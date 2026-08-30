@@ -1,6 +1,6 @@
 ---
 name: kasidia-frontend-law
-description: "Enforce Kasidia's frontend laws when designing, implementing, refactoring, or reviewing interactive UI: intentional alignment, shared component contracts, reversible motion, controlled information hierarchy, structured color roles, and genuine vector icons. Use for web pages, applications, dashboards, admin panels, components, responsive layouts, and UI quality reviews. Do not use for backend-only or non-visual work."
+description: "Enforce Kasidia's frontend laws when designing, implementing, refactoring, or reviewing interactive UI: intentional alignment, shared component contracts, reversible motion, controlled information hierarchy, structured color roles, genuine vector icons, and substance-first content with no invented data or decorative filler. Use for web pages, applications, dashboards, admin panels, components, responsive layouts, and UI quality reviews. Do not use for backend-only or non-visual work."
 ---
 
 # Kasidia Frontend Law
@@ -125,6 +125,21 @@ Fail the color rule when color roles are ambiguous, large saturated surfaces dom
 
 Fail the icon rule when a control uses emoji or text characters as pictograms, mixes incompatible icon styles without semantic reason, or relies on an unlabeled icon whose meaning is unclear.
 
+## Content Integrity
+
+Every interface must be built from real, purposeful content. An empty region is always preferable to a decorative filler module, and a page that communicates less is always preferable to a page that invents.
+
+Requirements:
+
+- Use only copy, numbers, and media supplied by the user or declared by the product. Never fabricate statistics, counts, testimonials, customer logos, case studies, or prices to fill space.
+- When a section has no real content, omit the entire section. Blank space is a correct deliverable, not an unfinished page.
+- Do not introduce modules that impute information the product has not declared. Unless explicitly requested, these include stat bars (a large numeral above a small caption), "Trusted by" logo walls, testimonial cards, and icon-grid feature cards padded with generic claims.
+- Apply the deletion test to every section: if removing it would not change what a visitor learns or decides, remove it.
+- When asked to remove an element, perform only that subtraction. Do not backfill the freed space with a different module.
+- Decorative prominence placed on invented content also violates Information Hierarchy: fabricated emphasis is worse than no emphasis.
+
+Fail the content rule when the page presents invented metrics or endorsements, keeps a module whose removal would not change any visitor decision, or adds sections to look complete rather than to communicate.
+
 ## Required Workflow
 
 ### Before Design or Editing
@@ -135,6 +150,7 @@ Fail the icon rule when a control uses emoji or text characters as pictograms, m
 4. Define the motion map: trigger, origin, enter state, settled state, leave state, duration, easing, and reduced-motion behavior.
 5. Define the hierarchy map: primary, secondary, supporting, and contextual information, including the size, weight, color, and spacing treatment for each level.
 6. Define the color-role map: accent/theme color, supporting color, background base, and any semantic state colors.
+7. Define the content map: the real copy and data available for each planned section. Mark sections without real content as omissions, not placeholders.
 
 Do not begin visual polishing while any of these maps is ambiguous.
 
@@ -158,6 +174,7 @@ Review the core laws and supporting visual rules independently:
 4. **Hierarchy audit:** verify that primary, secondary, supporting, and contextual information have intentional and consistent prominence.
 5. **Color audit:** verify semantic color roles, low-saturation large surfaces, bounded emphasis, and the absence of strongly divergent gradient fills.
 6. **Icon audit:** verify that every interface icon is a genuine vector icon with a consistent component contract and accessible name where required.
+7. **Content audit:** verify that every section communicates real, supplied substance; confirm there are no invented statistics, endorsements, or logos, and no filler module whose removal would not change a visitor decision.
 
 Report violations with the affected component or selector, the broken law, observable evidence, and the smallest foundational correction. Prefer fixing a shared root cause over patching each occurrence.
 
@@ -202,5 +219,6 @@ The work does not pass until:
 - accent, supporting, and background colors follow their declared semantic roles
 - large surfaces avoid high saturation and gradients avoid strongly divergent colors
 - interface icons use genuine vector assets rather than emoji or text-symbol substitutes
+- every section presents real, supplied content; sections without real content are omitted rather than padded, and no statistic, testimonial, or logo has been invented
 
 If any law or supporting visual rule fails, treat the UI as unfinished even when the page builds successfully or resembles a reference screenshot.
