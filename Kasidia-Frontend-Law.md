@@ -1,6 +1,6 @@
 ---
 name: kasidia-frontend-law
-description: "Enforce Kasidia's frontend laws when designing, implementing, refactoring, or reviewing interactive UI: intentional alignment, shared component contracts, reversible motion, controlled information hierarchy, structured color roles, genuine vector icons, substance-first content with no invented data or decorative filler, and status indication only for states that can actually change. Use for web pages, applications, dashboards, admin panels, components, responsive layouts, and UI quality reviews. Do not use for backend-only or non-visual work."
+description: "Enforce Kasidia's frontend laws when designing, implementing, refactoring, or reviewing interactive UI: intentional alignment, shared component contracts, reversible motion, controlled information hierarchy, structured color roles, genuine vector icons, substance-first content with no invented data or decorative filler, status indication only for states that can actually change, and legible text held to hard typographic floors. Use for web pages, applications, dashboards, admin panels, components, responsive layouts, and UI quality reviews. Do not use for backend-only or non-visual work."
 ---
 
 # Kasidia Frontend Law
@@ -155,6 +155,21 @@ Requirements:
 
 Fail the status rule when an interface displays a green dot with "Ready", "Online", or another self-evident state, when an indicator cannot display a different state during real use, or when an indicator light animates without reporting anything.
 
+## Type Legibility
+
+Text exists to be read. Every text element must render at or above a hard minimum size, and smallness is never used as a design tool for de-emphasis, decoration, or density.
+
+Requirements:
+
+- Honor the typographic floors: Latin text is never smaller than 10 CSS pixels; CJK text is never smaller than 12 CSS pixels, because dense glyph strokes collapse below that size; mixed-language text containing CJK follows the 12-pixel floor.
+- Treat the floors as absolute. They apply equally to captions, labels, timestamps, badges, table cells, chart annotations, placeholder text, keyboard hints, legal copy, and watermarks. There is no fine-print exemption.
+- Judge the computed style, not the declared token. A text element passes only when its rendered computed font-size meets the floor at the tested viewport and zoom level.
+- Do not bypass the floors with transforms or rendering tricks: `transform: scale()` on text, duplicated pseudo-element text, or condensed optical tricks that render glyphs below the floor are violations, not loopholes.
+- Keep primary reading text at the platform reference of 16px or above; treat the floors as the limit for the smallest supporting text, not as a target for body copy.
+- De-emphasize supporting text through weight, color role, and spacing under the Information Hierarchy rule, never by shrinking glyphs below the floors.
+
+Fail the type rule when any text element's computed font-size falls below its floor at a verified viewport or zoom level, when transforms or optical tricks render glyphs below the floor, or when a text class claims a fine-print exemption.
+
 ## Required Workflow
 
 ### Before Design or Editing
@@ -167,6 +182,7 @@ Fail the status rule when an interface displays a green dot with "Ready", "Onlin
 6. Define the color-role map: accent/theme color, supporting color, background base, and any semantic state colors.
 7. Define the content map: the real copy and data available for each planned section. Mark sections without real content as omissions, not placeholders.
 8. Define the status map: for every proposed status indicator, the state source it reads, every state it can display, and the user decision each state change supports. Omit indicators whose state cannot vary while the interface is visible.
+9. Define the type scale: every named text role with its size, weight, and line height, with computed sizes never below the typographic floors (10px Latin, 12px CJK and mixed-language text).
 
 Do not begin visual polishing while any of these maps is ambiguous.
 
@@ -179,6 +195,7 @@ Do not begin visual polishing while any of these maps is ambiguous.
 - Keep focus, pointer, keyboard, and touch behavior consistent across every instance of a component.
 - Preserve the declared information hierarchy across responsive and interaction states.
 - Use semantic color tokens and genuine vector icons instead of page-local colors, emoji, or text-symbol substitutes.
+- Set text through shared type-scale tokens and keep computed sizes at or above the typographic floors at every viewport and zoom level.
 
 ### During Review
 
@@ -192,6 +209,7 @@ Review the core laws and supporting visual rules independently:
 6. **Icon audit:** verify that every interface icon is a genuine vector icon with a consistent component contract and accessible name where required.
 7. **Content audit:** verify that every section communicates real, supplied substance; confirm there are no invented statistics, endorsements, or logos, and no filler module whose removal would not change a visitor decision.
 8. **Status audit:** verify that every status indicator reads a real state source, can display more than one state during real use, and supports a user decision; confirm no self-evident readiness badge or decorative live light remains.
+9. **Type audit:** sample every class of text — including captions, badges, placeholders, and chart labels — and verify computed font sizes meet the typographic floors at every verified viewport and zoom level.
 
 Report violations with the affected component or selector, the broken law, observable evidence, and the smallest foundational correction. Prefer fixing a shared root cause over patching each occurrence.
 
@@ -238,5 +256,6 @@ The work does not pass until:
 - interface icons use genuine vector assets rather than emoji or text-symbol substitutes
 - every section presents real, supplied content; sections without real content are omitted rather than padded, and no statistic, testimonial, or logo has been invented
 - every status indicator reports a real, varying state the interface does not already prove, and no decorative "ready" or "online" light exists
+- no text element renders below the typographic floors (10px Latin, 12px CJK and mixed-language text) at any verified viewport or zoom level
 
 If any law or supporting visual rule fails, treat the UI as unfinished even when the page builds successfully or resembles a reference screenshot.
