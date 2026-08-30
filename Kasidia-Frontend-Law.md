@@ -1,6 +1,6 @@
 ---
 name: kasidia-frontend-law
-description: "Enforce Kasidia's frontend laws when designing, implementing, refactoring, or reviewing interactive UI: intentional alignment, shared component contracts, reversible motion, controlled information hierarchy, structured color roles, genuine vector icons, and substance-first content with no invented data or decorative filler. Use for web pages, applications, dashboards, admin panels, components, responsive layouts, and UI quality reviews. Do not use for backend-only or non-visual work."
+description: "Enforce Kasidia's frontend laws when designing, implementing, refactoring, or reviewing interactive UI: intentional alignment, shared component contracts, reversible motion, controlled information hierarchy, structured color roles, genuine vector icons, substance-first content with no invented data or decorative filler, and status indication only for states that can actually change. Use for web pages, applications, dashboards, admin panels, components, responsive layouts, and UI quality reviews. Do not use for backend-only or non-visual work."
 ---
 
 # Kasidia Frontend Law
@@ -140,6 +140,21 @@ Requirements:
 
 Fail the content rule when the page presents invented metrics or endorsements, keeps a module whose removal would not change any visitor decision, or adds sections to look complete rather than to communicate.
 
+## Status Integrity
+
+A status indicator is a report, not a decoration. It may exist only when it reads a state the interface does not already prove, from a source that can actually change, in support of a decision the user makes differently per state.
+
+Requirements:
+
+- Justify every status indicator against three tests before designing it: the reported state can change while the interface is visible; the user would act differently in at least one state; the state is not already proven by the interface being rendered and interactive.
+- Never render readiness or connectivity indicators for the interface itself. A visible, interactive page is its own proof of readiness; a green "Ready" or "Online" badge that no real condition can turn red must not exist.
+- Do not animate indicator lights for atmosphere. A pulsing or glowing dot claims a live signal; placing it on a state that never changes fabricates telemetry.
+- When a genuine state need exists, bind the indicator to a real state source, design every state it can reach — loading, nominal, degraded, offline, error — through one shared component contract, and keep the displayed state synchronized with that source.
+- A status change must not rely on color alone: pair the light with text or an icon, and announce the change when the user depends on it.
+- Omission is the default outcome. An indicator that fails any justification test is removed, not restyled.
+
+Fail the status rule when an interface displays a green dot with "Ready", "Online", or another self-evident state, when an indicator cannot display a different state during real use, or when an indicator light animates without reporting anything.
+
 ## Required Workflow
 
 ### Before Design or Editing
@@ -151,6 +166,7 @@ Fail the content rule when the page presents invented metrics or endorsements, k
 5. Define the hierarchy map: primary, secondary, supporting, and contextual information, including the size, weight, color, and spacing treatment for each level.
 6. Define the color-role map: accent/theme color, supporting color, background base, and any semantic state colors.
 7. Define the content map: the real copy and data available for each planned section. Mark sections without real content as omissions, not placeholders.
+8. Define the status map: for every proposed status indicator, the state source it reads, every state it can display, and the user decision each state change supports. Omit indicators whose state cannot vary while the interface is visible.
 
 Do not begin visual polishing while any of these maps is ambiguous.
 
@@ -175,6 +191,7 @@ Review the core laws and supporting visual rules independently:
 5. **Color audit:** verify semantic color roles, low-saturation large surfaces, bounded emphasis, and the absence of strongly divergent gradient fills.
 6. **Icon audit:** verify that every interface icon is a genuine vector icon with a consistent component contract and accessible name where required.
 7. **Content audit:** verify that every section communicates real, supplied substance; confirm there are no invented statistics, endorsements, or logos, and no filler module whose removal would not change a visitor decision.
+8. **Status audit:** verify that every status indicator reads a real state source, can display more than one state during real use, and supports a user decision; confirm no self-evident readiness badge or decorative live light remains.
 
 Report violations with the affected component or selector, the broken law, observable evidence, and the smallest foundational correction. Prefer fixing a shared root cause over patching each occurrence.
 
@@ -220,5 +237,6 @@ The work does not pass until:
 - large surfaces avoid high saturation and gradients avoid strongly divergent colors
 - interface icons use genuine vector assets rather than emoji or text-symbol substitutes
 - every section presents real, supplied content; sections without real content are omitted rather than padded, and no statistic, testimonial, or logo has been invented
+- every status indicator reports a real, varying state the interface does not already prove, and no decorative "ready" or "online" light exists
 
 If any law or supporting visual rule fails, treat the UI as unfinished even when the page builds successfully or resembles a reference screenshot.
