@@ -1,11 +1,11 @@
 ---
 name: kasidia-frontend-law
-description: "Enforce Kasidia's frontend laws when designing, implementing, refactoring, or reviewing interactive UI: intentional alignment, shared component contracts, reversible motion, controlled information hierarchy, structured color roles, genuine vector icons, substance-first content with no invented data or decorative filler, status indication only for states that can actually change, and legible text held to hard typographic floors. Use for web pages, applications, dashboards, admin panels, components, responsive layouts, and UI quality reviews. Do not use for backend-only or non-visual work."
+description: "Enforce Kasidia's frontend laws when designing, implementing, refactoring, or reviewing interactive UI: intentional alignment, shared component contracts, reversible motion, controlled information hierarchy, structured color roles, genuine vector icons, substance-first content without invented data or filler modules, status indicators only for states that can actually change, and hard minimum font sizes. Use for web pages, applications, dashboards, admin panels, components, responsive layouts, and UI quality reviews. Do not use for backend-only or non-visual work."
 ---
 
 # Kasidia Frontend Law
 
-Treat the three laws below as required acceptance criteria, not aesthetic suggestions.
+Treat the three laws and the supporting rules below as required acceptance criteria, not aesthetic suggestions.
 
 ## Law 1: Every Element Aligns
 
@@ -58,6 +58,7 @@ Every animated element must leave by reversing the path and transformation used 
 Requirements:
 
 - Define enter and leave states together before implementation.
+- Implement the enter and leave transitions in the same change.
 - Preserve the same origin, axis, distance, scale reference, and transform origin in both directions.
 - Reverse timing curves where appropriate so the exit reads as the return leg of the same motion.
 - Do not unmount an element until its leave transition completes.
@@ -68,7 +69,7 @@ Requirements:
 - Prefer transform and opacity for motion, while keeping stable element dimensions.
 - Hover and active motion must return to the exact resting geometry and must not cause reflow.
 
-For reduced-motion preferences, remove spatial travel while preserving lifecycle continuity with a short reversible opacity or visibility transition. When motion is explicitly disabled for accessibility, preserve layout and focus continuity so the state change does not create a spatial jump.
+For reduced-motion preferences, remove spatial travel while preserving lifecycle continuity with a short reversible opacity or visibility transition, keeping layout and focus continuity so the state change does not create a spatial jump.
 
 Fail the law when an element has only an enter animation, disappears before leave completes, exits in another direction, changes origin, or causes surrounding content to jump.
 
@@ -142,7 +143,7 @@ Fail the content rule when the page presents invented metrics or endorsements, k
 
 ## Status Integrity
 
-A status indicator is a report, not a decoration. It may exist only when it reads a state the interface does not already prove, from a source that can actually change, in support of a decision the user makes differently per state.
+A status indicator is a report, not a decoration.
 
 Requirements:
 
@@ -150,7 +151,6 @@ Requirements:
 - Never render readiness or connectivity indicators for the interface itself. A visible, interactive page is its own proof of readiness; a green "Ready" or "Online" badge that no real condition can turn red must not exist.
 - Do not animate indicator lights for atmosphere. A pulsing or glowing dot claims a live signal; placing it on a state that never changes fabricates telemetry.
 - When a genuine state need exists, bind the indicator to a real state source, design every state it can reach — loading, nominal, degraded, offline, error — through one shared component contract, and keep the displayed state synchronized with that source.
-- A status change must not rely on color alone: pair the light with text or an icon, and announce the change when the user depends on it.
 - Omission is the default outcome. An indicator that fails any justification test is removed, not restyled.
 
 Fail the status rule when an interface displays a green dot with "Ready", "Online", or another self-evident state, when an indicator cannot display a different state during real use, or when an indicator light animates without reporting anything.
@@ -172,6 +172,8 @@ Fail the type rule when any text element's computed font-size falls below its fl
 
 ## Required Workflow
 
+Build or correct shared foundations before migrating repeated UI, and implement enter and leave transitions in the same change.
+
 ### Before Design or Editing
 
 1. Inspect the existing layout system, tokens, and component inventory.
@@ -182,20 +184,9 @@ Fail the type rule when any text element's computed font-size falls below its fl
 6. Define the color-role map: accent/theme color, supporting color, background base, and any semantic state colors.
 7. Define the content map: the real copy and data available for each planned section. Mark sections without real content as omissions, not placeholders.
 8. Define the status map: for every proposed status indicator, the state source it reads, every state it can display, and the user decision each state change supports. Omit indicators whose state cannot vary while the interface is visible.
-9. Define the type scale: every named text role with its size, weight, and line height, with computed sizes never below the typographic floors (10px Latin, 12px CJK and mixed-language text).
+9. Define the type scale: every named text role with its size, weight, and line height, never below the typographic floors.
 
 Do not begin visual polishing while any of these maps is ambiguous.
-
-### During Implementation
-
-- Build or correct shared foundations before migrating repeated UI.
-- Keep dimensions stable across interaction and data states.
-- Use structured layout primitives instead of one-off positional corrections.
-- Implement enter and leave transitions in the same change.
-- Keep focus, pointer, keyboard, and touch behavior consistent across every instance of a component.
-- Preserve the declared information hierarchy across responsive and interaction states.
-- Use semantic color tokens and genuine vector icons instead of page-local colors, emoji, or text-symbol substitutes.
-- Set text through shared type-scale tokens and keep computed sizes at or above the typographic floors at every viewport and zoom level.
 
 ### During Review
 
@@ -207,9 +198,9 @@ Review the core laws and supporting visual rules independently:
 4. **Hierarchy audit:** verify that primary, secondary, supporting, and contextual information have intentional and consistent prominence.
 5. **Color audit:** verify semantic color roles, low-saturation large surfaces, bounded emphasis, and the absence of strongly divergent gradient fills.
 6. **Icon audit:** verify that every interface icon is a genuine vector icon with a consistent component contract and accessible name where required.
-7. **Content audit:** verify that every section communicates real, supplied substance; confirm there are no invented statistics, endorsements, or logos, and no filler module whose removal would not change a visitor decision.
-8. **Status audit:** verify that every status indicator reads a real state source, can display more than one state during real use, and supports a user decision; confirm no self-evident readiness badge or decorative live light remains.
-9. **Type audit:** sample every class of text — including captions, badges, placeholders, and chart labels — and verify computed font sizes meet the typographic floors at every verified viewport and zoom level.
+7. **Content audit:** verify every section communicates real, supplied substance, with no invented statistics, endorsements, logos, or filler modules.
+8. **Status audit:** verify every status indicator reads a real state source and can vary during real use; confirm no self-evident readiness badge or decorative live light remains.
+9. **Type audit:** verify computed font sizes across every text class meet the typographic floors at every verified viewport and zoom level.
 
 Report violations with the affected component or selector, the broken law, observable evidence, and the smallest foundational correction. Prefer fixing a shared root cause over patching each occurrence.
 
@@ -244,18 +235,12 @@ Exercise long labels, changing values, loading, empty, error, populated, disable
 The work does not pass until:
 
 - every visible element has an intentional alignment relationship
-- repeated semantic elements use a shared component contract
-- equivalent component states look and behave consistently
+- repeated semantic elements use one shared component contract with consistent states
 - every animated surface completes both entrance and reverse exit
 - closing, filtering, loading, validation, and responsive changes cause no unexplained layout jump
 - keyboard focus remains visible and returns to the correct trigger after transient UI closes
 - reduced-motion behavior preserves continuity without spatial travel
-- information hierarchy remains clear without overemphasizing supporting content or hiding essential content
-- accent, supporting, and background colors follow their declared semantic roles
-- large surfaces avoid high saturation and gradients avoid strongly divergent colors
-- interface icons use genuine vector assets rather than emoji or text-symbol substitutes
-- every section presents real, supplied content; sections without real content are omitted rather than padded, and no statistic, testimonial, or logo has been invented
-- every status indicator reports a real, varying state the interface does not already prove, and no decorative "ready" or "online" light exists
-- no text element renders below the typographic floors (10px Latin, 12px CJK and mixed-language text) at any verified viewport or zoom level
+- the Interaction Baseline holds: semantic roles, managed focus, Escape behavior, 44px touch targets, and feedback that does not rely on color alone
+- no Fail condition in any rule above is triggered at any verified viewport, zoom level, or state
 
 If any law or supporting visual rule fails, treat the UI as unfinished even when the page builds successfully or resembles a reference screenshot.
