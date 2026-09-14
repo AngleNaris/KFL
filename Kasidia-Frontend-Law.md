@@ -1,246 +1,170 @@
 ---
 name: kasidia-frontend-law
-description: "Enforce Kasidia's frontend laws when designing, implementing, refactoring, or reviewing interactive UI: intentional alignment, shared component contracts, reversible motion, controlled information hierarchy, structured color roles, genuine vector icons, substance-first content without invented data or filler modules, status indicators only for states that can actually change, and hard minimum font sizes. Use for web pages, applications, dashboards, admin panels, components, responsive layouts, and UI quality reviews. Do not use for backend-only or non-visual work."
+description: "Design, implement, refactor, or review user-facing frontend UI with Kasidia's laws: task-first composition, the ten Swiss grid principles, scoped alignment, shared page and component contracts, semantic tokens, predictable accessible interactions, reversible motion, and truthful content. Use for websites, applications, dashboards, admin panels, components, responsive layouts, and UI quality reviews. Prevent component overuse, arbitrary styling, duplicate pages, and screenshot-only layouts. Do not use for backend-only or non-visual work."
 ---
 
 # Kasidia Frontend Law
 
-Treat the three laws and the supporting rules below as required acceptance criteria, not aesthetic suggestions.
+Treat these laws and supporting rules as acceptance criteria, not a visual template.
+
+Design in this order: **user task -> real content -> hierarchy and reading order -> layout -> component contracts -> styling and motion**. Never start by filling a screen with available components.
+
+Preserve the product's established language and the requested editing scope. Fix shared causes deliberately; do not redesign unrelated surfaces. Explain consequential exceptions through a user or content need, never through visual novelty alone.
 
 ## Law 1: Every Element Aligns
 
-Every visible UI element must align with at least one other visible element or with an explicit layout anchor shared by other elements.
+Give every visible element an intentional alignment relationship within its owning layout. A grid organizes relationships; it does not require every visible edge to touch a page-level column.
 
-Valid alignment relationships include:
+### 10 Rules of Good Swiss Grid Design
 
-- shared left, right, top, or bottom edges
-- shared text or control baselines
-- shared centers
-- shared CSS grid tracks
-- repeated spacing rhythm inside one flex or grid group
-- alignment to a container edge that also anchors another element
+Source: [10 Rules of Good Swiss Grid Design](https://github.com/longplay45/swiss-grid-generator/blob/main/TEN_RULES_OF_GOOD_SWISS_GRID_DESIGN.md#10-rules-of-good-swiss-grid-design), as supplied by the user. In the spirit of Dieter Rams' 10 Principles of Good Design. The ten principles below retain the supplied wording with punctuation normalized; subsequent implementation requirements are Kasidia-specific UI adaptations.
 
-Requirements:
+1. **Good Swiss Grid Design is systematic.** It begins with a clear, logical grid and follows it rigorously. Arbitrary placement is chaos.
+2. **Good Swiss Grid Design serves the content.** The grid is not decoration; it is infrastructure. It organizes information so the message becomes clear and accessible.
+3. **Good Swiss Grid Design creates order without boredom.** It uses asymmetry, rhythm, and proportional relationships to bring life to strict geometry.
+4. **Good Swiss Grid Design is precise.** Every millimeter, every baseline, every margin matters. Sloppiness destroys credibility.
+5. **Good Swiss Grid Design achieves clarity through reduction.** It removes the unnecessary so the essential can speak with maximum power.
+6. **Good Swiss Grid Design respects typography.** Text is not filler. It is given generous space, proper hierarchy, and breathing room on the baseline grid.
+7. **Good Swiss Grid Design creates visual tension and harmony.** It balances strong contrasts (scale, weight, color) with quiet, harmonious structure.
+8. **Good Swiss Grid Design is timeless rather than fashionable.** It avoids trends and cheap effects. A well-designed grid still looks contemporary in twenty years.
+9. **Good Swiss Grid Design is honest.** It does not hide behind ornament or unnecessary decoration. Form follows function, and structure is visible when it serves the message.
+10. **Good Swiss Grid Design is thorough to the last detail.** Even the smallest element (a caption, a folio number, a hairline rule) is considered with the same care as the headline.
 
-- Establish the page grid, column boundaries, baselines, and spacing scale before polishing individual elements.
-- Use Grid, Flexbox, container constraints, and shared spacing tokens. Do not repair structure with unrelated pixel nudges.
-- Text, icons, controls, dividers, panels, empty states, overlays, and floating tools must each have an identifiable alignment relationship.
-- Preserve alignment across content states, localization, zoom, and responsive viewports.
-- Reserve stable space for loading, badges, labels, validation, and changing values so state changes do not shift neighboring elements.
-- Treat an element that appears intentionally offset as aligned only when the offset repeats as part of a documented pattern.
+**UI application:** Apply these principles through the scoped rules below, not a fixed Swiss visual template. Treat precision as consistent relationships, not fixed-pixel positions. Use asymmetry and contrast to support hierarchy without breaking reading or keyboard order. Reduction must preserve necessary labels, controls, feedback, and accessibility. Reveal structure only when it aids comprehension, not by drawing decorative grid lines everywhere.
 
-Fail the law when an element floats without an anchor, uses arbitrary margins to look approximately aligned, or becomes misaligned in another state or viewport.
+### Define Three Alignment Scopes
+
+- **Page frame:** own outer margins, container width, and the major anchors shared by navigation, headers, and content. Reuse the frame across sibling pages.
+- **Region layout:** own the arrangement of meaningful content groups. Align region boundaries to their parent's tracks or named areas. Share tracks, or use `subgrid`, only when contents must align across regions; otherwise use an independent local layout.
+- **Component interior:** own padding, control geometry, baselines, and local gaps. Align text and icons to the component's content box, not automatically to the page grid. Anchor floating surfaces to their trigger or a declared viewport edge.
+
+Do not confuse aligned boxes with identical text lengths, icon outlines, or equal-height content. Use optical corrections only as small, reusable, documented adjustments.
+
+### Derive the Layout from Content
+
+- Inspect the existing layout and token system first. Extend it instead of installing a competing grid or spacing scale.
+- Identify region roles, reading order, minimum usable widths, and flexible space. Then choose the simplest structure: normal flow for a stack, Flexbox for one-dimensional groups, Grid for shared two-dimensional tracks.
+- Declare container width, page padding, spacing scale, row/column gaps, track definitions, and responsive rules once in their owning shared layout. Distinguish outer padding from the content box in both implementation and measurement.
+- Choose columns for actual sibling relationships. Use asymmetry, rhythm, and proportion to express hierarchy, not novelty. Equal units may share equal tracks; a navigation rail and workspace need different width rules. Do not force 12 columns, one global count for all nested ratios, or asymmetry onto genuinely parallel content.
+- Constrain prose to a readable measure for its language and typeface; do not cap a table, canvas, or entire application at prose width. Primary importance does not automatically mean a wider column.
+- Use content-driven patterns: a reading page may need one column; a workspace may need a bounded rail plus `minmax(0, 1fr)`; a collection may need auto-fitting tracks with a shared item minimum. Choose a pattern for its content, not to produce a fashionable tile arrangement.
+- Align headings, toolbars, lists, and footers that share a content edge through the same container or track, not separately tuned widths. Let full-bleed backgrounds contain an aligned inner content frame.
+- Use shared spacing tokens for gutters, section gaps, margins, and padding. Local and vertical gaps need not equal the page gutter. Make related items closer than unrelated groups; do not insert empty columns merely to imitate padding.
+- Allow content to determine height. Reserve predictable loading/control space, but let longer text and validation grow in flow rather than clipping them or reserving excessive blank space.
+
+### Reflow without Losing the Task
+
+- Choose breakpoints where content stops fitting, not from device names alone. Record what wraps, stacks, collapses, or changes interaction at each breakpoint, and why. A responsive contract may change tracks and navigation, not only spans.
+- Preserve task priority and a coherent DOM, reading, and keyboard order. Keep essential actions available; do not solve crowding by hiding required information or shrinking text.
+- Let flexible children shrink with `min-inline-size: 0` where needed; wrap long content. Give inherently wide tables, code, or canvases a deliberate local scrolling strategy instead of making the entire page overflow.
+- Adapt reusable regions to their available width, using container queries where supported by the project. Do not make a component depend on one page's viewport assumptions.
+- Test between reference widths and immediately around each breakpoint. Do not conceal failed layouts with page-wide `overflow-x: hidden`, arbitrary fixed heights, absolute-positioned content, or viewport-specific nudges.
+
+### Verify the Correct Anchors
+
+Use a development overlay or browser layout tools that reflect the actual container, padding, tracks, and gaps. Check region edges against their owning grid, interiors against local edges/baselines, and floating surfaces against their anchors. Do not audit every descendant against the page grid. Shared edges should agree within one CSS pixel, except for documented optical adjustments.
+
+**Fail:** unexplained offsets, conflicting containers, tokenless spacing patches, broken reading order, or alignment that works only at one width or content state.
 
 ## Law 2: Similar Elements Reuse One Contract
 
-Elements with the same semantic role must use the same shared component or the same component family with explicit variants.
+Reuse by semantic responsibility and interaction, not merely by visual resemblance. Share behavior as well as appearance.
 
-Similarity includes purpose, information structure, control type, or user expectation. Visual resemblance alone is not the only test.
+- Inventory existing primitives, component families, and page templates before adding anything. Prefer the established library and native semantics over rebuilding controls.
+- Choose the least complex structure that supports the task: lists for sequences, tables for cross-row comparison, cards for independently meaningful entities, tabs for peer views, dialogs for bounded interruptive tasks. Do not wrap every section in a card or turn every choice into a custom dropdown.
+- Reuse sibling-page shells, headers, filter/toolbars, content layouts, and state presentations where their responsibilities match. A repeated page is not made reusable merely by sharing its buttons.
+- Upgrade an incomplete shared contract and migrate its affected consumers together. Express legitimate differences through named variants, slots, composition, and explicit states; do not clone a page-private version.
+- Keep component APIs coherent. Split materially different responsibilities instead of building a universal component with unrelated boolean switches or route-name branches. Do not force reuse solely because two things currently look alike.
+- Centralize recurring geometry, spacing, typography, color roles, borders, elevation, focus, and motion in semantic tokens and shared recipes. Use the project's existing styling and breakpoint mechanisms.
+- Distinguish constraints from patches: `0`, `auto`, ratios, intrinsic sizing, and a documented component minimum are legitimate. Arbitrary per-instance pixels, repeated magic values, and one-off tokens named to disguise a nudge are not.
+- Keep static appearance in tokens and component styles. Allow bounded data-driven values for progress, charts, and measured positioning; do not hardcode data or move static styling inline to evade the shared contract.
+- Keep hover, focus-visible, active, selected, disabled, loading, error, keyboard, touch, responsive, and motion behavior consistent wherever applicable. Domain wrappers may bind data or behavior, but must not recreate shared visual structure.
 
-Requirements:
-
-- Inventory existing shared components before creating a new one.
-- Upgrade the shared component when the existing contract is incomplete. Do not clone it into a page-private alternative.
-- Express legitimate differences through named variants, sizes, slots, props, and states.
-- Reused components must share visual language and interaction behavior for hover, focus-visible, active, selected, disabled, loading, error, keyboard, touch, and motion states.
-- Centralize tokens for geometry, typography, color roles, borders, elevation, focus, and motion.
-- A domain wrapper may add domain behavior or data binding, but it must not recreate the shared component's chrome.
-- Similar responsive behavior must also be shared. Reuse is incomplete when desktop matches but mobile interaction diverges without a product reason.
-
-Create a new component only when the semantic responsibility or interaction model is materially different. Record that distinction in the component API, not in page-specific CSS.
-
-Fail the law when two similar controls have different heights, spacing, hover behavior, keyboard behavior, animation, or state feedback without an explicit semantic reason.
+**Fail:** repeated responsibilities implemented independently, shared styles overridden page by page, cosmetic variants hiding different behavior, or a token/component introduced only to legitimize a one-off patch.
 
 ## Law 3: Motion Returns to Its Origin
 
-Every animated element must leave by reversing the path and transformation used to enter. No interactive surface may abruptly appear or disappear.
+Make motion optional and purposeful. When a transient surface animates in, define its matching return path in the same change.
 
-Requirements:
+- Pair enter, settled, leave, and interrupted states. Keep the same origin, axis, and spatial relationship for opening/closing; a right-hand drawer returns right, and a triggered menu collapses toward its trigger.
+- Coordinate backdrop and content; finish exit before removal when an exit runs. Handle rapid reversal from the current state, not by replaying from the beginning or leaving stale focus/scroll locks.
+- Prefer transform and opacity. Return hover/active effects to resting geometry without reflow. Reserve predictable space and coordinate necessary layout changes; do not animate every state update or route by default.
+- Do not delay action feedback, focus management, or access to controls for decorative animation. Preserve focus and scroll continuity whether motion runs or not.
+- Honor `prefers-reduced-motion`: remove nonessential spatial motion; use instant updates or restrained opacity when appropriate. Zero-duration paths must complete cleanup without waiting for an animation event that will not fire.
 
-- Define enter and leave states together before implementation.
-- Implement the enter and leave transitions in the same change.
-- Preserve the same origin, axis, distance, scale reference, and transform origin in both directions.
-- Reverse timing curves where appropriate so the exit reads as the return leg of the same motion.
-- Do not unmount an element until its leave transition completes.
-- A panel entering from the right exits to the right. A menu expanding from its trigger collapses into that trigger. A dialog scaling from its center returns to its center.
-- Animate layout presence deliberately. Reserve space, use layout transitions, or coordinate sibling movement so surrounding content does not jump.
-- Portalled overlays must retain a visible relationship with their trigger or declared screen edge.
-- Pair overlay and content transitions; closing must reverse both layers coherently.
-- Prefer transform and opacity for motion, while keeping stable element dimensions.
-- Hover and active motion must return to the exact resting geometry and must not cause reflow.
-
-For reduced-motion preferences, remove spatial travel while preserving lifecycle continuity with a short reversible opacity or visibility transition, keeping layout and focus continuity so the state change does not create a spatial jump.
-
-Fail the law when an element has only an enter animation, disappears before leave completes, exits in another direction, changes origin, or causes surrounding content to jump.
+**Fail:** animated entry without a coherent exit, changed origins, abrupt removal during an active exit, motion-induced layout jumps, or motion required for the UI to function.
 
 ## Information Hierarchy
 
-Every interface must divide information into intentional levels such as primary, secondary, supporting, and contextual content.
-
-Control visual prominence with these four factors:
-
-- element size
-- font weight
-- color emphasis and contrast
-- distance from related and surrounding elements
-
-Requirements:
-
-- Match prominence to importance. Do not make supporting information so visually heavy that it competes with the user's primary task.
-- Do not make important information so visually light that users can overlook it.
-- Elements at the same information level must use a consistent combination of size, weight, color, and spacing.
-- Use proximity to express relationships: related elements stay closer together, while distinct information groups receive a deliberate larger gap or divider.
-- Reserve the strongest visual treatment for the smallest number of elements needed to establish the page's reading order.
-- Verify hierarchy in populated, empty, loading, error, disabled, and selected states. State styling must not accidentally promote secondary content above primary content.
-
-Fail the hierarchy rule when everything appears equally important, decorative content dominates task content, or essential information cannot be detected during a normal scan.
+- Establish primary, secondary, supporting, and contextual levels through size, weight, color, and spacing. Keep the same roles consistent across pages and states.
+- Make the current task and its primary action obvious. Reserve the strongest treatment for what matters in that task context, not every button or section.
+- Group by meaning using proximity, headings, and whitespace before adding borders, backgrounds, or nested panels. Preserve a clear reading order without decorative scaffolding.
+- Verify hierarchy in loading, empty, error, populated, disabled, and selected states. Never let secondary metadata, badges, or decoration overwhelm task content.
 
 ## Color System
 
-Every interface must define and consistently apply these color roles:
-
-1. **Accent or theme color:** the primary brand and action color. Use it for the most important actions, active states, and essential emphasis.
-2. **Supporting color:** a color related to the accent color or intentionally contrasted with it. Use it for secondary emphasis, distinct product domains, or complementary states without competing with the accent.
-3. **Background base:** a very low-saturation color that supports long viewing sessions and lets content hierarchy remain legible.
-
-Requirements:
-
-- Assign color roles as semantic tokens before styling individual elements.
-- Keep large surfaces and most background regions low in saturation.
-- Use high-saturation color only in bounded areas where strong emphasis is necessary.
-- Do not fill large regions with high-saturation color.
-- Do not create gradients from colors with strongly different hues. If a gradient is necessary, use closely related colors with controlled saturation and preserve text contrast.
-- Color must reinforce hierarchy rather than replace size, weight, spacing, labels, or structure.
-- Supporting and semantic state colors must not visually overpower the primary accent without an explicit critical-state reason.
-
-Fail the color rule when color roles are ambiguous, large saturated surfaces dominate the interface, unrelated vivid colors compete, or a high-contrast multihue gradient becomes the main fill.
+- Define semantic roles for accent/theme, supporting emphasis, background base, text, borders, focus, and real states. A supporting role need not introduce another vivid hue.
+- Keep large surfaces low in saturation and strong color bounded. Avoid large saturated fills and strongly divergent multihue gradients; use closely related hues when a gradient is justified.
+- Check contrast: at least 4.5:1 for normal text and 3:1 for qualifying large text and essential control/state cues. Do not assume a heading automatically qualifies as large text.
+- Reinforce hierarchy and labels rather than replacing them with color. Let state colors outrank the accent only when the urgency warrants it.
 
 ## Icon Integrity
 
-- Never use emoji as interface icons.
-- Never use letters, punctuation, Unicode symbols, or ordinary text as substitutes for icons.
-- Icons must be genuine vector icons from an established icon library or an intentionally designed vector asset.
-- Reuse the same icon component and stroke/fill style for the same semantic action.
-- Give icon-only controls an accessible name and a stable hit area.
-- Do not introduce a new icon metaphor when a familiar product-wide icon already exists.
-
-Fail the icon rule when a control uses emoji or text characters as pictograms, mixes incompatible icon styles without semantic reason, or relies on an unlabeled icon whose meaning is unclear.
+- Use genuine vector assets from the established icon family, with consistent stroke/fill treatment. Never substitute emoji, letters, punctuation, or Unicode pictograms for interface icons.
+- Reuse familiar product-wide metaphors. Give icon-only controls accessible names and stable hit areas; hide purely decorative icons from assistive technology.
 
 ## Content Integrity
 
-Every interface must be built from real, purposeful content. An empty region is always preferable to a decorative filler module, and a page that communicates less is always preferable to a page that invents.
-
-Requirements:
-
-- Use only copy, numbers, and media supplied by the user or declared by the product. Never fabricate statistics, counts, testimonials, customer logos, case studies, or prices to fill space.
-- When a section has no real content, omit the entire section. Blank space is a correct deliverable, not an unfinished page.
-- Do not introduce modules that impute information the product has not declared. Unless explicitly requested, these include stat bars (a large numeral above a small caption), "Trusted by" logo walls, testimonial cards, and icon-grid feature cards padded with generic claims.
-- Apply the deletion test to every section: if removing it would not change what a visitor learns or decides, remove it.
-- When asked to remove an element, perform only that subtraction. Do not backfill the freed space with a different module.
-- Decorative prominence placed on invented content also violates Information Hierarchy: fabricated emphasis is worse than no emphasis.
-
-Fail the content rule when the page presents invented metrics or endorsements, keeps a module whose removal would not change any visitor decision, or adds sections to look complete rather than to communicate.
+- Use supplied or product-declared facts. Never invent statistics, counts, testimonials, logos, prices, or generic feature claims to make a page look complete.
+- Write necessary functional copy, but keep unsupported factual claims out. Use sample data only when explicitly requested, label it as sample, and keep it separate from production sources.
+- Omit optional sections without real content. Retain useful empty states for genuine product features: explain what is missing and provide a relevant next action when one exists.
+- Apply the deletion test: keep a section only if it helps users learn, decide, act, or understand the current state. Do not add metric strips, logo walls, feature grids, or testimonial cards as filler.
+- When asked to remove an element, remove it without inventing a replacement module.
 
 ## Status Integrity
 
-A status indicator is a report, not a decoration.
-
-Requirements:
-
-- Justify every status indicator against three tests before designing it: the reported state can change while the interface is visible; the user would act differently in at least one state; the state is not already proven by the interface being rendered and interactive.
-- Never render readiness or connectivity indicators for the interface itself. A visible, interactive page is its own proof of readiness; a green "Ready" or "Online" badge that no real condition can turn red must not exist.
-- Do not animate indicator lights for atmosphere. A pulsing or glowing dot claims a live signal; placing it on a state that never changes fabricates telemetry.
-- When a genuine state need exists, bind the indicator to a real state source, design every state it can reach — loading, nominal, degraded, offline, error — through one shared component contract, and keep the displayed state synchronized with that source.
-- Omission is the default outcome. An indicator that fails any justification test is removed, not restyled.
-
-Fail the status rule when an interface displays a green dot with "Ready", "Online", or another self-evident state, when an indicator cannot display a different state during real use, or when an indicator light animates without reporting anything.
+- Require a real source and a user-relevant meaning for every status. Distinguish unknown, loading, success, degraded, offline, and error only where those states actually exist.
+- Do not display decorative "Ready"/"Online" badges or animated telemetry. A rendered page does not prove backend connectivity, synchronization, or saved changes; report those only from the relevant source.
+- Keep live state synchronized and expose stale/unknown data honestly. A persisted record status may remain unchanged during the session and still be useful; a pulsing dot must represent genuine ongoing activity.
+- Omit a status that adds no decision value or merely duplicates an already clear state. Do not fabricate all possible states to justify an indicator.
 
 ## Type Legibility
 
-Text exists to be read. Every text element must render at or above a hard minimum size, and smallness is never used as a design tool for de-emphasis, decoration, or density.
-
-Requirements:
-
-- Honor the typographic floors: Latin text is never smaller than 10 CSS pixels; CJK text is never smaller than 12 CSS pixels, because dense glyph strokes collapse below that size; mixed-language text containing CJK follows the 12-pixel floor.
-- Treat the floors as absolute. They apply equally to captions, labels, timestamps, badges, table cells, chart annotations, placeholder text, keyboard hints, legal copy, and watermarks. There is no fine-print exemption.
-- Judge the computed style, not the declared token. A text element passes only when its rendered computed font-size meets the floor at the tested viewport and zoom level.
-- Do not bypass the floors with transforms or rendering tricks: `transform: scale()` on text, duplicated pseudo-element text, or condensed optical tricks that render glyphs below the floor are violations, not loopholes.
-- Keep primary reading text at the platform reference of 16px or above; treat the floors as the limit for the smallest supporting text, not as a target for body copy.
-- De-emphasize supporting text through weight, color role, and spacing under the Information Hierarchy rule, never by shrinking glyphs below the floors.
-
-Fail the type rule when any text element's computed font-size falls below its floor at a verified viewport or zoom level, when transforms or optical tricks render glyphs below the floor, or when a text class claims a fine-print exemption.
+- Preserve project floors: Latin text at least 10 CSS pixels; CJK and mixed CJK text at least 12 CSS pixels. Use at least 16px-equivalent for primary reading text. Treat floors as limits, never default targets for supporting text.
+- Apply floors to labels, captions, badges, tables, chart annotations, placeholders, hints, and legal copy. Do not bypass them through transforms or pseudo-element substitutions.
+- Use a shared type scale, relative sizing where appropriate, and sufficient line height. Establish vertical rhythm through line heights and spacing tokens; align related baselines within their region. Let wrapped/localized text grow naturally, never crop or shrink it to force a page-wide baseline grid. De-emphasize through hierarchy, not illegibility.
+- Check computed sizes and rendered readability separately. Browser zoom is not a reason to reduce font sizes; preserve reading and operation when text is enlarged.
 
 ## Required Workflow
 
-Build or correct shared foundations before migrating repeated UI, and implement enter and leave transitions in the same change.
+1. **Inspect:** identify the requested task, available content, existing tokens, layout owners, components, sibling pages, and actual state/data sources. Preserve unaffected work.
+2. **Decide:** use the ten Swiss grid principles to write or update one compact design contract covering the task/primary action, content hierarchy/type scale, layout scopes and responsive behavior, reuse/variant map, and interaction/state/motion behavior. Reuse existing decisions; document only affected roles for a small edit, not nine separate planning documents.
+3. **Build:** fix shared foundations first, then compose the page. Implement a complete primary task path, including applicable loading, empty, error, success, and recovery states, before decorative polish.
+4. **Verify:** review the ten Swiss grid principles against real rendered UI, including sibling consumers of changed shared contracts. Inspect captions, pagination, dividers, and validation as carefully as headlines. Fix root causes and rerun failed checks rather than accumulating per-instance patches.
+5. **Report:** identify changed foundations, verified widths/states/task paths, remaining violations, and unavailable checks. Report a violation as component/selector + broken rule + observable evidence + smallest shared correction. Never claim a test ran when it did not.
 
-### Before Design or Editing
-
-1. Inspect the existing layout system, tokens, and component inventory.
-2. Define the alignment map: page grid, major edges, baselines, repeated gaps, and responsive changes.
-3. Define the component map: repeated semantic roles and the shared component responsible for each.
-4. Define the motion map: trigger, origin, enter state, settled state, leave state, duration, easing, and reduced-motion behavior.
-5. Define the hierarchy map: primary, secondary, supporting, and contextual information, including the size, weight, color, and spacing treatment for each level.
-6. Define the color-role map: accent/theme color, supporting color, background base, and any semantic state colors.
-7. Define the content map: the real copy and data available for each planned section. Mark sections without real content as omissions, not placeholders.
-8. Define the status map: for every proposed status indicator, the state source it reads, every state it can display, and the user decision each state change supports. Omit indicators whose state cannot vary while the interface is visible.
-9. Define the type scale: every named text role with its size, weight, and line height, never below the typographic floors.
-
-Do not begin visual polishing while any of these maps is ambiguous.
-
-### During Review
-
-Review the core laws and supporting visual rules independently:
-
-1. **Alignment audit:** identify the alignment partner or shared anchor for every visible element.
-2. **Reuse audit:** group similar elements and verify that each group resolves to one component contract.
-3. **Motion audit:** exercise open/close, mount/unmount, hover/rest, expand/collapse, route transitions, and responsive overlays in both directions.
-4. **Hierarchy audit:** verify that primary, secondary, supporting, and contextual information have intentional and consistent prominence.
-5. **Color audit:** verify semantic color roles, low-saturation large surfaces, bounded emphasis, and the absence of strongly divergent gradient fills.
-6. **Icon audit:** verify that every interface icon is a genuine vector icon with a consistent component contract and accessible name where required.
-7. **Content audit:** verify every section communicates real, supplied substance, with no invented statistics, endorsements, logos, or filler modules.
-8. **Status audit:** verify every status indicator reads a real state source and can vary during real use; confirm no self-evident readiness badge or decorative live light remains.
-9. **Type audit:** verify computed font sizes across every text class meet the typographic floors at every verified viewport and zoom level.
-
-Report violations with the affected component or selector, the broken law, observable evidence, and the smallest foundational correction. Prefer fixing a shared root cause over patching each occurrence.
+Use existing grid generators/auditors when actually present; otherwise use shared CSS, browser layout tools, and DOM measurements. Do not invent tool dependencies or build a new auditing framework for a small UI change.
 
 ## Interaction Baseline
 
-The three laws apply to interaction and accessibility states as well as static appearance.
-
-- Transient surfaces must expose the correct semantic role and accessible name.
-- Triggers must expose state and relationship with `aria-expanded`, `aria-controls`, or the equivalent framework contract when applicable.
-- Dialogs, Drawers, Sheets, menus, and Popovers must define initial focus, keyboard navigation, Escape behavior, outside-interaction behavior, and focus restoration.
-- Modal surfaces must trap focus, make the background inert, and own scroll while open.
-- Touch targets for primary interactive controls must be at least 44 by 44 CSS pixels unless an equivalent enlarged hit area is provided.
-- Status, loading, validation, and error feedback must not rely on color alone and must be announced when the user needs it.
-- Tables must preserve header relationships and define an intentional narrow-screen strategy such as prioritized columns, a controlled horizontal scroller, or a shared compact representation.
-- Overlays must remain inside the usable viewport and safe area without breaking their declared alignment origin.
-
-For alignment measurement, elements assigned to the same grid track, edge, or baseline should resolve within one CSS pixel at the tested viewport unless a documented optical-adjustment token applies. Repeated gaps must resolve to the same spacing token.
+- Use links for navigation and buttons for actions. Preserve native behavior, visible focus, associated labels, and logical keyboard order; never use a clickable generic container when a native control fits.
+- Make every visible control work or clearly explain its unavailability. Bind feedback to actual outcomes; never show successful saving after a timer while ignoring the result.
+- Keep familiar actions discoverable, labels specific, and essential controls usable without hover. Do not use placeholders as labels or tooltips as the sole explanation of required input.
+- Preserve entered values on validation/network failure; explain the problem at the relevant field or action and provide recovery. Prevent accidental duplicate submissions; use confirmation or undo proportionate to destructive risk, not for every routine action.
+- Preserve filters, selection, scroll, and navigation context where the task expects continuity. Support browser Back for navigational changes and avoid unexpected resets on resize or refresh of data.
+- Give transient surfaces correct semantics/names and trigger relationships such as `aria-expanded`/`aria-controls` when applicable. Define initial focus, keyboard behavior, Escape, outside interaction, and restoration according to the pattern, not one generic overlay handler.
+- Trap focus and make the background inert only for modal surfaces; manage their scrolling. Keep non-modal popovers and disclosures non-modal. Restore focus to the trigger or a logical successor if the trigger no longer exists.
+- Keep overlays and focus targets within the usable viewport/safe area, including with the virtual keyboard open. Allow anchor-aware flipping or shifting near edges; preserve the trigger relationship rather than clipping to obey a grid line.
+- Keep primary touch targets at least 44 by 44 CSS pixels, or provide an equivalent non-overlapping hit area. Keep error, loading, and status feedback understandable without color and announce important updates without flooding assistive technology.
+- Preserve table header relationships. Choose a shared narrow-screen strategy: prioritized columns, local horizontal scrolling, or an equivalent representation that retains required comparison and actions.
 
 ## Verification Gate
 
-Use a real rendered UI when available. Unless the product defines a stricter matrix, verify at:
+Verify in a rendered browser when available; a successful build or attractive screenshot alone is insufficient.
 
-- `375x812` mobile
-- `768x1024` tablet portrait
-- `1024x768` tablet landscape
-- `1440x1000` desktop
-- `1920x1080` wide desktop
-- `200%` zoom on the most information-dense view
+- **Widths:** test 375x812, 768x1024, 1024x768, 1440x1000, and 1920x1080 unless the product defines a stricter matrix. Also test intermediate widths, both sides of changed breakpoints, 200% enlargement, and reflow at 320 CSS pixels wide. Confine unavoidable two-dimensional scrolling to the relevant table/canvas, not the page.
+- **Content/states:** exercise long and localized labels, long unbroken values, missing content, loading, empty, error, populated, disabled, selected, and changing values. Check that intended shared edges and spacing remain consistent without clipped text or unexplained jumps.
+- **Tasks/interactions:** complete the primary task with keyboard and touch/pointer; test errors/retry, browser Back, focus-visible, open/close, rapid reversal, and reduced motion where relevant. Check the affected sibling pages, not just the edited instance.
+- **Evidence:** use screenshots for appearance, DOM geometry/computed styles for alignment/type, interaction traces for behavior, and accessibility checks for semantics/contrast. Use an overlay derived from the actual layout when auditing grids; a screenshot alone does not verify behavior.
 
-Exercise long labels, changing values, loading, empty, error, populated, disabled, selected, hover, focus-visible, and open/closed transient states. Use browser screenshots, DOM geometry or computed styles, keyboard focus traces, and an accessibility scanner as evidence when tools are available.
-
-The work does not pass until:
-
-- every visible element has an intentional alignment relationship
-- repeated semantic elements use one shared component contract with consistent states
-- every animated surface completes both entrance and reverse exit
-- closing, filtering, loading, validation, and responsive changes cause no unexplained layout jump
-- keyboard focus remains visible and returns to the correct trigger after transient UI closes
-- reduced-motion behavior preserves continuity without spatial travel
-- the Interaction Baseline holds: semantic roles, managed focus, Escape behavior, 44px touch targets, and feedback that does not rely on color alone
-- no Fail condition in any rule above is triggered at any verified viewport, zoom level, or state
-
-If any law or supporting visual rule fails, treat the UI as unfinished even when the page builds successfully or resembles a reference screenshot.
+Do not mark the UI complete while a required rule fails. Separate **verified**, **failed**, and **not tested** checks; when execution tools are unavailable, deliver the implementation and a clearly unverified checklist rather than claiming a pass.
