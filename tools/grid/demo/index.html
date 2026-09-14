@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KFL grid demo — compliant</title>
+<link rel="stylesheet" href="grid.css">
+<style>
+  body { margin: 0; font: 16px/1.6 system-ui, sans-serif; color: #1a1a1a; background: #fafafa; }
+  h1, h2 { line-height: 1.2; margin: 0 0 .5em; }
+  p { margin: 0 0 .75em; }
+  header { padding-block: 32px; }
+  main section, main aside { padding-block: 24px; }
+  footer { padding-block: 32px; }
+</style>
+</head>
+<body>
+  <header class="grid-container">
+    <div class="grid-row">
+      <div data-region="masthead">
+        <h1>KFL Grid Demo</h1>
+        <p>A reference page for the grid-first workflow: declare the grid in a manifest, generate the substrate, place every region on a track, then audit the rendered geometry.</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="grid-container">
+    <div class="grid-row">
+      <section data-region="content">
+        <h2>Why a manifest comes first</h2>
+        <p>The manifest is the contract. Columns, gutter, margin, and container are declared once per breakpoint, and the generator turns that declaration into tokens, layout classes, and the debug overlay. Elements placed later can only inherit from it.</p>
+        <p>An asymmetric 5/4 split is used here: the article is held near a 66-character measure, the rail takes its functional width, and three tracks stay empty because the container is wider than the content needs. Equal splits are reserved for genuinely parallel content.</p>
+      </section>
+      <aside data-region="sidebar">
+        <h2>Reading the audit</h2>
+        <p>The auditor measures rendered edges against the manifest's track lines and fails within one pixel of drift. A passing report is the acceptance evidence for Law 1.</p>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="grid-container">
+    <div class="grid-row">
+      <div data-region="colophon">
+        <p>Kasidia Frontend Law — tools/grid demo. Press Ctrl+G to toggle the overlay when the overlay markup is included.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

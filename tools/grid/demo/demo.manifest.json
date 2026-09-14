@@ -1,0 +1,57 @@
+{
+  "name": "kfl-grid-demo",
+  "overlayColor": "#e00087",
+  "breakpoints": [
+    {
+      "id": "mobile",
+      "minWidth": 0,
+      "columns": 4,
+      "gutter": 16,
+      "margin": 20,
+      "rationale": "single full-width column at phone width; gutter 16 is half a body line"
+    },
+    {
+      "id": "tablet",
+      "minWidth": 768,
+      "columns": 8,
+      "gutter": 20,
+      "margin": 24,
+      "rationale": "smallest count that expresses the 5/3 text-over-rail split"
+    },
+    {
+      "id": "desktop",
+      "minWidth": 1200,
+      "columns": 12,
+      "gutter": 20,
+      "margin": 40,
+      "container": 1440,
+      "rationale": "12 columns so the 5/4 text-over-rail pair leaves 3 breathing tracks; container stops at the measure ceiling"
+    }
+  ],
+  "regions": [
+    {
+      "role": "masthead",
+      "kind": "display",
+      "spans": { "mobile": 4, "tablet": 8, "desktop": 12 },
+      "rationale": "full-width display surface"
+    },
+    {
+      "role": "content",
+      "kind": "measure",
+      "spans": { "mobile": 4, "tablet": 5, "desktop": 5 },
+      "rationale": "reading text held inside the 45-75ch window; 5 of 12 lands near 66ch"
+    },
+    {
+      "role": "sidebar",
+      "kind": "aux",
+      "spans": { "mobile": 4, "tablet": 3, "desktop": 4 },
+      "rationale": "auxiliary rail at functional width beside the 5-column text column"
+    },
+    {
+      "role": "colophon",
+      "kind": "display",
+      "spans": { "mobile": 4, "tablet": 8, "desktop": 12 },
+      "rationale": "full-width structural close"
+    }
+  ]
+}

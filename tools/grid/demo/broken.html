@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KFL grid demo — violations</title>
+<link rel="stylesheet" href="grid.css">
+<style>
+  body { margin: 0; font: 16px/1.6 system-ui, sans-serif; color: #1a1a1a; background: #fafafa; }
+  h1, h2 { line-height: 1.2; margin: 0 0 .5em; }
+  p { margin: 0 0 .75em; }
+  header { padding-block: 32px; }
+  main section, main aside { padding-block: 24px; }
+  footer { padding-block: 32px; }
+</style>
+</head>
+<body>
+  <header class="grid-container">
+    <div class="grid-row">
+      <div data-region="masthead">
+        <h1>KFL Grid Demo — violations</h1>
+        <p>Same page as the compliant demo, with two typical AI placement mistakes injected: a nudging margin and a percentage width that pull region edges off the declared tracks.</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="grid-container">
+    <div class="grid-row">
+      <section data-region="content" style="margin-left: 13px">
+        <h2>Why a manifest comes first</h2>
+        <p>The margin-left nudges this region 13px off its track. This is the "arbitrary margin to look approximately aligned" pattern that Law 1 fails.</p>
+      </section>
+      <aside data-region="sidebar">
+        <h2>Reading the audit</h2>
+        <p>The auditor measures rendered edges against the manifest's track lines and fails within one pixel of drift.</p>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="grid-container">
+    <div class="grid-row">
+      <div data-region="colophon" style="width: 97%">
+        <p>Kasidia Frontend Law — tools/grid demo.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
