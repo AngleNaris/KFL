@@ -31,6 +31,7 @@ Review task visibility, layout relationships, type/readability, content density 
 Do not claim to measure DOM geometry or exact contrast from a generated image. Record exact copy, tokens,
 responsive rules, focus/motion behavior and approved exceptions as the image's supplementary contract.
 Resolve conflicts with approved behavior before asking for one combined visual-package approval.
+Apply [design review](design-review.md) here: classify evidence before reporting, preserve intentional choices and combine only unresolved design tradeoffs with the existing G2 approval.
 If the image or tool is unavailable, leave G2 blocked with a transferable brief; do not build a replacement UI.
 
 ## Implementation and evidence
@@ -45,6 +46,7 @@ Use browser geometry for alignment, real keyboard/pointer journeys for behavior,
 for data claims. Grid/surface CLI exit 0 proves only the configured measured checks, not G2 approval or G3 completion.
 Map evidence to the existing VIS/FLOW/DATA/ENG acceptance items and supported verification surfaces;
 keep the original delivery/review ledger as the sole completion record.
+Reapply the design review after shared-token/component fixes across affected pages; distinguish visual comparison from real interaction and persistence checks.
 
 ## Resume, change or repair
 

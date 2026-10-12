@@ -18,6 +18,8 @@ Use the [optional tool guide](references/tools.md) only when the project benefit
 These tools verify bounded properties, not image approval, general accessibility compliance, or working business journeys.
 See [sources and licenses](THIRD_PARTY.md) before redistributing the skill or its reference kit.
 
+Apply [evidence-led design review](references/design-review.md) before G2 approval and during implementation verification: triage evidence and false positives, group shared causes, preserve approved choices, and recheck affected pages. Reuse the existing approval route and ledger.
+
 Design in this order: **user task -> real content -> hierarchy and reading order -> layout -> component contracts -> styling and motion**. Never start by filling a screen with available components.
 
 Preserve the product's established language and the requested editing scope. Fix shared causes deliberately; do not redesign unrelated surfaces. Explain consequential exceptions through a user or content need, never through visual novelty alone.
@@ -115,7 +117,7 @@ Make motion optional and purposeful. When a transient surface animates in, defin
 ## Color System
 
 - Define semantic roles for accent/theme, supporting emphasis, background base, text, borders, focus, and real states. A supporting role need not introduce another vivid hue.
-- Keep large surfaces low in saturation and strong color bounded. Avoid large saturated fills and strongly divergent multihue gradients; use closely related hues when a gradient is justified.
+- Before a visual direction is approved, prefer low-saturation large surfaces and bounded strong color; closely related hues are a starting option for gradients. Preserve approved saturated fills and multihue gradients. Reconsider them only for a changed requirement or specific new evidence of a task/readability problem, following the existing design-review route.
 - Check contrast: at least 4.5:1 for normal text and 3:1 for qualifying large text and essential control/state cues. Do not assume a heading automatically qualifies as large text.
 - Reinforce hierarchy and labels rather than replacing them with color. Let state colors outrank the accent only when the urgency warrants it.
 
