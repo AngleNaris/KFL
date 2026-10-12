@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KFL Reference Kit — Square edge, human pace</title>
+<meta name="description" content="The Kasidia Frontend Law reference kit: a grid manifest, a verification loop and thirty-one components built on it. Every rectangle is square.">
+<script>try{var t=localStorage.getItem('kfl-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="grid/grid.css">
+<link rel="stylesheet" href="kit/tokens.css">
+<link rel="stylesheet" href="kit/base.css">
+<link rel="stylesheet" href="kit/icons.css">
+<link rel="stylesheet" href="kit/components.css">
+<link rel="stylesheet" href="site.css">
+<script defer src="kit/kit.js"></script>
+</head>
+<body>
+<a class="kfl-skip-link" href="#main">Skip to content</a>
+
+<header class="kfl-topbar site-header">
+  <div class="grid-container kfl-topbar__row">
+    <a class="kfl-topbar__brand" href="index.html" aria-current="page">KFL <span class="site-brand-long">Reference Kit</span></a>
+    <nav class="kfl-topbar__nav" aria-label="Examples">
+      <ul>
+        <li><a href="grid.html">Grid</a></li>
+        <li><a href="components.html">Components</a></li>
+        <li><a href="settings.html">Settings page</a></li>
+      </ul>
+    </nav>
+    <div class="kfl-topbar__end">
+      <fieldset class="kfl-segmented site-theme" data-size="sm" data-theme-control>
+        <legend class="kfl-visually-hidden">Color theme</legend>
+        <label><input type="radio" name="theme" value="system" checked>Auto</label>
+        <label><input type="radio" name="theme" value="light">Light</label>
+        <label><input type="radio" name="theme" value="dark">Dark</label>
+      </fieldset>
+      <button type="button" class="kfl-button" data-size="sm" data-variant="quiet" data-grid-toggle aria-pressed="false"><span class="kfl-icon" data-icon="columns" aria-hidden="true"></span>Grid</button>
+      <button type="button" class="kfl-button kfl-topbar__menu-button" data-size="sm" data-toggle aria-expanded="false" aria-controls="site-panel"><span class="kfl-icon" data-icon="menu" aria-hidden="true"></span>Menu</button>
+    </div>
+  </div>
+  <nav class="kfl-topbar__panel" id="site-panel" aria-label="Examples (menu)" hidden>
+    <div class="grid-container kfl-stack" data-gap="3">
+      <ul>
+        <li><a href="grid.html">Grid</a></li>
+        <li><a href="components.html">Components</a></li>
+        <li><a href="settings.html">Settings page</a></li>
+      </ul>
+      <fieldset class="kfl-segmented" data-size="sm" data-theme-control>
+        <legend class="kfl-visually-hidden">Color theme</legend>
+        <label><input type="radio" name="theme-panel" value="system" checked>Auto</label>
+        <label><input type="radio" name="theme-panel" value="light">Light</label>
+        <label><input type="radio" name="theme-panel" value="dark">Dark</label>
+      </fieldset>
+    </div>
+  </nav>
+</header>
+
+<div class="grid-overlay" aria-hidden="true"><div class="grid-overlay__inner"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+
+<main id="main" class="grid-container" tabindex="-1">
+
+  <header class="grid-row doc-masthead">
+    <p data-region="kicker" class="kfl-overline">Kasidia Frontend Law · Reference Kit</p>
+    <h1 data-region="title" class="kfl-display">Square edge,<br>human pace</h1>
+    <p data-region="lede" class="kfl-lead">A grid manifest, a verification loop and thirty-one components built on it. This square-corner reference kit demonstrates checks for annotated regions and selected surface properties; visual and behavior review remain necessary.</p>
+    <div data-region="section-aside" class="kfl-cluster" style="grid-column: 1 / -1">
+      <a class="kfl-button" href="components.html"><span class="kfl-icon" data-icon="grid" aria-hidden="true"></span>Open the components</a>
+      <a class="kfl-button" data-variant="secondary" href="grid.html"><span class="kfl-icon" data-icon="columns" aria-hidden="true"></span>See the grid</a>
+      <button type="button" class="kfl-button" data-variant="quiet" data-grid-toggle aria-pressed="false"><span class="kfl-icon" data-icon="eye" aria-hidden="true"></span>Toggle the column overlay</button>
+    </div>
+  </header>
+
+  <section class="grid-row doc-section" id="kit-map" aria-labelledby="kit-map-h">
+    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">01 · Files</p><h2 id="kit-map-h" class="kfl-h3">The kit, in three layers</h2></header>
+    <div data-region="section-text" class="kfl-prose">
+      <p>Tokens name raw values, base gives elements their defaults, components maps one contract per semantic role. The grid is generated from a manifest; its annotated regions can be checked in the browser against that contract.</p>
+    </div>
+    <div data-region="section-aside" class="doc-aside">
+      <div><h3 class="kfl-label">Rules</h3><ul><li>Change tokens, never component internals.</li><li>Copy <code>kit/</code> and <code>grid/</code>; leave <code>site.css</code> behind.</li></ul></div>
+    </div>
+    <div data-region="section-body" class="doc-body">
+      <div class="kfl-card-grid">
+        <article class="kfl-card">
+          <h3 class="kfl-h4"><span class="kfl-icon" data-icon="columns" aria-hidden="true"></span> Grid</h3>
+          <p>Three breakpoints, declared spans, generated CSS. The auditor measures the rendered page against the manifest — 12 tracks at this width.</p>
+          <a class="kfl-link" href="grid.html">Grid examples<span class="kfl-icon" data-icon="arrow-right" aria-hidden="true"></span></a>
+        </article>
+        <article class="kfl-card">
+          <h3 class="kfl-h4"><span class="kfl-icon" data-icon="grid" aria-hidden="true"></span> Components</h3>
+          <p>Thirty-one contracts with their states, keyboard behavior and usage rules. Hover, focus and press them; every state is visible and reachable.</p>
+          <a class="kfl-link" href="components.html">Component index<span class="kfl-icon" data-icon="arrow-right" aria-hidden="true"></span></a>
+        </article>
+        <article class="kfl-card">
+          <h3 class="kfl-h4"><span class="kfl-icon" data-icon="check" aria-hidden="true"></span> Verification</h3>
+          <p><code>node tools/grid/audit.mjs</code> and <code>node tools/surface/audit.mjs</code> catch what the eye misses: a column off by a pixel, a pill sneaking back in.</p>
+          <a class="kfl-link" href="grid.html#audit">Run the audits<span class="kfl-icon" data-icon="arrow-right" aria-hidden="true"></span></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid-row doc-section" id="principles" aria-labelledby="principles-h">
+    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">02 · Law</p><h2 id="principles-h" class="kfl-h3">What the kit enforces</h2></header>
+    <div data-region="section-text" class="kfl-prose">
+      <p>Three laws cover geometry, contract and motion. Around them: typography floors, a status rule, square-capped icons. Each is short enough to remember; the audits make them hard to break.</p>
+    </div>
+    <div data-region="section-aside" class="doc-aside">
+      <div><h3 class="kfl-label">Hard limits</h3><ul><li>No rounded rectangles — the only curve allowed is a true circle (the radio control).</li><li>12px text floor on CJK, 10px on Latin.</li><li>Hit area: 44px pointer, 40px keyboard.</li></ul></div>
+    </div>
+    <div data-region="section-body" class="doc-body">
+      <div class="specimen-grid">
+        <div class="specimen"><p class="specimen__label kfl-overline">Law 1</p><h3 class="kfl-h4">Align within the owning layout</h3><p class="kfl-small kfl-muted">Page frames, regions and component interiors have distinct alignment scopes. Share tracks with subgrid when needed; local layouts may use their own content-driven structure.</p></div>
+        <div class="specimen"><p class="specimen__label kfl-overline">Law 2</p><h3 class="kfl-h4">Similar elements reuse one contract</h3><p class="kfl-small kfl-muted">A button is a button everywhere. Variants are named attributes, states come from semantic markup — never from a parallel class that can drift.</p></div>
+        <div class="specimen"><p class="specimen__label kfl-overline">Law 3</p><h3 class="kfl-h4">Motion returns to its origin</h3><p class="kfl-small kfl-muted">Panels open from where the user was looking and give the space back when they close. Nothing slides off the page forever.</p></div>
+        <div class="specimen"><p class="specimen__label kfl-overline">Aesthetic</p><h3 class="kfl-h4">Hierarchy before decoration</h3><p class="kfl-small kfl-muted">Size steps of 1.25×, weight, then space. Color is the last lever, not the first. A rule line does the work a shadow would fake.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid-row doc-section" id="start" aria-labelledby="start-h">
+    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">03 · Start</p><h2 id="start-h" class="kfl-h3">Pick a page to explore</h2></header>
+    <div data-region="section-body" class="doc-body" style="grid-column: 1 / -1">
+      <div class="doc-index">
+        <ol>
+          <li><a href="grid.html"><span>01</span>Grid — breakpoints, subgrid, audit loop</a></li>
+          <li><a href="components.html"><span>02</span>Components — all 31 contracts</a></li>
+          <li><a href="settings.html"><span>03</span>Settings page — forms in the wild</a></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="grid-container grid-row">
+    <p>Kasidia Frontend Law — reference kit examples. Every rectangle has square corners; the radio control is the only circle.</p>
+  </div>
+</footer>
+
+</body>
+</html>

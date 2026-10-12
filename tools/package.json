@@ -1,0 +1,16 @@
+{
+  "name": "kfl-tools",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Verification tooling for Kasidia Frontend Law: grid manifest -> generate -> audit, plus a surface audit for square geometry, type floors, and target sizes.",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "grid:generate": "node grid/generate.mjs",
+    "grid:audit": "node grid/audit.mjs",
+    "surface:audit": "node surface/audit.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.63.0"
+  }
+}

@@ -7,6 +7,17 @@ description: "Design, implement, refactor, or review user-facing frontend UI wit
 
 Treat these laws and supporting rules as acceptance criteria, not a visual template.
 
+## Entry and authority
+
+When using Starcode (the customized mancode fork), read [workflow integration](references/workflow.md) first.
+`develop-with-visual-spec` owns the sequence **interaction approval → actual image generation and visual approval → implementation → evidence**.
+KFL supplies design and verification criteria within those stages; it does not authorize implementation, repeat approval questions, or create a second task ledger.
+For standalone use, agree the task's design/approval process before implementation. Preserve existing approvals for repairs that only restore their specified behavior or appearance.
+
+Use the [optional tool guide](references/tools.md) only when the project benefits from the bundled grid or surface checks.
+These tools verify bounded properties, not image approval, general accessibility compliance, or working business journeys.
+See [sources and licenses](THIRD_PARTY.md) before redistributing the skill or its reference kit.
+
 Design in this order: **user task -> real content -> hierarchy and reading order -> layout -> component contracts -> styling and motion**. Never start by filling a screen with available components.
 
 Preserve the product's established language and the requested editing scope. Fix shared causes deliberately; do not redesign unrelated surfaces. Explain consequential exceptions through a user or content need, never through visual novelty alone.
@@ -17,7 +28,7 @@ Give every visible element an intentional alignment relationship within its owni
 
 ### 10 Rules of Good Swiss Grid Design
 
-Source: [10 Rules of Good Swiss Grid Design](https://github.com/longplay45/swiss-grid-generator/blob/main/TEN_RULES_OF_GOOD_SWISS_GRID_DESIGN.md#10-rules-of-good-swiss-grid-design), as supplied by the user. In the spirit of Dieter Rams' 10 Principles of Good Design. The ten principles below retain the supplied wording with punctuation normalized; subsequent implementation requirements are Kasidia-specific UI adaptations.
+Source: [10 Rules of Good Swiss Grid Design](https://github.com/longplay45/swiss-grid-generator/blob/cca381a7254125a6ff0144c483ae72ba8e529c17/TEN_RULES_OF_GOOD_SWISS_GRID_DESIGN.md#10-rules-of-good-swiss-grid-design), as supplied by the user. In the spirit of Dieter Rams' 10 Principles of Good Design. The ten principles below retain the supplied wording with punctuation normalized; subsequent implementation requirements are Kasidia-specific UI adaptations.
 
 1. **Good Swiss Grid Design is systematic.** It begins with a clear, logical grid and follows it rigorously. Arbitrary placement is chaos.
 2. **Good Swiss Grid Design serves the content.** The grid is not decoration; it is infrastructure. It organizes information so the message becomes clear and accessible.
@@ -138,8 +149,8 @@ Make motion optional and purposeful. When a transient surface animates in, defin
 ## Required Workflow
 
 1. **Inspect:** identify the requested task, available content, existing tokens, layout owners, components, sibling pages, and actual state/data sources. Preserve unaffected work.
-2. **Decide:** use the ten Swiss grid principles to write or update one compact design contract covering the task/primary action, content hierarchy/type scale, layout scopes and responsive behavior, reuse/variant map, and interaction/state/motion behavior. Reuse existing decisions; document only affected roles for a small edit, not nine separate planning documents.
-3. **Build:** fix shared foundations first, then compose the page. Implement a complete primary task path, including applicable loading, empty, error, success, and recovery states, before decorative polish.
+2. **Decide:** use the ten Swiss grid principles to write or update one compact design contract covering the task/primary action, content hierarchy/type scale, layout scopes and responsive behavior, reuse/variant map, and interaction/state/motion behavior. Reuse existing decisions; document only affected roles for a small edit, not nine separate planning documents. In mancode, keep it in or linked from the existing bound `docs/` module plan.
+3. **Visual approval, then build:** in the integrated workflow, apply that contract to the actual image-generation inputs and inspect the generated pixels. Do not substitute this kit, an HTML prototype, a grid overlay, or a screenshot of implemented code for the required generated design. Missing image capability or inaccessible approved images blocks the affected UI slice. After G2 and the final implementation plan are confirmed, fix shared foundations first, then compose the page. Implement a complete primary task path, including applicable loading, empty, error, success, and recovery states, before decorative polish.
 4. **Verify:** review the ten Swiss grid principles against real rendered UI, including sibling consumers of changed shared contracts. Inspect captions, pagination, dividers, and validation as carefully as headlines. Fix root causes and rerun failed checks rather than accumulating per-instance patches.
 5. **Report:** identify changed foundations, verified widths/states/task paths, remaining violations, and unavailable checks. Report a violation as component/selector + broken rule + observable evidence + smallest shared correction. Never claim a test ran when it did not.
 

@@ -1,15 +1,15 @@
 # KFL Grid Tools
 
-Grid-first workflow tooling for Kasidia Frontend Law. The UI is never placed first:
-the grid is declared, generated, and audited, and only then do elements exist.
-The overlay draws the same tracks the layout uses — the pattern of the Swiss Grid
-reference site (swissgrid.posterhouse.org), automated.
+Optional manifest-based tooling for Kasidia Frontend Law. After logic, generated
+design images and the final implementation plan are approved, use this loop if
+the project selects this grid contract. Existing project layouts can use browser
+geometry checks instead. The overlay draws the tracks declared by the manifest.
 
 ## The four-step loop
 
 ### 1. Declare — write the manifest
 
-No element may be placed before this file exists. Columns, gutter, margin, and
+For this tool's grid contract, declare columns, gutter, margin, and
 container are declared once per breakpoint; regions are named roles with a span map.
 
 ```json
@@ -30,9 +30,9 @@ Fields inherit down the breakpoint list; the first breakpoint inherits the Swiss
 grid reference defaults (12 columns / 20px gutter / 40px margin / 1440px container).
 Other values are legal — the law is that each value is declared exactly once.
 
-Derive the numbers the way Law 1 "Deriving the Substrate" prescribes: body size
-first, reading regions inside the 45–75 character measure window, a width intent
-per role, then the smallest column count that expresses every required ratio. Each
+Derive values from Law 1's page, region and component scopes: real content,
+reading order and width needs first, then suitable tracks. The 45–75ch audit window
+is a fixed reading-text heuristic, not a universal CJK or application constraint. Each
 breakpoint and region carries a one-line `rationale`. Roles are annotated for the
 audit:
 
@@ -58,10 +58,13 @@ echoed back so the reasons stay visible in build output.
 
 - Layout regions are grid items annotated with `data-region="<role>"`, matching a
   manifest role.
-- Whitespace between regions is the gutter or empty tracks (`cs-N` start offsets).
-  Per-element margins that push regions into position are violations.
-- A nested grid that intentionally uses a different column count must declare it:
+- Page-grid sibling spacing is the gutter or explicitly declared empty tracks (`cs-N`).
+  Component padding and local gaps retain their own shared tokens; do not add empty
+  page tracks merely to imitate component padding.
+- A nested equal-track grid that intentionally uses a different column count declares it:
   `<div class="grid-row" data-grid-columns="3">`.
+- An independent local grid uses `data-grid="local"`; regions can omit page `spans`
+  and declare their own min/max bounds. The auditor checks their owning grid.
 - A documented optical adjustment may opt out with `data-grid-optical`; the auditor
   reports it as a named exemption rather than silently passing it.
 
@@ -72,7 +75,7 @@ node audit.mjs --manifest grid.manifest.json --html page.html --screenshot shots
 node audit.mjs --manifest grid.manifest.json --url http://localhost:5173 --json report.json
 ```
 
-Default viewports: one per activated breakpoint plus a container-fitting width.
+Default viewports: a phone width, both sides of each breakpoint, and a container-fitting width.
 Checks, all against the manifest numbers (±1px, per the Interaction Baseline):
 
 - every `[data-region]` left/right edge resolves to a track line
@@ -83,7 +86,9 @@ Checks, all against the manifest numbers (±1px, per the Interaction Baseline):
   1ch is measured live from the region's own typography, not estimated)
 - declared `min`/`max` bounds hold
 
-Exit code 0 = pass, 1 = violations. Treat the report the way the review section of
+Exit code 0 = configured geometry checks passed, 1 = violations, 2 = invalid input.
+No visible annotated regions is a failure, not a vacuous pass. Browser/environment
+errors are blocked checks, regardless of their process exit code. Treat the report the way the review section of
 KFL requires: fix the shared root cause (tokens, span map, or placement), never the
 symptom. Screenshots are captured with the overlay on and serve as visual evidence
 alongside the geometry report.

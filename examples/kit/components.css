@@ -1,0 +1,795 @@
+/* KFL reference kit — components
+   One contract per semantic role (KFL Law 2). Variants are named data-*
+   attributes; states come from semantic attributes — :disabled, :checked,
+   aria-selected, aria-current, aria-invalid, aria-busy, aria-expanded — never
+   from a parallel class, so what people see cannot drift from what assistive
+   technology hears. Every surface is square (see base.css). Load after base.css.
+
+   Contents
+    1 Button            10 Tag, count          19 List
+    2 Standalone link   11 Avatar              20 Card
+    3 Field and inputs  12 Alert               21 Description list
+    4 Choice controls   13 Toast               22 Progress, loader, skeleton
+    5 Segmented control 14 Dialog, drawer      23 Empty state
+    6 Slider            15 Menu                24 Steps
+    7 Tabs              16 Tooltip             25 Top bar, side nav
+    8 Breadcrumb        17 Disclosure          26 Form, error summary
+    9 Pagination        18 Table               27 Kbd, code, rules */
+
+/* Lets disclosures animate to their natural height (block-size: auto). */
+:root { interpolate-size: allow-keywords; }
+
+
+/* 1 Button ------------------------------------------------------------------
+   secondary (default) | primary | quiet | danger | danger-secondary
+   One primary per view or region: the strongest treatment marks the next step. */
+.kfl-button {
+  --_bg: transparent;
+  --_fg: var(--kfl-text);
+  --_edge: var(--kfl-line-strong);
+  --_hover-bg: var(--kfl-hover);
+  --_hover-edge: var(--_edge);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--kfl-space-2);
+  min-block-size: var(--kfl-control-md);
+  min-inline-size: var(--kfl-control-md);
+  padding: var(--kfl-space-2) var(--kfl-space-4);
+  border: var(--kfl-border) solid var(--_edge);
+  background: var(--_bg);
+  color: var(--_label, var(--_fg));
+  font-size: var(--kfl-fs-body);
+  line-height: var(--kfl-lh-small);
+  font-weight: var(--kfl-fw-medium);
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  transition: background-color var(--kfl-dur-state), border-color var(--kfl-dur-state), color var(--kfl-dur-state), translate var(--kfl-dur-state);
+}
+.kfl-button:hover { background: var(--_hover-bg); border-color: var(--_hover-edge); color: var(--_label, var(--_fg)); text-decoration: none; }
+.kfl-button:active { translate: 0 1px; }
+.kfl-button[data-variant="primary"] { --_bg: var(--kfl-action); --_fg: var(--kfl-on-action); --_edge: var(--kfl-action); --_hover-bg: var(--kfl-action-hover); --_hover-edge: var(--kfl-action-hover); }
+.kfl-button[data-variant="quiet"] { --_edge: transparent; }
+.kfl-button[data-variant="danger"] { --_bg: var(--kfl-danger); --_fg: var(--kfl-on-danger); --_edge: var(--kfl-danger); --_hover-bg: var(--kfl-danger-hover); --_hover-edge: var(--kfl-danger-hover); }
+.kfl-button[data-variant="danger-secondary"] { --_fg: var(--kfl-danger); --_edge: var(--kfl-danger); --_hover-bg: var(--kfl-danger-tint); }
+.kfl-button[data-size="sm"] { min-block-size: var(--kfl-control-sm); min-inline-size: var(--kfl-control-sm); padding: var(--kfl-space-1) var(--kfl-space-3); font-size: var(--kfl-fs-small); }
+.kfl-button[data-size="lg"] { min-block-size: var(--kfl-control-lg); min-inline-size: var(--kfl-control-lg); padding-inline: var(--kfl-space-5); }
+.kfl-button[data-icon-only] { padding: 0; }
+.kfl-button[data-block] { inline-size: 100%; }
+/* Disabled reads as inert, and nearby text says why (KFL Interaction Baseline). */
+.kfl-button:is(:disabled, [aria-disabled="true"]):not([aria-busy="true"]) {
+  --_bg: var(--kfl-sunken); --_fg: var(--kfl-text-disabled); --_edge: var(--kfl-rule);
+  --_hover-bg: var(--_bg); --_hover-edge: var(--_edge);
+  cursor: not-allowed; translate: none;
+}
+.kfl-button[data-variant="quiet"]:is(:disabled, [aria-disabled="true"]):not([aria-busy="true"]) { --_bg: transparent; --_edge: transparent; }
+/* Busy: the label keeps its width so nothing moves; a loader sits on top. */
+.kfl-button[aria-busy="true"] { --_label: transparent; cursor: progress; translate: none; }
+.kfl-button > .kfl-loader { position: absolute; inset: 0; margin: auto; color: var(--_fg); }
+.kfl-button:not([aria-busy="true"]) > .kfl-loader { display: none; }
+
+
+/* 2 Standalone link ---------------------------------------------------------
+   Outside running text a link still underlines; the arrow icon says "go". */
+.kfl-link { display: inline-flex; align-items: center; gap: var(--kfl-space-1); padding-block: max(0px, (var(--kfl-hit-min) - 1lh) / 2); font-weight: var(--kfl-fw-medium); }
+.kfl-link > .kfl-icon { transition: translate var(--kfl-dur-state) var(--kfl-ease-enter); }
+.kfl-link:hover > .kfl-icon[data-icon="arrow-right"] { translate: 0.125rem 0; }
+
+
+/* 3 Field and inputs --------------------------------------------------------
+   Anatomy, top to bottom: label, hint, control, error. The label is always
+   visible (placeholders are examples, never labels); the hint sits above the
+   control so an on-screen keyboard cannot cover it; errors appear after submit
+   and clear the moment the value becomes valid. Mark the optional minority. */
+.kfl-field { display: flex; flex-direction: column; gap: var(--kfl-space-2); min-inline-size: 0; }
+.kfl-field__label { font-size: var(--kfl-fs-small); line-height: var(--kfl-lh-small); font-weight: var(--kfl-fw-medium); }
+.kfl-field__optional { font-weight: var(--kfl-fw-regular); color: var(--kfl-text-3); }
+.kfl-field__hint { font-size: var(--kfl-fs-small); line-height: var(--kfl-lh-small); color: var(--kfl-text-2); }
+.kfl-field__error { display: flex; align-items: flex-start; gap: var(--kfl-space-2); font-size: var(--kfl-fs-small); line-height: var(--kfl-lh-small); font-weight: var(--kfl-fw-medium); color: var(--kfl-danger); }
+.kfl-field__error > .kfl-icon { --kfl-icon-size: 1rem; margin-block-start: 0.125rem; }
+.kfl-field__count { align-self: flex-end; font-size: var(--kfl-fs-small); line-height: var(--kfl-lh-small); color: var(--kfl-text-3); font-variant-numeric: tabular-nums; }
+.kfl-field__count[data-over] { color: var(--kfl-danger); font-weight: var(--kfl-fw-medium); }
+
+.kfl-input, .kfl-textarea, .kfl-select > select {
+  inline-size: 100%;
+  min-block-size: var(--kfl-control-md);
+  padding: 0 var(--kfl-space-3);
+  border: var(--kfl-border) solid var(--kfl-line);
+  background: var(--kfl-surface);
+  color: var(--kfl-text);
+  font-size: var(--kfl-fs-body); /* 16px: also stops mobile browsers zooming in on focus */
+  line-height: var(--kfl-lh-body);
+  transition: border-color var(--kfl-dur-state), box-shadow var(--kfl-dur-state);
+}
+.kfl-textarea { display: block; padding-block: var(--kfl-space-2); min-block-size: calc(4lh + var(--kfl-space-4) + 2px); max-block-size: 24rem; resize: vertical; field-sizing: content; }
+:is(.kfl-input, .kfl-textarea, .kfl-select > select):hover { border-color: var(--kfl-line-strong); }
+:is(.kfl-input, .kfl-textarea, .kfl-select > select):focus { outline: var(--kfl-focus-width) solid var(--kfl-focus); outline-offset: 0; border-color: var(--kfl-focus); }
+:is(.kfl-input, .kfl-textarea)::placeholder { color: var(--kfl-text-3); opacity: 1; }
+/* Invalid: red edge plus an inner bar — a shape cue that does not move the text. */
+:is(.kfl-input, .kfl-textarea, .kfl-select > select)[aria-invalid="true"] { border-color: var(--kfl-danger); box-shadow: inset 0.25rem 0 0 var(--kfl-danger); }
+:is(.kfl-input, .kfl-textarea, .kfl-select > select):disabled { background: var(--kfl-sunken); color: var(--kfl-text-disabled); border-color: var(--kfl-rule); }
+:is(.kfl-input, .kfl-textarea):read-only:not(:disabled) { background: transparent; border-color: var(--kfl-rule); }
+/* Width tells people how much to type: a postcode field is not a paragraph. */
+.kfl-input[data-width="xs"] { max-inline-size: calc(6ch + 2 * var(--kfl-space-3) + 2px); }
+.kfl-input[data-width="sm"] { max-inline-size: calc(12ch + 2 * var(--kfl-space-3) + 2px); }
+.kfl-input[data-width="md"] { max-inline-size: calc(24ch + 2 * var(--kfl-space-3) + 2px); }
+:is(.kfl-select, .kfl-input-group)[data-width="md"] { max-inline-size: calc(24ch + 4 * var(--kfl-space-3) + var(--kfl-icon-size)); }
+.kfl-input[type="search"]::-webkit-search-cancel-button { appearance: none; }
+
+.kfl-input-group { display: flex; align-items: stretch; min-inline-size: 0; }
+.kfl-input-group > .kfl-input { flex: 1; min-inline-size: 0; }
+.kfl-input-group > * + * { margin-inline-start: calc(-1 * var(--kfl-border)); }
+.kfl-input-group > :is(:focus, :hover) { position: relative; z-index: 1; }
+.kfl-input-group__addon { display: flex; align-items: center; padding: 0 var(--kfl-space-3); border: var(--kfl-border) solid var(--kfl-line); background: var(--kfl-sunken); color: var(--kfl-text-2); white-space: nowrap; }
+
+/* Search: magnifier at the start, our own clear button at the end. */
+.kfl-search { position: relative; display: block; }
+.kfl-search > .kfl-icon { position: absolute; inset-block: 0; inset-inline-start: var(--kfl-space-3); margin-block: auto; color: var(--kfl-text-3); pointer-events: none; }
+.kfl-search > .kfl-input { padding-inline: calc(var(--kfl-space-3) * 2 + var(--kfl-icon-size)); }
+.kfl-search > .kfl-button { position: absolute; inset-block: 0; inset-inline-end: 0; margin-block: auto; min-block-size: 100%; }
+.kfl-search:has(.kfl-input:placeholder-shown) > .kfl-button { display: none; }
+
+.kfl-select { position: relative; display: block; }
+.kfl-select > select { appearance: none; padding-inline-end: calc(var(--kfl-space-3) * 2 + var(--kfl-icon-size)); cursor: pointer; }
+.kfl-select::after {
+  content: ""; position: absolute; inset-block: 0; inset-inline-end: var(--kfl-space-3); margin-block: auto;
+  inline-size: var(--kfl-icon-size); block-size: var(--kfl-icon-size);
+  background: currentColor; mask: var(--kfl-icon-chevron-down) center / contain no-repeat; pointer-events: none;
+}
+/* Where the platform lets us draw the picker too, draw it square. */
+@supports (appearance: base-select) {
+  .kfl-select > select, .kfl-select > select::picker(select) { appearance: base-select; }
+  .kfl-select > select { display: flex; align-items: center; }
+  .kfl-select > select::picker-icon { display: none; }
+  .kfl-select > select::picker(select) {
+    margin-block: var(--kfl-space-1); padding-block: var(--kfl-space-1);
+    border: var(--kfl-border) solid var(--kfl-line-strong); background: var(--kfl-surface); color: var(--kfl-text);
+    box-shadow: var(--kfl-elevation) var(--kfl-elevation) 0 var(--kfl-shadow);
+  }
+  .kfl-select option { display: flex; align-items: center; gap: var(--kfl-space-3); min-block-size: var(--kfl-control-md); padding: 0 var(--kfl-space-4); }
+  .kfl-select option:is(:hover, :focus-visible) { background: var(--kfl-hover); }
+  .kfl-select option:focus-visible { outline-offset: calc(-1 * var(--kfl-focus-width)); }
+  .kfl-select option::checkmark {
+    content: ""; order: 1; margin-inline-start: auto; inline-size: 1rem; block-size: 1rem;
+    background: currentColor; mask: var(--kfl-icon-check) center / contain no-repeat;
+  }
+}
+
+
+/* 4 Choice controls ---------------------------------------------------------
+   Square checkbox = any number; circle radio = exactly one. The radio is the
+   kit's single sanctioned curve: its shape is the convention people rely on.
+   Switches apply immediately; checkboxes in a form wait for its submit button. */
+.kfl-choice {
+  display: flex; align-items: flex-start; gap: var(--kfl-space-3);
+  min-block-size: var(--kfl-hit-min);
+  padding-block: max(0px, (var(--kfl-hit-min) - var(--kfl-lh-body)) / 2);
+}
+.kfl-choice[data-control="end"] { justify-content: space-between; }
+.kfl-choice__text { display: flex; flex-direction: column; }
+.kfl-choice__hint { font-size: var(--kfl-fs-small); line-height: var(--kfl-lh-small); color: var(--kfl-text-2); }
+.kfl-choice:has(:disabled) { color: var(--kfl-text-disabled); cursor: not-allowed; }
+.kfl-choice:has(:disabled) .kfl-choice__hint { color: var(--kfl-text-disabled); }
+
+.kfl-checkbox, .kfl-radio {
+  appearance: none; flex: none; display: inline-grid; place-content: center;
+  inline-size: 1.25rem; block-size: 1.25rem; margin: calc((var(--kfl-lh-body) - 1.25rem) / 2) 0 0;
+  border: var(--kfl-border-strong) solid var(--kfl-line); background: var(--kfl-surface);
+  transition: background-color var(--kfl-dur-state), border-color var(--kfl-dur-state);
+}
+.kfl-checkbox::before {
+  content: ""; inline-size: 1rem; block-size: 1rem; background: var(--kfl-on-accent);
+  mask: var(--kfl-icon-check) center / contain no-repeat; scale: 0;
+  transition: scale var(--kfl-dur-state) var(--kfl-ease-enter);
+}
+.kfl-checkbox:is(:checked, :indeterminate) { background: var(--kfl-accent); border-color: var(--kfl-accent); }
+.kfl-checkbox:is(:checked, :indeterminate)::before { scale: 1; }
+.kfl-checkbox:indeterminate::before { mask-image: var(--kfl-icon-minus); }
+.kfl-radio { border-radius: 50%; }
+.kfl-radio::before { content: ""; inline-size: 0.5rem; block-size: 0.5rem; border-radius: 50%; background: var(--kfl-accent); scale: 0; transition: scale var(--kfl-dur-state) var(--kfl-ease-enter); }
+.kfl-radio:checked { border-color: var(--kfl-accent); }
+.kfl-radio:checked::before { scale: 1; }
+.kfl-choice:hover > :is(.kfl-checkbox, .kfl-radio):not(:checked, :indeterminate, :disabled) { border-color: var(--kfl-line-strong); }
+:is(.kfl-checkbox, .kfl-radio)[aria-invalid="true"] { border-color: var(--kfl-danger); }
+:is(.kfl-checkbox, .kfl-radio):disabled { background: var(--kfl-sunken); border-color: var(--kfl-rule); }
+.kfl-checkbox:disabled:is(:checked, :indeterminate) { background: var(--kfl-text-disabled); border-color: var(--kfl-text-disabled); }
+
+.kfl-switch {
+  appearance: none; flex: none; position: relative;
+  inline-size: 2.75rem; block-size: 1.5rem; margin: calc((var(--kfl-lh-body) - 1.5rem) / 2) 0 0;
+  border: var(--kfl-border-strong) solid var(--kfl-line); background: var(--kfl-surface);
+  transition: background-color var(--kfl-dur-state), border-color var(--kfl-dur-state);
+}
+.kfl-switch::before {
+  content: ""; position: absolute; inset-block: 0.125rem; inset-inline-start: 0.125rem; inline-size: 1rem;
+  background: var(--kfl-line);
+  transition: translate var(--kfl-dur-state) var(--kfl-ease-enter), background-color var(--kfl-dur-state);
+}
+.kfl-switch:checked { background: var(--kfl-accent); border-color: var(--kfl-accent); }
+.kfl-switch:checked::before { translate: 1.25rem 0; background: var(--kfl-on-accent); }
+.kfl-switch:checked:dir(rtl)::before { translate: -1.25rem 0; }
+.kfl-choice:hover > .kfl-switch:not(:checked, :disabled) { border-color: var(--kfl-line-strong); }
+.kfl-switch:disabled { background: var(--kfl-sunken); border-color: var(--kfl-rule); }
+.kfl-switch:disabled::before { background: var(--kfl-rule); }
+
+.kfl-fieldset { display: flex; flex-direction: column; gap: var(--kfl-space-2); }
+.kfl-fieldset > legend { margin-block-end: var(--kfl-space-2); font-size: var(--kfl-fs-small); line-height: var(--kfl-lh-small); font-weight: var(--kfl-fw-medium); }
+.kfl-fieldset > legend + .kfl-field__hint { margin-block-start: calc(-1 * var(--kfl-space-2)); }
+
+
+/* 5 Segmented control -------------------------------------------------------
+   A radio group drawn as joined segments: switches a view or a mode in place. */
+.kfl-segmented { display: inline-flex; flex-wrap: wrap; }
+.kfl-segmented > legend { padding: 0; }
+.kfl-segmented > label {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; gap: var(--kfl-space-2);
+  min-block-size: var(--kfl-control-md); padding: 0 var(--kfl-space-4);
+  border: var(--kfl-border) solid var(--kfl-line-strong); color: var(--kfl-text); font-weight: var(--kfl-fw-medium);
+  transition: background-color var(--kfl-dur-state), color var(--kfl-dur-state);
+}
+.kfl-segmented > label + label { margin-inline-start: calc(-1 * var(--kfl-border)); }
+.kfl-segmented input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+.kfl-segmented > label:hover:not(:has(:checked)) { background: var(--kfl-hover); }
+.kfl-segmented > label:has(:checked) { background: var(--kfl-inverse); color: var(--kfl-on-inverse); border-color: var(--kfl-inverse); z-index: 1; }
+.kfl-segmented > label:has(:focus-visible) { outline: var(--kfl-focus-width) solid var(--kfl-focus); outline-offset: var(--kfl-focus-offset); z-index: 2; }
+.kfl-segmented[data-size="sm"] > label { min-block-size: var(--kfl-control-sm); padding-inline: var(--kfl-space-3); font-size: var(--kfl-fs-small); }
+
+
+/* 6 Slider ------------------------------------------------------------------
+   Native range input: keyboard, touch and semantics come free. kit.js keeps
+   --_pct in step with the value so the filled part tracks the thumb. */
+.kfl-slider { appearance: none; display: block; inline-size: 100%; block-size: var(--kfl-hit-min); margin: 0; background: transparent; cursor: pointer; }
+.kfl-slider::-webkit-slider-runnable-track { block-size: 0.25rem; background: linear-gradient(to right, var(--kfl-accent) var(--_pct, 50%), var(--kfl-line) var(--_pct, 50%)); }
+.kfl-slider::-webkit-slider-thumb { appearance: none; inline-size: 1rem; block-size: 1.5rem; margin-block-start: -0.625rem; border: var(--kfl-border-strong) solid var(--kfl-surface); background: var(--kfl-action); }
+.kfl-slider::-moz-range-track { block-size: 0.25rem; background: var(--kfl-line); }
+.kfl-slider::-moz-range-progress { block-size: 0.25rem; background: var(--kfl-accent); }
+.kfl-slider::-moz-range-thumb { inline-size: 0.75rem; block-size: 1.25rem; border: var(--kfl-border-strong) solid var(--kfl-surface); border-radius: 0; background: var(--kfl-action); }
+.kfl-slider:focus-visible { outline-offset: var(--kfl-space-1); }
+.kfl-slider-field { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: var(--kfl-space-4); }
+.kfl-slider-field > output { min-inline-size: 4ch; text-align: end; font-variant-numeric: tabular-nums; font-weight: var(--kfl-fw-medium); }
+
+
+/* 7 Tabs --------------------------------------------------------------------
+   Peer views of one object. Arrow keys move between tabs (kit.js); the selected
+   tab is marked by weight and an accent bar, not by color alone. */
+.kfl-tabs__list { display: flex; overflow-x: auto; border-block-end: var(--kfl-border) solid var(--kfl-rule); scrollbar-width: thin; }
+.kfl-tab {
+  position: relative; display: inline-flex; align-items: center; gap: var(--kfl-space-2); flex: none;
+  min-block-size: var(--kfl-control-md); padding: 0 var(--kfl-space-3);
+  border: 0; background: none; color: var(--kfl-text-2); font-weight: var(--kfl-fw-medium); white-space: nowrap;
+}
+.kfl-tab::after { content: ""; position: absolute; inset-inline: 0; inset-block-end: 0; block-size: 0.1875rem; background: transparent; transition: background-color var(--kfl-dur-state); }
+.kfl-tab:hover { color: var(--kfl-text); }
+.kfl-tab:hover::after { background: var(--kfl-rule); }
+.kfl-tab[aria-selected="true"] { color: var(--kfl-text); }
+.kfl-tab[aria-selected="true"]::after { background: var(--kfl-accent); }
+.kfl-tab:focus-visible { outline-offset: calc(-1 * var(--kfl-focus-width)); }
+.kfl-tabs__panel { padding-block-start: var(--kfl-space-5); }
+.kfl-tabs__panel:focus-visible { outline-offset: var(--kfl-space-2); }
+
+
+/* 8 Breadcrumb --------------------------------------------------------------
+   For hierarchies deeper than two levels. The last item is the current page. */
+.kfl-breadcrumb ol { display: flex; flex-wrap: wrap; align-items: center; margin: 0; padding: 0; list-style: none; font-size: var(--kfl-fs-small); line-height: var(--kfl-lh-small); }
+.kfl-breadcrumb li { display: inline-flex; align-items: center; color: var(--kfl-text-2); }
+.kfl-breadcrumb li + li::before { content: ""; inline-size: 1rem; block-size: 1rem; margin-inline: var(--kfl-space-1); background: var(--kfl-text-3); mask: var(--kfl-icon-chevron-right) center / contain no-repeat; }
+.kfl-breadcrumb a { display: inline-block; padding-block: max(0.125rem, (var(--kfl-hit-min) - 1lh) / 2); color: var(--kfl-text-2); text-decoration-color: var(--kfl-line); }
+.kfl-breadcrumb a:hover { color: var(--kfl-text); text-decoration-color: currentColor; }
+.kfl-breadcrumb [aria-current="page"] { color: var(--kfl-text); font-weight: var(--kfl-fw-medium); }
+
+
+/* 9 Pagination --------------------------------------------------------------
+   Always label Previous/Next in words; say where the reader is ("21–40 of 312").
+   Narrow screens keep Previous, Next and the position, and drop the page list. */
+.kfl-pagination { display: flex; flex-wrap: wrap; align-items: center; gap: var(--kfl-space-2) var(--kfl-space-4); }
+.kfl-pagination__summary { margin-inline-end: auto; color: var(--kfl-text-2); font-size: var(--kfl-fs-small); font-variant-numeric: tabular-nums; }
+.kfl-pagination__pages { display: flex; flex-wrap: wrap; gap: var(--kfl-space-1); margin: 0; padding: 0; list-style: none; }
+.kfl-pagination :is(a, [aria-current="page"], [aria-disabled="true"]) {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--kfl-space-2);
+  min-inline-size: var(--kfl-control-md); min-block-size: var(--kfl-control-md); padding: 0 var(--kfl-space-3);
+  border: var(--kfl-border) solid transparent; color: var(--kfl-text); font-weight: var(--kfl-fw-medium);
+  text-decoration: none; font-variant-numeric: tabular-nums;
+}
+.kfl-pagination a:hover { border-color: var(--kfl-line-strong); }
+.kfl-pagination [aria-current="page"] { background: var(--kfl-inverse); color: var(--kfl-on-inverse); }
+.kfl-pagination [aria-disabled="true"] { color: var(--kfl-text-disabled); }
+.kfl-pagination__gap { display: inline-grid; place-content: center; min-inline-size: var(--kfl-control-sm); color: var(--kfl-text-3); }
+.kfl-pagination__status { display: none; font-variant-numeric: tabular-nums; }
+@media (width < 48rem) {
+  .kfl-pagination__pages { display: none; }
+  .kfl-pagination__status { display: inline; }
+}
+
+
+/* 10 Tag, count -------------------------------------------------------------
+   Tags label; they are not buttons (no border, no hover). Tone always comes with
+   words, and the square mark is a second cue besides hue. */
+.kfl-tag {
+  --_tone: var(--kfl-text-3); --_tint: var(--kfl-sunken);
+  display: inline-flex; align-items: center; gap: var(--kfl-space-2); vertical-align: middle;
+  min-block-size: 1.5rem; padding: 0 var(--kfl-space-2);
+  background: var(--_tint); color: var(--kfl-text);
+  font-size: var(--kfl-fs-caption); line-height: var(--kfl-lh-caption); font-weight: var(--kfl-fw-medium); white-space: nowrap;
+}
+.kfl-tag[data-tone]::before { content: ""; flex: none; inline-size: 0.5rem; block-size: 0.5rem; background: var(--_tone); }
+.kfl-tag[data-tone="info"] { --_tone: var(--kfl-accent); --_tint: var(--kfl-accent-tint); }
+.kfl-tag[data-tone="success"] { --_tone: var(--kfl-success); --_tint: var(--kfl-success-tint); }
+.kfl-tag[data-tone="warning"] { --_tone: var(--kfl-warning); --_tint: var(--kfl-warning-tint); }
+.kfl-tag[data-tone="danger"] { --_tone: var(--kfl-danger); --_tint: var(--kfl-danger-tint); }
+/* A removable tag (an applied filter): the remove control names what it removes. */
+.kfl-tag:has(> .kfl-tag__remove) { padding-inline-end: 0; }
+.kfl-tag__remove { position: relative; display: inline-grid; place-content: center; inline-size: 1.5rem; block-size: 1.5rem; padding: 0; border: 0; background: none; color: var(--kfl-text-2); }
+.kfl-tag__remove::after { content: ""; position: absolute; inset: min(0px, (1.5rem - var(--kfl-hit-min)) / 2); }
+.kfl-tag__remove:hover { background: var(--kfl-hover); color: var(--kfl-text); }
+.kfl-tag__remove > .kfl-icon { --kfl-icon-size: 1rem; }
+
+.kfl-count {
+  display: inline-grid; place-content: center; min-inline-size: 1.25rem; block-size: 1.25rem; padding: 0 var(--kfl-space-1);
+  background: var(--kfl-sunken); color: var(--kfl-text-2);
+  font-size: var(--kfl-fs-caption); line-height: 1; font-weight: var(--kfl-fw-medium); font-variant-numeric: tabular-nums;
+}
+:is([aria-selected="true"], [aria-current="page"]) .kfl-count { background: var(--kfl-accent-tint); color: var(--kfl-accent); }
+
+
+/* 11 Avatar -------------------------------------------------------------------
+   Square, with initials when there is no picture. Hide it from assistive
+   technology when the person's name is already next to it. */
+.kfl-avatar {
+  display: inline-grid; place-content: center; flex: none; overflow: hidden;
+  inline-size: 2rem; block-size: 2rem; background: var(--kfl-sunken); color: var(--kfl-text-2);
+  font-size: var(--kfl-fs-caption); font-weight: var(--kfl-fw-bold); text-transform: uppercase;
+}
+.kfl-avatar[data-size="lg"] { inline-size: 3rem; block-size: 3rem; font-size: var(--kfl-fs-small); }
+.kfl-avatar > img { inline-size: 100%; block-size: 100%; object-fit: cover; }
+
+
+/* 12 Alert ------------------------------------------------------------------
+   Inline and persistent: for conditions the reader must notice or act on.
+   A heavy start rule, an icon and a title carry the tone together. */
+.kfl-alert {
+  --_tone: var(--kfl-accent); --_tint: var(--kfl-accent-tint);
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; column-gap: var(--kfl-space-3);
+  padding: var(--kfl-space-4); border-inline-start: var(--kfl-rule-heavy) solid var(--_tone);
+  background: var(--_tint); color: var(--kfl-text);
+}
+.kfl-alert[data-tone="success"] { --_tone: var(--kfl-success); --_tint: var(--kfl-success-tint); }
+.kfl-alert[data-tone="warning"] { --_tone: var(--kfl-warning); --_tint: var(--kfl-warning-tint); }
+.kfl-alert[data-tone="danger"] { --_tone: var(--kfl-danger); --_tint: var(--kfl-danger-tint); }
+.kfl-alert > .kfl-icon { margin-block-start: calc((var(--kfl-lh-body) - var(--kfl-icon-size)) / 2); color: var(--_tone); }
+.kfl-alert__body { display: flex; flex-direction: column; gap: var(--kfl-space-1); min-inline-size: 0; }
+.kfl-alert__title { font-weight: var(--kfl-fw-bold); }
+.kfl-alert__actions { display: flex; flex-wrap: wrap; gap: var(--kfl-space-2) var(--kfl-space-5); margin-block-start: var(--kfl-space-2); }
+.kfl-alert > .kfl-button[data-icon-only] { margin: calc((var(--kfl-lh-body) - var(--kfl-control-md)) / 2) calc(-1 * var(--kfl-space-2)) 0 0; }
+
+
+/* 13 Toast ------------------------------------------------------------------
+   Brief confirmation of something that already happened, ideally with Undo.
+   Never the only place an error that needs action is reported. It rises from
+   the bottom edge and returns there (KFL Law 3); hovering or focusing pauses it. */
+.kfl-toaster {
+  position: fixed; z-index: var(--kfl-z-toast);
+  inset-block-end: var(--kfl-space-5); inset-inline: var(--page-margin, var(--kfl-space-4));
+  display: flex; flex-direction: column; align-items: flex-start; gap: var(--kfl-space-2); pointer-events: none;
+}
+.kfl-toast {
+  display: flex; align-items: center; gap: var(--kfl-space-2);
+  inline-size: min(28rem, 100%); min-block-size: var(--kfl-control-lg);
+  padding: var(--kfl-space-1) var(--kfl-space-1) var(--kfl-space-1) var(--kfl-space-4);
+  background: var(--kfl-inverse); color: var(--kfl-on-inverse); pointer-events: auto;
+  box-shadow: var(--kfl-elevation) var(--kfl-elevation) 0 var(--kfl-shadow);
+  transition: opacity var(--kfl-dur-panel) var(--kfl-ease-exit), translate var(--kfl-dur-panel) var(--kfl-ease-exit), display var(--kfl-dur-panel) allow-discrete;
+}
+.kfl-toast:not([hidden]) { transition-timing-function: var(--kfl-ease-enter); }
+.kfl-toast[hidden] { opacity: 0; translate: 0 var(--kfl-travel); }
+@starting-style { .kfl-toast:not([hidden]) { opacity: 0; translate: 0 var(--kfl-travel); } }
+.kfl-toast__message { flex: 1; padding-block: var(--kfl-space-2); }
+.kfl-toast .kfl-button { --_fg: var(--kfl-on-inverse); --_edge: transparent; --_hover-bg: color-mix(in srgb, var(--kfl-on-inverse) 16%, transparent); }
+.kfl-toast__action { text-decoration: underline; text-underline-offset: 0.2em; }
+.kfl-toast :focus-visible { outline-color: var(--kfl-on-inverse); }
+
+
+/* 14 Dialog, drawer -----------------------------------------------------------
+   Native <dialog> with showModal(): focus containment, inert background and
+   Escape come from the platform. Dialogs are for short, blocking decisions;
+   long tasks get a page. The dialog rises from its center line and sinks back;
+   the drawer slides from the end edge and returns there (KFL Law 3). */
+.kfl-dialog {
+  inline-size: min(32rem, 100% - 2 * var(--kfl-space-4));
+  max-inline-size: none; max-block-size: min(44rem, 100% - 2 * var(--kfl-space-4));
+  padding: 0; border: var(--kfl-border) solid var(--kfl-line-strong);
+  background: var(--kfl-surface); color: var(--kfl-text);
+  box-shadow: var(--kfl-elevation) var(--kfl-elevation) 0 var(--kfl-shadow);
+  opacity: 0; translate: 0 var(--kfl-travel);
+  transition: opacity var(--kfl-dur-panel) var(--kfl-ease-exit), translate var(--kfl-dur-panel) var(--kfl-ease-exit),
+    overlay var(--kfl-dur-panel) allow-discrete, display var(--kfl-dur-panel) allow-discrete;
+}
+.kfl-dialog[open] { display: flex; flex-direction: column; opacity: 1; translate: 0 0; transition-timing-function: var(--kfl-ease-enter); }
+@starting-style { .kfl-dialog[open] { opacity: 0; translate: 0 var(--kfl-travel); } }
+.kfl-dialog::backdrop {
+  background: var(--kfl-scrim); opacity: 0;
+  transition: opacity var(--kfl-dur-panel) var(--kfl-ease-exit), overlay var(--kfl-dur-panel) allow-discrete, display var(--kfl-dur-panel) allow-discrete;
+}
+.kfl-dialog[open]::backdrop { opacity: 1; transition-timing-function: var(--kfl-ease-enter); }
+@starting-style { .kfl-dialog[open]::backdrop { opacity: 0; } }
+.kfl-dialog__frame { display: flex; flex-direction: column; flex: 1 1 auto; min-block-size: 0; }
+.kfl-dialog__header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--kfl-space-4); padding: var(--kfl-space-5) var(--kfl-space-5) 0; }
+.kfl-dialog__header > .kfl-button[data-icon-only] { flex: none; margin: calc((var(--kfl-lh-h3) - var(--kfl-control-md)) / 2) calc(-1 * var(--kfl-space-3)) 0 0; }
+.kfl-dialog__body { display: flex; flex-direction: column; gap: var(--kfl-space-4); flex: 1 1 auto; min-block-size: 0; padding: var(--kfl-space-4) var(--kfl-space-5); overflow-y: auto; }
+.kfl-dialog__footer { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--kfl-space-3); padding: var(--kfl-space-2) var(--kfl-space-5) var(--kfl-space-5); }
+@media (width < 30rem) {
+  /* Stacked on phones: the confirming action on top, full width, reachable by thumb. */
+  .kfl-dialog__footer { flex-direction: column-reverse; }
+  .kfl-dialog__footer > .kfl-button { inline-size: 100%; }
+}
+
+.kfl-drawer {
+  --_from: 100%;
+  inset-block: 0; margin: 0 0 0 auto; inline-size: min(28rem, 100%); block-size: 100dvh;
+  max-inline-size: 100%; max-block-size: 100dvh;
+  padding: 0; border: 0; border-inline-start: var(--kfl-border) solid var(--kfl-line-strong);
+  background: var(--kfl-surface); color: var(--kfl-text);
+  translate: var(--_from) 0;
+  transition: translate var(--kfl-dur-panel) var(--kfl-ease-exit), opacity var(--kfl-dur-panel) var(--kfl-ease-exit),
+    overlay var(--kfl-dur-panel) allow-discrete, display var(--kfl-dur-panel) allow-discrete;
+}
+.kfl-drawer:dir(rtl) { --_from: -100%; margin: 0 auto 0 0; }
+.kfl-drawer[open] { display: flex; flex-direction: column; translate: 0 0; transition-timing-function: var(--kfl-ease-enter); }
+@starting-style { .kfl-drawer[open] { translate: var(--_from) 0; } }
+.kfl-drawer::backdrop { background: var(--kfl-scrim); opacity: 0; transition: opacity var(--kfl-dur-panel) var(--kfl-ease-exit), overlay var(--kfl-dur-panel) allow-discrete, display var(--kfl-dur-panel) allow-discrete; }
+.kfl-drawer[open]::backdrop { opacity: 1; }
+@starting-style { .kfl-drawer[open]::backdrop { opacity: 0; } }
+.kfl-drawer .kfl-dialog__footer { padding-block-start: var(--kfl-space-4); border-block-start: var(--kfl-border) solid var(--kfl-rule); }
+@media (prefers-reduced-motion: reduce) {
+  /* No slide: the drawer fades in place. */
+  .kfl-drawer, .kfl-drawer:dir(rtl) { --_from: 0%; opacity: 0; }
+  .kfl-drawer[open] { opacity: 1; }
+  @starting-style { .kfl-drawer[open] { opacity: 0; } }
+}
+
+
+/* 15 Menu -------------------------------------------------------------------
+   Actions on one object, opened from a button (WAI-ARIA menu button pattern in
+   kit.js). It opens from its trigger and collapses back toward it. */
+.kfl-menu { position: relative; display: inline-block; }
+.kfl-menu__list {
+  position: absolute; z-index: var(--kfl-z-dropdown);
+  inset-block-start: calc(100% + var(--kfl-space-1)); inset-inline-start: 0;
+  min-inline-size: max(100%, 12rem); max-inline-size: 20rem; margin: 0; padding: var(--kfl-space-1) 0; list-style: none;
+  border: var(--kfl-border) solid var(--kfl-line-strong); background: var(--kfl-surface);
+  box-shadow: var(--kfl-elevation) var(--kfl-elevation) 0 var(--kfl-shadow);
+  --_shift: calc(var(--kfl-travel) * -0.5);
+  opacity: 0; translate: 0 var(--_shift);
+  transition: opacity var(--kfl-dur-small) var(--kfl-ease-exit), translate var(--kfl-dur-small) var(--kfl-ease-exit), display var(--kfl-dur-small) allow-discrete;
+}
+.kfl-menu__list:not([hidden]) { opacity: 1; translate: 0 0; transition-timing-function: var(--kfl-ease-enter); }
+@starting-style { .kfl-menu__list:not([hidden]) { opacity: 0; translate: 0 var(--_shift); } }
+.kfl-menu__list[data-align="end"] { inset-inline: auto 0; }
+.kfl-menu__list[data-placement="top"] { --_shift: calc(var(--kfl-travel) * 0.5); inset-block: auto calc(100% + var(--kfl-space-1)); }
+.kfl-menu__item {
+  display: flex; align-items: center; gap: var(--kfl-space-3); inline-size: 100%;
+  min-block-size: var(--kfl-control-md); padding: 0 var(--kfl-space-4);
+  border: 0; background: none; color: var(--kfl-text); font-size: var(--kfl-fs-body); text-align: start; text-decoration: none; white-space: nowrap;
+}
+.kfl-menu__item:is(:hover, :focus-visible) { background: var(--kfl-hover); color: var(--kfl-text); }
+.kfl-menu__item:focus-visible { outline-offset: calc(-1 * var(--kfl-focus-width)); }
+.kfl-menu__item[data-tone="danger"] { color: var(--kfl-danger); }
+.kfl-menu__item > .kfl-icon { color: var(--kfl-text-2); }
+.kfl-menu__item[data-tone="danger"] > .kfl-icon { color: inherit; }
+.kfl-menu__hint { margin-inline-start: auto; padding-inline-start: var(--kfl-space-5); color: var(--kfl-text-3); font-size: var(--kfl-fs-small); }
+.kfl-menu__list > [role="separator"] { block-size: var(--kfl-border); margin: var(--kfl-space-1) 0; background: var(--kfl-rule); }
+
+
+/* 16 Tooltip ----------------------------------------------------------------
+   The visible name of an icon-only control — the same words as its aria-label.
+   Shows on hover after a short delay and on keyboard focus at once; Escape hides
+   it; it stays while the pointer moves onto it (WCAG 1.4.13). Never the only
+   home of information a person needs. */
+[data-tooltip] { position: relative; }
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute; z-index: var(--kfl-z-dropdown);
+  inset-block-end: 100%; inset-inline-start: 50%;
+  inline-size: max-content; max-inline-size: 16rem;
+  padding: var(--kfl-space-1) var(--kfl-space-2);
+  border-block-end: var(--kfl-space-2) solid transparent; background-clip: padding-box; /* transparent bridge to the trigger */
+  background-color: var(--kfl-inverse); color: var(--kfl-on-inverse);
+  font-size: var(--kfl-fs-small); line-height: var(--kfl-lh-small); font-weight: var(--kfl-fw-regular); text-align: start; white-space: normal;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  translate: -50% calc(var(--kfl-travel) * 0.5);
+  transition: opacity var(--kfl-dur-small) var(--kfl-ease-exit), translate var(--kfl-dur-small) var(--kfl-ease-exit), visibility 0s linear var(--kfl-dur-small);
+}
+[data-tooltip]:is(:hover, :focus-visible):not([data-tooltip-dismissed])::after {
+  opacity: 1; visibility: visible; pointer-events: auto; translate: -50% 0;
+  transition-timing-function: var(--kfl-ease-enter); transition-delay: 400ms, 400ms, 400ms;
+}
+[data-tooltip]:focus-visible:not([data-tooltip-dismissed])::after { transition-delay: 0s; }
+[data-tooltip][data-tooltip-align="start"]::after { inset-inline-start: 0; translate: 0 calc(var(--kfl-travel) * 0.5); }
+[data-tooltip][data-tooltip-align="end"]::after { inset-inline-start: auto; inset-inline-end: 0; translate: 0 calc(var(--kfl-travel) * 0.5); }
+[data-tooltip][data-tooltip-align]:is(:hover, :focus-visible):not([data-tooltip-dismissed])::after { translate: 0 0; }
+
+
+/* 17 Disclosure -------------------------------------------------------------
+   Native <details>: progressive disclosure for secondary detail. Give several
+   the same name attribute for an accordion that keeps one open. */
+.kfl-disclosure { border-block-end: var(--kfl-border) solid var(--kfl-rule); }
+.kfl-disclosure > summary {
+  display: flex; align-items: center; gap: var(--kfl-space-3);
+  min-block-size: var(--kfl-control-lg); padding-block: var(--kfl-space-2);
+  font-weight: var(--kfl-fw-medium); list-style: none;
+}
+.kfl-disclosure > summary::-webkit-details-marker { display: none; }
+.kfl-disclosure > summary::after {
+  content: ""; flex: none; margin-inline-start: auto; inline-size: var(--kfl-icon-size); block-size: var(--kfl-icon-size);
+  background: currentColor; mask: var(--kfl-icon-chevron-down) center / contain no-repeat;
+  transition: rotate var(--kfl-dur-small) var(--kfl-ease-exit);
+}
+.kfl-disclosure[open] > summary::after { rotate: 180deg; transition-timing-function: var(--kfl-ease-enter); }
+.kfl-disclosure > summary:focus-visible { outline-offset: calc(-1 * var(--kfl-focus-width)); }
+.kfl-disclosure::details-content { block-size: 0; overflow: clip; transition: block-size var(--kfl-dur-small) var(--kfl-ease-exit), content-visibility var(--kfl-dur-small) allow-discrete; }
+.kfl-disclosure[open]::details-content { block-size: auto; transition-timing-function: var(--kfl-ease-enter); }
+.kfl-disclosure__content { padding-block-end: var(--kfl-space-5); color: var(--kfl-text-2); }
+
+
+/* 18 Table ------------------------------------------------------------------
+   For comparing across rows. Rules, not boxes; numbers end-aligned in tabular
+   figures; sortable headers are buttons that say their state (aria-sort).
+   The wrapper owns narrow-screen scrolling so the page never scrolls sideways;
+   data-scroll="both" also bounds its height so the header row can stick. */
+.kfl-table-wrap { --_table-bg: var(--kfl-bg); overflow-x: auto; }
+.kfl-table-wrap[data-scroll="both"] { max-block-size: min(36rem, 70vh); overflow: auto; }
+.kfl-table-wrap:focus-visible { outline-offset: var(--kfl-focus-offset); }
+.kfl-table { inline-size: 100%; font-size: var(--kfl-fs-small); line-height: var(--kfl-lh-small); }
+.kfl-table > caption { caption-side: top; padding-block-end: var(--kfl-space-3); text-align: start; font-size: var(--kfl-fs-body); line-height: var(--kfl-lh-body); font-weight: var(--kfl-fw-bold); }
+.kfl-table :is(th, td) { padding: var(--kfl-space-3) var(--kfl-space-4); text-align: start; vertical-align: middle; }
+.kfl-table :is(th, td):first-child { padding-inline-start: 0; }
+.kfl-table :is(th, td):last-child { padding-inline-end: 0; }
+.kfl-table thead th {
+  position: sticky; inset-block-start: 0; z-index: 1;
+  background: var(--_table-bg, var(--kfl-bg)); color: var(--kfl-text-2); font-weight: var(--kfl-fw-medium); white-space: nowrap;
+  box-shadow: inset 0 calc(-1 * var(--kfl-border)) 0 var(--kfl-line-strong); /* the rule travels with a stuck header */
+}
+.kfl-table tbody tr { border-block-end: var(--kfl-border) solid var(--kfl-rule); }
+.kfl-table tbody tr:hover { background: var(--kfl-hover); }
+.kfl-table tbody tr:has(> td > .kfl-checkbox:checked) { background: var(--kfl-accent-tint); }
+.kfl-table[data-density="compact"] :is(th, td) { padding-block: var(--kfl-space-2); }
+.kfl-table :is(th, td)[data-numeric] { text-align: end; font-variant-numeric: tabular-nums; }
+.kfl-table__select { inline-size: 1px; }
+.kfl-table__select > .kfl-checkbox { margin-block-start: 0; vertical-align: middle; }
+.kfl-table__sort {
+  --_pad: max(var(--kfl-space-1), (var(--kfl-hit-min) - 1lh) / 2);
+  display: inline-flex; align-items: center; gap: var(--kfl-space-1);
+  margin: calc(-1 * var(--_pad)) calc(-1 * var(--kfl-space-2)); padding: var(--_pad) var(--kfl-space-2);
+  border: 0; background: none; color: inherit; font: inherit; font-weight: var(--kfl-fw-medium); white-space: nowrap;
+}
+.kfl-table__sort:hover { background: var(--kfl-hover); color: var(--kfl-text); }
+.kfl-table__sort > .kfl-icon { --kfl-icon-size: 1rem; --kfl-icon: var(--kfl-icon-sort); color: var(--kfl-text-3); }
+.kfl-table th[aria-sort="ascending"] { color: var(--kfl-text); }
+.kfl-table th[aria-sort="descending"] { color: var(--kfl-text); }
+.kfl-table th[aria-sort="ascending"] .kfl-table__sort > .kfl-icon { --kfl-icon: var(--kfl-icon-arrow-up); color: var(--kfl-text); }
+.kfl-table th[aria-sort="descending"] .kfl-table__sort > .kfl-icon { --kfl-icon: var(--kfl-icon-arrow-down); color: var(--kfl-text); }
+.kfl-table th[data-numeric] .kfl-table__sort { flex-direction: row-reverse; } /* label edge meets the numbers */
+.kfl-table__key { font-weight: var(--kfl-fw-medium); }
+.kfl-table__key > a { color: var(--kfl-text); text-decoration-color: var(--kfl-line); }
+.kfl-table__key > a:hover { text-decoration-color: currentColor; }
+.kfl-table__meta { display: block; color: var(--kfl-text-2); font-weight: var(--kfl-fw-regular); }
+.kfl-table__empty > td { padding-block: var(--kfl-space-6); }
+.kfl-table__empty:hover { background: none; }
+
+/* Bulk actions appear only while rows are selected, and say how many. */
+.kfl-bulkbar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--kfl-space-3);
+  min-block-size: var(--kfl-control-lg); padding: var(--kfl-space-1) var(--kfl-space-1) var(--kfl-space-1) var(--kfl-space-4);
+  background: var(--kfl-inverse); color: var(--kfl-on-inverse);
+  transition: opacity var(--kfl-dur-small) var(--kfl-ease-exit), translate var(--kfl-dur-small) var(--kfl-ease-exit), display var(--kfl-dur-small) allow-discrete;
+}
+.kfl-bulkbar[hidden] { opacity: 0; translate: 0 calc(var(--kfl-travel) * -0.5); }
+@starting-style { .kfl-bulkbar:not([hidden]) { opacity: 0; translate: 0 calc(var(--kfl-travel) * -0.5); } }
+.kfl-bulkbar__count { margin-inline-end: auto; font-weight: var(--kfl-fw-medium); font-variant-numeric: tabular-nums; }
+.kfl-bulkbar .kfl-button { --_fg: var(--kfl-on-inverse); --_edge: color-mix(in srgb, var(--kfl-on-inverse) 40%, transparent); --_hover-bg: color-mix(in srgb, var(--kfl-on-inverse) 16%, transparent); }
+.kfl-bulkbar :focus-visible { outline-color: var(--kfl-on-inverse); }
+
+
+/* 19 List -------------------------------------------------------------------
+   A sequence of like items. Leading marks align to the first text line; the
+   text edge is shared by every row; trailing values end-align. */
+.kfl-list { margin: 0; padding: 0; list-style: none; border-block-start: var(--kfl-border) solid var(--kfl-rule); }
+.kfl-list__item {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; column-gap: var(--kfl-space-3);
+  padding-block: var(--kfl-space-3); border-block-end: var(--kfl-border) solid var(--kfl-rule);
+}
+.kfl-list__item > .kfl-icon { margin-block-start: calc((var(--kfl-lh-body) - var(--kfl-icon-size)) / 2); color: var(--kfl-text-2); }
+.kfl-list__title { font-weight: var(--kfl-fw-medium); }
+.kfl-list__meta { font-size: var(--kfl-fs-small); line-height: var(--kfl-lh-small); color: var(--kfl-text-2); }
+.kfl-list__trail { justify-self: end; text-align: end; color: var(--kfl-text-2); font-variant-numeric: tabular-nums; }
+.kfl-list__item[data-align="center"] { align-items: center; } /* single-line rows led by an avatar */
+
+
+/* 20 Card -------------------------------------------------------------------
+   Only for independently meaningful entities in a collection — never as a
+   default wrapper for sections. The title link covers the card; secondary
+   actions stay separately clickable above it. Inside a .kfl-card-grid, card
+   rows share tracks through subgrid, so titles, bodies and footers line up
+   across the row whatever their text length. */
+.kfl-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr)); gap: var(--gutter, var(--kfl-space-5)); }
+.kfl-card {
+  position: relative; display: grid; grid-template-rows: auto auto 1fr auto; row-gap: var(--kfl-space-2); align-content: start;
+  padding: var(--kfl-space-5); border: var(--kfl-border) solid var(--kfl-rule); background: var(--kfl-surface);
+  transition: border-color var(--kfl-dur-state);
+}
+.kfl-card-grid > .kfl-card { grid-row: span 4; grid-template-rows: subgrid; }
+.kfl-card:has(.kfl-card__link:hover) { border-color: var(--kfl-line-strong); }
+.kfl-card:has(.kfl-card__link:focus-visible) { outline: var(--kfl-focus-width) solid var(--kfl-focus); outline-offset: var(--kfl-focus-offset); }
+.kfl-card__link { color: var(--kfl-text); text-decoration: none; }
+.kfl-card__link::after { content: ""; position: absolute; inset: 0; }
+.kfl-card__link:focus-visible { outline: none; }
+.kfl-card__title { font-size: var(--kfl-fs-lead); line-height: var(--kfl-lh-lead); font-weight: var(--kfl-fw-bold); }
+.kfl-card__meta { font-size: var(--kfl-fs-small); line-height: var(--kfl-lh-small); color: var(--kfl-text-2); }
+.kfl-card__body { color: var(--kfl-text-2); }
+.kfl-card__footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--kfl-space-3); padding-block-start: var(--kfl-space-3); border-block-start: var(--kfl-border) solid var(--kfl-rule); }
+.kfl-card :is(button, a:not(.kfl-card__link), input, select) { position: relative; z-index: 1; }
+
+
+/* 21 Description list ---------------------------------------------------------
+   Key/value facts. Each pair is a subgrid row: the term and the value share a
+   baseline and one rule, whatever their sizes. */
+.kfl-dl { display: grid; grid-template-columns: minmax(8rem, max-content) minmax(0, 1fr); column-gap: var(--kfl-space-5); container-type: inline-size; }
+.kfl-dl > div { display: grid; grid-column: 1 / -1; grid-template-columns: subgrid; align-items: baseline; padding-block: var(--kfl-space-3); border-block-start: var(--kfl-border) solid var(--kfl-rule); }
+.kfl-dl > div:last-child { border-block-end: var(--kfl-border) solid var(--kfl-rule); }
+.kfl-dl dt { font-size: var(--kfl-fs-small); line-height: var(--kfl-lh-small); color: var(--kfl-text-2); }
+.kfl-dl dd { min-inline-size: 0; overflow-wrap: anywhere; }
+/* In a narrow region the pair stacks — the list adapts to its own width, not the viewport. */
+@container (width < 30rem) {
+  .kfl-dl > div { grid-template-columns: minmax(0, 1fr); row-gap: var(--kfl-space-1); }
+}
+
+
+/* 22 Progress, loader, skeleton -----------------------------------------------
+   Determinate progress when the amount is known; an indeterminate bar or the
+   loader when it is not; skeletons where the layout is known. Nothing here
+   claims a state the page cannot measure (KFL Status Integrity). */
+.kfl-progress { appearance: none; display: block; inline-size: 100%; block-size: 0.5rem; border: 0; background: var(--kfl-sunken); color: var(--kfl-accent); overflow: hidden; }
+.kfl-progress::-webkit-progress-bar { background: var(--kfl-sunken); }
+.kfl-progress::-webkit-progress-value { background: var(--kfl-accent); transition: inline-size var(--kfl-dur-panel) var(--kfl-ease-enter); }
+.kfl-progress::-moz-progress-bar { background: var(--kfl-accent); }
+.kfl-progress:indeterminate { background: linear-gradient(var(--kfl-accent), var(--kfl-accent)) no-repeat, var(--kfl-sunken); background-size: 30% 100%, auto; animation: kfl-indeterminate 1.6s var(--kfl-ease-enter) infinite; }
+.kfl-progress:indeterminate::-webkit-progress-bar { background: transparent; }
+.kfl-progress:indeterminate::-moz-progress-bar { background: transparent; }
+@keyframes kfl-indeterminate { from { background-position: -40% 0, 0 0; } to { background-position: 140% 0, 0 0; } }
+.kfl-progress-field { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--kfl-space-2) var(--kfl-space-4); }
+.kfl-progress-field > .kfl-progress, .kfl-progress-field > .kfl-field__hint { grid-column: 1 / -1; }
+.kfl-progress-field > output { font-variant-numeric: tabular-nums; font-weight: var(--kfl-fw-medium); }
+
+.kfl-loader { display: inline-flex; gap: 0.1875rem; }
+.kfl-loader > span { inline-size: 0.375rem; block-size: 0.375rem; background: currentColor; animation: kfl-loader 900ms ease-in-out infinite; }
+.kfl-loader > span:nth-child(2) { animation-delay: 150ms; }
+.kfl-loader > span:nth-child(3) { animation-delay: 300ms; }
+@keyframes kfl-loader { 0%, 80%, 100% { opacity: 0.25; } 40% { opacity: 1; } }
+
+.kfl-skeleton { display: block; block-size: 1lh; background: var(--kfl-sunken); animation: kfl-pulse 1.6s ease-in-out infinite; }
+.kfl-skeleton[data-width="40"] { inline-size: 40%; }
+.kfl-skeleton[data-width="60"] { inline-size: 60%; }
+.kfl-skeleton[data-width="80"] { inline-size: 80%; }
+@keyframes kfl-pulse { 50% { opacity: 0.5; } }
+@media (prefers-reduced-motion: reduce) {
+  .kfl-skeleton { animation: none; }
+  .kfl-progress:indeterminate { animation: none; background: repeating-linear-gradient(-45deg, var(--kfl-accent) 0 0.25rem, var(--kfl-sunken) 0.25rem 0.5rem); }
+  .kfl-loader > span { animation-duration: 1800ms; }
+}
+
+
+/* 23 Empty state ----------------------------------------------------------------
+   Say what belongs here and offer the next step. No illustration is required,
+   and no invented example content fills the gap (KFL Content Integrity). */
+.kfl-empty { display: grid; justify-items: start; gap: var(--kfl-space-3); max-inline-size: 32rem; padding-block: var(--kfl-space-7); }
+.kfl-empty > .kfl-icon { --kfl-icon-size: 2rem; color: var(--kfl-text-3); }
+.kfl-empty__title { font-size: var(--kfl-fs-lead); line-height: var(--kfl-lh-lead); font-weight: var(--kfl-fw-bold); }
+.kfl-empty[data-size="compact"] { padding-block: var(--kfl-space-4); }
+.kfl-empty__actions { display: flex; flex-wrap: wrap; gap: var(--kfl-space-3); margin-block-start: var(--kfl-space-2); }
+
+
+/* 24 Steps --------------------------------------------------------------------
+   Where a person is in a multi-step task, and how much is left. */
+.kfl-steps { display: flex; gap: var(--kfl-space-2); margin: 0; padding: 0; list-style: none; counter-reset: kfl-step; }
+.kfl-steps > li {
+  flex: 1 1 0; min-inline-size: 0; display: flex; flex-direction: column; gap: var(--kfl-space-1);
+  padding-block-start: var(--kfl-space-3); border-block-start: var(--kfl-rule-heavy) solid var(--kfl-rule);
+  color: var(--kfl-text-3); font-size: var(--kfl-fs-small); line-height: var(--kfl-lh-small); counter-increment: kfl-step;
+}
+.kfl-steps > li::before { content: counter(kfl-step, decimal-leading-zero); font-weight: var(--kfl-fw-bold); font-variant-numeric: tabular-nums; }
+.kfl-steps > li[data-state="complete"] { border-color: var(--kfl-line-strong); color: var(--kfl-text-2); }
+.kfl-steps > li[aria-current="step"] { border-color: var(--kfl-accent); color: var(--kfl-text); font-weight: var(--kfl-fw-medium); }
+@media (width < 40rem) {
+  .kfl-steps { flex-direction: column; gap: 0; }
+  .kfl-steps > li { flex-direction: row; gap: var(--kfl-space-3); padding: var(--kfl-space-2) 0 var(--kfl-space-2) var(--kfl-space-4); border-block-start: 0; border-inline-start: var(--kfl-rule-heavy) solid var(--kfl-rule); }
+}
+
+
+/* 25 Top bar, side nav ----------------------------------------------------------
+   Product name at the start links home; sections next; account at the end.
+   Current location is marked by a bar and weight, and aria-current. */
+.kfl-topbar { border-block-end: var(--kfl-border) solid var(--kfl-rule); background: var(--kfl-surface); }
+.kfl-topbar__row { display: flex; align-items: center; gap: var(--kfl-space-5); min-block-size: 3.5rem; }
+.kfl-topbar__brand { display: inline-flex; align-items: center; gap: var(--kfl-space-2); min-block-size: var(--kfl-control-md); color: var(--kfl-text); font-weight: var(--kfl-fw-bold); text-decoration: none; }
+.kfl-topbar__brand:hover { color: var(--kfl-text); }
+.kfl-topbar__nav { display: flex; align-self: stretch; }
+.kfl-topbar__nav ul { display: flex; margin: 0; padding: 0; list-style: none; }
+.kfl-topbar__nav a {
+  position: relative; display: inline-flex; align-items: center; block-size: 100%; padding: 0 var(--kfl-space-3);
+  color: var(--kfl-text-2); font-weight: var(--kfl-fw-medium); text-decoration: none;
+}
+.kfl-topbar__nav a:hover { color: var(--kfl-text); }
+.kfl-topbar__nav a::after { content: ""; position: absolute; inset-inline: 0; inset-block-end: calc(-1 * var(--kfl-border)); block-size: 0.1875rem; background: transparent; }
+.kfl-topbar__nav a[aria-current="page"] { color: var(--kfl-text); }
+.kfl-topbar__nav a[aria-current="page"]::after { background: var(--kfl-accent); }
+.kfl-topbar__nav a:focus-visible { outline-offset: calc(-1 * var(--kfl-focus-width)); }
+.kfl-topbar__end { display: flex; align-items: center; gap: var(--kfl-space-2); margin-inline-start: auto; }
+.kfl-topbar__menu-button { display: none; }
+.kfl-topbar__panel { border-block-start: var(--kfl-border) solid var(--kfl-rule); padding-block: var(--kfl-space-2); }
+.kfl-topbar__panel ul { margin: 0; padding: 0; list-style: none; }
+.kfl-topbar__panel a { display: flex; align-items: center; min-block-size: var(--kfl-control-lg); color: var(--kfl-text); text-decoration: none; font-weight: var(--kfl-fw-medium); border-inline-start: 0.1875rem solid transparent; padding-inline-start: var(--kfl-space-3); }
+.kfl-topbar__panel a[aria-current="page"] { border-inline-start-color: var(--kfl-accent); }
+@media (width < 48rem) {
+  .kfl-topbar__nav { display: none; }
+  .kfl-topbar__menu-button { display: inline-flex; }
+}
+@media (width >= 48rem) { .kfl-topbar__panel { display: none !important; } }
+
+/* Skip link: the first focusable element on every page, visible when focused. */
+.kfl-skip-link {
+  position: absolute; z-index: calc(var(--kfl-z-toast) + 1); inset-block-start: var(--kfl-space-2); inset-inline-start: var(--kfl-space-2);
+  padding: var(--kfl-space-2) var(--kfl-space-4); background: var(--kfl-inverse); color: var(--kfl-on-inverse); font-weight: var(--kfl-fw-medium);
+  translate: 0 -200%;
+}
+.kfl-skip-link:focus { translate: 0 0; color: var(--kfl-on-inverse); outline-color: var(--kfl-on-inverse); }
+
+.kfl-sidenav { display: flex; flex-direction: column; gap: var(--kfl-space-5); }
+.kfl-sidenav__group { display: flex; flex-direction: column; gap: var(--kfl-space-2); }
+.kfl-sidenav ul { margin: 0; padding: 0; list-style: none; }
+.kfl-sidenav a {
+  display: flex; align-items: center; gap: var(--kfl-space-3); min-block-size: var(--kfl-control-md);
+  padding: 0 var(--kfl-space-3); border-inline-start: 0.1875rem solid transparent;
+  color: var(--kfl-text-2); font-weight: var(--kfl-fw-medium); text-decoration: none;
+}
+.kfl-sidenav a:hover { background: var(--kfl-hover); color: var(--kfl-text); }
+.kfl-sidenav a[aria-current="page"] { border-inline-start-color: var(--kfl-accent); color: var(--kfl-text); font-weight: var(--kfl-fw-bold); }
+.kfl-sidenav a > .kfl-count { margin-inline-start: auto; }
+.kfl-sidenav a:focus-visible { outline-offset: calc(-1 * var(--kfl-focus-width)); }
+
+
+/* 26 Form, error summary --------------------------------------------------------
+   One column, in the order people think about the answers. Actions follow the
+   last field on its start edge, primary first — where the eye finishes. */
+.kfl-form { display: flex; flex-direction: column; gap: var(--kfl-space-7); }
+.kfl-form__section { display: flex; flex-direction: column; gap: var(--kfl-space-5); }
+.kfl-form__section-head { display: flex; flex-direction: column; gap: var(--kfl-space-1); padding-block-start: var(--kfl-space-4); border-block-start: var(--kfl-border) solid var(--kfl-line-strong); }
+.kfl-form__fields { display: flex; flex-direction: column; gap: var(--kfl-space-5); max-inline-size: 36rem; }
+.kfl-form__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--kfl-space-3); }
+.kfl-form__status { color: var(--kfl-text-2); font-size: var(--kfl-fs-small); }
+
+.kfl-error-summary { display: flex; flex-direction: column; gap: var(--kfl-space-2); padding: var(--kfl-space-5); border: var(--kfl-border-strong) solid var(--kfl-danger); background: var(--kfl-surface); }
+.kfl-error-summary__title { display: flex; align-items: center; gap: var(--kfl-space-2); font-size: var(--kfl-fs-lead); line-height: var(--kfl-lh-lead); font-weight: var(--kfl-fw-bold); }
+.kfl-error-summary__title > .kfl-icon { color: var(--kfl-danger); }
+.kfl-error-summary ul { margin: 0; padding-inline-start: var(--kfl-space-5); }
+.kfl-error-summary a { color: var(--kfl-danger); font-weight: var(--kfl-fw-medium); }
+.kfl-error-summary:focus-visible { outline-offset: var(--kfl-focus-offset); }
+
+
+/* 27 Kbd, code, rules ---------------------------------------------------------- */
+.kfl-kbd { display: inline-block; min-inline-size: 1.75em; padding: 0 0.375em; border: var(--kfl-border) solid var(--kfl-line); border-block-end-width: var(--kfl-border-strong); background: var(--kfl-surface); color: var(--kfl-text); font-family: var(--kfl-font-mono); font-size: 0.8125em; line-height: 1.5; text-align: center; }
+.kfl-code { display: block; margin: 0; padding: var(--kfl-space-4); overflow-x: auto; background: var(--kfl-sunken); color: var(--kfl-text); font-size: var(--kfl-fs-small); line-height: var(--kfl-lh-small); tab-size: 2; }
+.kfl-rule-heavy { border: 0; border-block-start: var(--kfl-rule-heavy) solid var(--kfl-line-strong); }
+
+
+/* Forced colors (Windows contrast themes): the platform takes over painting.
+   Hand native controls back to it and keep state marks visible. */
+@media (forced-colors: active) {
+  .kfl-checkbox, .kfl-radio, .kfl-switch, .kfl-slider, .kfl-progress { appearance: auto; }
+  :is(.kfl-checkbox, .kfl-radio, .kfl-switch)::before { display: none; }
+  .kfl-tab[aria-selected="true"]::after, .kfl-topbar__nav a[aria-current="page"]::after { background: Highlight; }
+  .kfl-sidenav a[aria-current="page"] { border-inline-start-color: Highlight; }
+  .kfl-segmented > label:has(:checked) { outline: var(--kfl-focus-width) solid Highlight; outline-offset: calc(-1 * var(--kfl-focus-width) - 1px); }
+  .kfl-tag[data-tone]::before { background: CanvasText; forced-color-adjust: none; }
+  .kfl-pagination [aria-current="page"] { outline: var(--kfl-border-strong) solid Highlight; }
+}

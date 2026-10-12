@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grid — KFL Reference Kit</title>
+<meta name="description" content="The KFL grid manifest, its generated CSS and the audit loop that keeps every page on its tracks. Four columns on phones, eight on tablets, twelve on desktop.">
+<script>try{var t=localStorage.getItem('kfl-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="grid/grid.css">
+<link rel="stylesheet" href="kit/tokens.css">
+<link rel="stylesheet" href="kit/base.css">
+<link rel="stylesheet" href="kit/icons.css">
+<link rel="stylesheet" href="kit/components.css">
+<link rel="stylesheet" href="site.css">
+<script defer src="kit/kit.js"></script>
+<style>
+  /* Grid specimens only */
+  .grid-specimen { display: grid; gap: var(--gutter); border-block-start: var(--kfl-border) solid var(--kfl-rule); padding-block-start: var(--kfl-space-3); }
+  .grid-specimen [data-region="demo"] { background: var(--kfl-surface); border: var(--kfl-border) solid var(--kfl-rule); padding: var(--kfl-space-3); font-size: var(--kfl-fs-caption); color: var(--kfl-text-2); font-variant-numeric: tabular-nums; min-block-size: 3rem; display: flex; align-items: center; }
+  .grid-specimen [data-region="demo"].is-strong { background: var(--kfl-sunken); color: var(--kfl-text); }
+  .bp-table code { font-size: var(--kfl-fs-caption); }
+  .subgrid-demo { display: grid; grid-template-columns: subgrid; grid-column: 1 / -1; gap: var(--gutter); }
+</style>
+</head>
+<body>
+<a class="kfl-skip-link" href="#main">Skip to content</a>
+
+<header class="kfl-topbar site-header">
+  <div class="grid-container kfl-topbar__row">
+    <a class="kfl-topbar__brand" href="index.html">KFL <span class="site-brand-long">Reference Kit</span></a>
+    <nav class="kfl-topbar__nav" aria-label="Examples">
+      <ul>
+        <li><a href="grid.html" aria-current="page">Grid</a></li>
+        <li><a href="components.html">Components</a></li>
+        <li><a href="settings.html">Settings page</a></li>
+      </ul>
+    </nav>
+    <div class="kfl-topbar__end">
+      <fieldset class="kfl-segmented site-theme" data-size="sm" data-theme-control>
+        <legend class="kfl-visually-hidden">Color theme</legend>
+        <label><input type="radio" name="theme" value="system" checked>Auto</label>
+        <label><input type="radio" name="theme" value="light">Light</label>
+        <label><input type="radio" name="theme" value="dark">Dark</label>
+      </fieldset>
+      <button type="button" class="kfl-button" data-size="sm" data-variant="quiet" data-grid-toggle aria-pressed="false"><span class="kfl-icon" data-icon="columns" aria-hidden="true"></span>Grid</button>
+      <button type="button" class="kfl-button kfl-topbar__menu-button" data-size="sm" data-toggle aria-expanded="false" aria-controls="site-panel"><span class="kfl-icon" data-icon="menu" aria-hidden="true"></span>Menu</button>
+    </div>
+  </div>
+  <nav class="kfl-topbar__panel" id="site-panel" aria-label="Examples (menu)" hidden>
+    <div class="grid-container kfl-stack" data-gap="3">
+      <ul>
+        <li><a href="grid.html" aria-current="page">Grid</a></li>
+        <li><a href="components.html">Components</a></li>
+        <li><a href="settings.html">Settings page</a></li>
+      </ul>
+      <fieldset class="kfl-segmented" data-size="sm" data-theme-control>
+        <legend class="kfl-visually-hidden">Color theme</legend>
+        <label><input type="radio" name="theme-panel" value="system" checked>Auto</label>
+        <label><input type="radio" name="theme-panel" value="light">Light</label>
+        <label><input type="radio" name="theme-panel" value="dark">Dark</label>
+      </fieldset>
+    </div>
+  </nav>
+</header>
+
+<div class="grid-overlay" aria-hidden="true"><div class="grid-overlay__inner"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+
+<main id="main" class="grid-container" tabindex="-1">
+
+  <header class="grid-row doc-masthead">
+    <p data-region="kicker" class="kfl-overline">KFL Reference Kit · 01</p>
+    <h1 data-region="title" class="kfl-display">Grid</h1>
+    <p data-region="lede" class="kfl-lead">One manifest declares three breakpoints and every region's span. From it, <code>generate.mjs</code> writes the page's CSS and <code>audit.mjs</code> measures the rendered page against it. Toggle the overlay to see the twelve tracks under this page.</p>
+  </header>
+
+  <nav class="grid-row doc-index" aria-label="On this page">
+    <div data-region="specimen">
+      <ol>
+        <li><a href="#breakpoints"><span>01</span>Breakpoints</a></li>
+        <li><a href="#anatomy"><span>02</span>Page anatomy</a></li>
+        <li><a href="#spans"><span>03</span>Region spans</a></li>
+        <li><a href="#subgrid"><span>04</span>Subgrid</a></li>
+        <li><a href="#audit"><span>05</span>The audit loop</a></li>
+      </ol>
+    </div>
+  </nav>
+
+  <section class="grid-row doc-section" id="breakpoints" aria-labelledby="breakpoints-h">
+    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">01 · Foundation</p><h2 id="breakpoints-h" class="kfl-h3">Breakpoints</h2></header>
+    <div data-region="section-text" class="kfl-prose">
+      <p>Four columns on phones so pairs can sit side by side; eight on tablets, where the frame stops at 800px so text cannot outgrow its measure; twelve from 1120px up, where a label and an aside can flank the text. Each step is a deliberate re-composition, not a squeeze.</p>
+    </div>
+    <div data-region="section-aside" class="doc-aside">
+      <div><h3 class="kfl-label">Rules</h3><ul><li>Columns are equal tracks; gutters and margins come from the manifest.</li><li>The container never outruns 75ch of body text.</li></ul></div>
+    </div>
+    <div data-region="section-body" class="doc-body">
+      <div class="kfl-table-wrap bp-table">
+        <table class="kfl-table">
+          <thead><tr><th>Breakpoint</th><th>Min width</th><th>Columns</th><th>Gutter</th><th>Margin</th><th>Container</th></tr></thead>
+          <tbody>
+            <tr><td><code>mobile</code></td><td>0</td><td>4</td><td>16</td><td>16</td><td>—</td></tr>
+            <tr><td><code>tablet</code></td><td>768</td><td>8</td><td>24</td><td>32</td><td>800</td></tr>
+            <tr><td><code>desktop</code></td><td>1120</td><td>12</td><td>24</td><td>48</td><td>1280</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid-row doc-section" id="anatomy" aria-labelledby="anatomy-h">
+    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">02 · Regions</p><h2 id="anatomy-h" class="kfl-h3">Page anatomy</h2></header>
+    <div data-region="section-text" class="kfl-prose">
+      <p>Every page in this kit is built from the same named regions. The kicker hangs in the first three columns, the title and lede share the fourth column's edge, and each section repeats the label–text–aside–body pattern. That shared rhythm is what lets the eye rest.</p>
+    </div>
+    <div data-region="section-aside" class="doc-aside">
+      <div><h3 class="kfl-label">On this page</h3><ul><li>The masthead above is the live example: kicker 3, title 9, lede 7 from column 4.</li></ul></div>
+    </div>
+    <div data-region="section-body" class="doc-body">
+      <div class="specimen">
+        <p class="specimen__label kfl-caption">Masthead regions at desktop — toggle the overlay to verify</p>
+        <div class="grid-specimen" style="grid-template-columns: repeat(12, minmax(0, 1fr));">
+          <div data-region="demo" class="c-3">kicker · c-3</div>
+          <div data-region="demo" class="c-9 is-strong">title · c-9 (starts col 4)</div>
+          <div data-region="demo" class="c-3" style="grid-column: 1 / 4">—</div>
+          <div data-region="demo" class="c-7 is-strong" style="grid-column: 4 / 11">lede · c-7 from col 4</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid-row doc-section" id="spans" aria-labelledby="spans-h">
+    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">03 · Ratios</p><h2 id="spans-h" class="kfl-h3">Region spans</h2></header>
+    <div data-region="section-text" class="kfl-prose">
+      <p>A section’s body text takes the middle six columns at desktop; the aside takes three; the body below takes nine and shares the text’s start edge. Halves, thirds and quarters divide the frame without ever leaving a fractional track.</p>
+    </div>
+    <div data-region="section-aside" class="doc-aside">
+      <div><h3 class="kfl-label">Rules</h3><ul><li>Spans are declared once in the manifest.</li><li>A region’s start can pin to a column; flow fills the rest.</li></ul></div>
+    </div>
+    <div data-region="section-body" class="doc-body">
+      <div class="specimen">
+        <p class="specimen__label kfl-caption">6 + 6 / 4 + 4 + 4 / 3 + 3 + 3 + 3</p>
+        <div class="grid-specimen" style="grid-template-columns: repeat(12, minmax(0, 1fr));">
+          <div data-region="demo" class="c-6 is-strong">6</div><div data-region="demo" class="c-6">6</div>
+          <div data-region="demo" class="c-4">4</div><div data-region="demo" class="c-4 is-strong">4</div><div data-region="demo" class="c-4">4</div>
+          <div data-region="demo" class="c-3">3</div><div data-region="demo" class="c-3">3</div><div data-region="demo" class="c-3 is-strong">3</div><div data-region="demo" class="c-3">3</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid-row doc-section" id="subgrid" aria-labelledby="subgrid-h">
+    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">04 · Nesting</p><h2 id="subgrid-h" class="kfl-h3">Subgrid</h2></header>
+    <div data-region="section-text" class="kfl-prose">
+      <p>A card grid that spans the whole frame still aligns its inner blocks to the page columns: the row inside uses <code>grid-template-columns: subgrid</code>. Inner content never invents its own gutter or its own rhythm.</p>
+    </div>
+    <div data-region="section-aside" class="doc-aside">
+      <div><h3 class="kfl-label">Rules</h3><ul><li>Nested grids inherit the parent’s tracks.</li><li>Independent nested grids are the bug the audit rejects.</li></ul></div>
+    </div>
+    <div data-region="section-body" class="doc-body" style="grid-column: 1 / -1">
+      <div class="specimen">
+        <p class="specimen__label kfl-caption">A subgrid row across all twelve columns</p>
+        <div class="grid-specimen" style="grid-template-columns: repeat(12, minmax(0, 1fr));">
+          <div class="subgrid-demo">
+            <div data-region="demo" class="c-3">card A</div>
+            <div data-region="demo" class="c-3 is-strong">card B</div>
+            <div data-region="demo" class="c-3">card C</div>
+            <div data-region="demo" class="c-3">card D</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid-row doc-section" id="audit" aria-labelledby="audit-h">
+    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">05 · Verify</p><h2 id="audit-h" class="kfl-h3">The audit loop</h2></header>
+    <div data-region="section-text" class="kfl-prose">
+      <p>Generation and audit share one manifest resolver for consistent inheritance. The grid audit measures annotated regions in Chromium against configured tracks and tolerance. The optional surface audit reports selected geometry, text and target findings; neither tool replaces visual approval or behavior verification.</p>
+    </div>
+    <div data-region="section-aside" class="doc-aside">
+      <div><h3 class="kfl-label">Commands</h3><ul><li><code>node tools/grid/generate.mjs manifest.json outdir</code></li><li><code>node tools/grid/audit.mjs --manifest m.json --html page.html</code></li><li><code>node tools/surface/audit.mjs --html page.html</code></li></ul></div>
+    </div>
+    <div data-region="section-body" class="doc-body">
+      <div class="kfl-card">
+        <pre class="kfl-code">$ node tools/grid/audit.mjs --manifest examples/grid/kfl.manifest.json --html examples/components.html
+grid-audit ok — 4/8/12 columns, 14 regions on their tracks, margins 16/32/48 within tolerance
+
+$ node tools/surface/audit.mjs --html examples/components.html
+surface-audit ok — 0 rounded corners, 0 pills, smallest text 12px, smallest target 40px</pre>
+      </div>
+      <p class="kfl-small kfl-muted">Both audits run headless and cross-platform; they reuse whatever Chromium Playwright already has cached.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="grid-container grid-row">
+    <p>Kasidia Frontend Law — reference kit examples. Every rectangle has square corners; the radio control is the only circle. <a href="index.html">Back to the index</a>.</p>
+  </div>
+</footer>
+
+</body>
+</html>

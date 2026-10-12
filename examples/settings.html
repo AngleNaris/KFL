@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Settings — KFL Reference Kit</title>
+<meta name="description" content="A settings page built with the KFL reference kit: a sidenav rail beside a form column, with real validation, dirty-state handling and keyboard-safe saves.">
+<script>try{var t=localStorage.getItem('kfl-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="grid/grid.css">
+<link rel="stylesheet" href="kit/tokens.css">
+<link rel="stylesheet" href="kit/base.css">
+<link rel="stylesheet" href="kit/icons.css">
+<link rel="stylesheet" href="kit/components.css">
+<link rel="stylesheet" href="site.css">
+<script defer src="kit/kit.js"></script>
+</head>
+<body>
+<a class="kfl-skip-link" href="#main">Skip to content</a>
+
+<header class="kfl-topbar site-header">
+  <div class="grid-container kfl-topbar__row">
+    <a class="kfl-topbar__brand" href="index.html">KFL <span class="site-brand-long">Reference Kit</span></a>
+    <nav class="kfl-topbar__nav" aria-label="Examples">
+      <ul>
+        <li><a href="grid.html">Grid</a></li>
+        <li><a href="components.html">Components</a></li>
+        <li><a href="settings.html" aria-current="page">Settings page</a></li>
+      </ul>
+    </nav>
+    <div class="kfl-topbar__end">
+      <fieldset class="kfl-segmented site-theme" data-size="sm" data-theme-control>
+        <legend class="kfl-visually-hidden">Color theme</legend>
+        <label><input type="radio" name="theme" value="system" checked>Auto</label>
+        <label><input type="radio" name="theme" value="light">Light</label>
+        <label><input type="radio" name="theme" value="dark">Dark</label>
+      </fieldset>
+      <button type="button" class="kfl-button" data-size="sm" data-variant="quiet" data-grid-toggle aria-pressed="false"><span class="kfl-icon" data-icon="columns" aria-hidden="true"></span>Grid</button>
+      <button type="button" class="kfl-button kfl-topbar__menu-button" data-size="sm" data-toggle aria-expanded="false" aria-controls="site-panel"><span class="kfl-icon" data-icon="menu" aria-hidden="true"></span>Menu</button>
+    </div>
+  </div>
+  <nav class="kfl-topbar__panel" id="site-panel" aria-label="Examples (menu)" hidden>
+    <div class="grid-container kfl-stack" data-gap="3">
+      <ul>
+        <li><a href="grid.html">Grid</a></li>
+        <li><a href="components.html">Components</a></li>
+        <li><a href="settings.html" aria-current="page">Settings page</a></li>
+      </ul>
+      <fieldset class="kfl-segmented" data-size="sm" data-theme-control>
+        <legend class="kfl-visually-hidden">Color theme</legend>
+        <label><input type="radio" name="theme-panel" value="system" checked>Auto</label>
+        <label><input type="radio" name="theme-panel" value="light">Light</label>
+        <label><input type="radio" name="theme-panel" value="dark">Dark</label>
+      </fieldset>
+    </div>
+  </nav>
+</header>
+
+<div class="grid-overlay" aria-hidden="true"><div class="grid-overlay__inner"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+
+<main id="main" class="grid-container" tabindex="-1">
+
+  <header class="grid-row doc-masthead">
+    <p data-region="kicker" class="kfl-overline">KFL Reference Kit · 03</p>
+    <h1 data-region="title" class="kfl-display">Settings</h1>
+    <p data-region="lede" class="kfl-lead">A three-column rail beside a seven-column form. Same kit, same rules — validation writes its own errors, and the save bar only appears when there is something to save.</p>
+  </header>
+
+  <div class="grid-row">
+    <nav class="kfl-sidenav" data-region="settings-nav" aria-label="Settings sections">
+      <div class="kfl-sidenav__group">
+        <p class="kfl-label">Account</p>
+        <ul>
+          <li><a href="#profile" aria-current="page">Profile</a></li>
+          <li><a href="#notifications">Notifications <span class="kfl-count">3</span></a></li>
+          <li><a href="#security">Security</a></li>
+        </ul>
+      </div>
+      <div class="kfl-sidenav__group">
+        <p class="kfl-label">Workspace</p>
+        <ul>
+          <li><a href="#members">Members</a></li>
+          <li><a href="#billing">Billing</a></li>
+          <li><a href="#danger">Danger zone</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div data-region="settings-main" class="kfl-stack" data-gap="7">
+
+      <section id="profile" aria-labelledby="profile-h">
+        <h2 id="profile-h" class="kfl-h3">Profile</h2>
+        <p class="kfl-small kfl-muted">Your public name and how the team addresses you.</p>
+        <form class="kfl-form" data-dirty-watch data-validate novalidate>
+          <div class="kfl-field">
+            <label class="kfl-label" for="s-name">Full name</label>
+            <input class="kfl-input" id="s-name" name="name" type="text" value="Kasidia Vale" autocomplete="name" required minlength="2">
+            <p class="kfl-field__hint">As it appears on invoices and the member list.</p>
+          </div>
+          <div class="kfl-field">
+            <label class="kfl-label" for="s-handle">Handle</label>
+            <div class="kfl-input-group">
+              <span class="kfl-input-group__addon">@</span>
+              <input class="kfl-input" id="s-handle" name="handle" type="text" value="kasidia" pattern="[a-z0-9_\-]{3,20}" autocomplete="username" required>
+            </div>
+            <p class="kfl-field__hint">3–20 characters; lowercase, digits, dash and underscore.</p>
+          </div>
+          <div class="kfl-field">
+            <label class="kfl-label" for="s-bio">Bio</label>
+            <textarea class="kfl-textarea" id="s-bio" name="bio" rows="4" maxlength="280" data-count>Designing the laws grids obey.</textarea>
+          </div>
+          <div class="kfl-field">
+            <label class="kfl-label" for="s-role">Role</label>
+            <select class="kfl-select" id="s-role" name="role">
+              <option value="owner" selected>Owner — full control</option>
+              <option value="admin">Admin — manage members and billing</option>
+              <option value="member">Member — create and edit</option>
+              <option value="viewer">Viewer — read only</option>
+            </select>
+          </div>
+          <div class="kfl-cluster">
+            <button type="submit" class="kfl-button">Save profile</button>
+            <button type="reset" class="kfl-button" data-variant="quiet">Reset</button>
+            <p class="kfl-small kfl-muted" role="status" id="profile-status" aria-live="polite"></p>
+          </div>
+        </form>
+      </section>
+
+      <hr class="kfl-rule-heavy">
+
+      <section id="notifications" aria-labelledby="notifications-h">
+        <h2 id="notifications-h" class="kfl-h3">Notifications <span class="kfl-count">3</span></h2>
+        <p class="kfl-small kfl-muted">Choose what earns an interruption; everything else waits in the inbox.</p>
+        <form class="kfl-form" data-dirty-watch data-validate novalidate>
+          <fieldset class="kfl-fieldset">
+            <legend class="kfl-label">Email</legend>
+            <label class="kfl-choice"><input type="checkbox" class="kfl-checkbox" name="n-mentions" checked> <span>Mentions and direct replies</span></label>
+            <label class="kfl-choice"><input type="checkbox" class="kfl-checkbox" name="n-digest" checked> <span>Weekly digest, Monday 09:00</span></label>
+            <label class="kfl-choice"><input type="checkbox" class="kfl-checkbox" name="n-marketing"> <span>News and product updates</span></label>
+          </fieldset>
+          <fieldset class="kfl-fieldset">
+            <legend class="kfl-label">Push</legend>
+            <label class="kfl-choice"><input type="checkbox" class="kfl-switch" name="p-enabled" checked> <span>Enable push on this device</span></label>
+            <label class="kfl-choice"><input type="checkbox" class="kfl-switch" name="p-sound"> <span>Play a sound with each alert</span></label>
+          </fieldset>
+          <fieldset class="kfl-fieldset">
+            <legend class="kfl-label">Delivery window</legend>
+            <label class="kfl-choice"><input type="radio" class="kfl-radio" name="window" value="realtime" checked> <span>As they happen</span></label>
+            <label class="kfl-choice"><input type="radio" class="kfl-radio" name="window" value="batched"> <span>Batched, at 09:00 and 17:00</span></label>
+            <label class="kfl-choice"><input type="radio" class="kfl-radio" name="window" value="quiet"> <span>Quiet hours — nothing between 20:00 and 08:00</span></label>
+          </fieldset>
+          <div class="kfl-cluster">
+            <button type="submit" class="kfl-button">Save notifications</button>
+            <p class="kfl-small kfl-muted" role="status" id="notifications-status" aria-live="polite"></p>
+          </div>
+        </form>
+      </section>
+
+      <hr class="kfl-rule-heavy">
+
+      <section id="security" aria-labelledby="security-h">
+        <h2 id="security-h" class="kfl-h3">Security</h2>
+        <p class="kfl-small kfl-muted">Sign-in methods and session hygiene.</p>
+        <form class="kfl-form" data-dirty-watch data-validate novalidate>
+          <div class="kfl-field">
+            <label class="kfl-label" for="s-pw-current">Current password</label>
+            <input class="kfl-input" id="s-pw-current" name="pw-current" type="password" autocomplete="current-password" required>
+          </div>
+          <div class="kfl-field">
+            <label class="kfl-label" for="s-pw-new">New password</label>
+            <input class="kfl-input" id="s-pw-new" name="pw-new" type="password" autocomplete="new-password" minlength="12" required>
+            <p class="kfl-field__hint">Twelve characters minimum; a passphrase beats p4ssw0rd.</p>
+          </div>
+          <div class="kfl-field">
+            <label class="kfl-label" for="s-pw-confirm">Confirm new password</label>
+            <input class="kfl-input" id="s-pw-confirm" name="pw-confirm" type="password" autocomplete="new-password" required>
+          </div>
+          <fieldset class="kfl-fieldset">
+            <legend class="kfl-label">Two-factor</legend>
+            <div class="kfl-cluster" style="justify-content: space-between">
+              <span><strong>Authenticator app</strong><br><span class="kfl-small kfl-muted">TOTP, any standard app</span></span>
+              <label class="kfl-choice"><input type="checkbox" class="kfl-switch" name="twofa" checked> <span class="kfl-visually-hidden">Enable authenticator app</span></label>
+            </div>
+          </fieldset>
+          <div class="kfl-cluster">
+            <button type="submit" class="kfl-button">Update security</button>
+            <button type="button" class="kfl-button" data-variant="quiet"><span class="kfl-icon" data-icon="refresh" aria-hidden="true"></span>Sign out other sessions</button>
+            <p class="kfl-small kfl-muted" role="status" id="security-status" aria-live="polite"></p>
+          </div>
+        </form>
+      </section>
+
+      <hr class="kfl-rule-heavy">
+
+      <section id="danger" aria-labelledby="danger-h">
+        <h2 id="danger-h" class="kfl-h3">Danger zone</h2>
+        <div class="kfl-alert" data-variant="danger">
+          <span class="kfl-icon" data-icon="danger" aria-hidden="true"></span>
+          <div>
+            <p><strong>Deleting the workspace is immediate and irreversible.</strong></p>
+            <p class="kfl-small">All records, files and member access end at once. Export first.</p>
+          </div>
+        </div>
+        <div class="kfl-cluster" style="margin-block-start: var(--kfl-space-4)">
+          <button type="button" class="kfl-button" data-variant="danger-secondary" disabled><span class="kfl-icon" data-icon="download" aria-hidden="true"></span>Export unavailable in this demo</button>
+          <button type="button" class="kfl-button" data-variant="danger" commandfor="dlg-delete-ws" command="show-modal"><span class="kfl-icon" data-icon="trash" aria-hidden="true"></span>Delete workspace…</button>
+        </div>
+
+        <dialog class="kfl-dialog" id="dlg-delete-ws" aria-labelledby="dlg-delete-ws-title" aria-describedby="dlg-delete-ws-desc">
+          <form method="dialog">
+            <h3 id="dlg-delete-ws-title" class="kfl-h4">Delete workspace?</h3>
+            <p id="dlg-delete-ws-desc">Type the workspace name <strong>northwind</strong> to confirm. There is no undo.</p>
+            <div class="kfl-field">
+              <label class="kfl-label" for="dlg-confirm-name">Workspace name</label>
+              <input class="kfl-input" id="dlg-confirm-name" name="confirm" type="text" autocomplete="off" required pattern="northwind">
+            </div>
+            <div class="kfl-cluster" style="justify-content: flex-end">
+              <button type="submit" class="kfl-button" data-variant="quiet" value="cancel" formnovalidate>Cancel</button>
+              <button type="submit" class="kfl-button" data-variant="danger" value="confirm">Delete permanently</button>
+            </div>
+          </form>
+        </dialog>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="grid-container grid-row">
+    <p>Kasidia Frontend Law — reference kit examples. Every rectangle has square corners; the radio control is the only circle. <a href="index.html">Back to the index</a>.</p>
+  </div>
+</footer>
+
+<script>
+  addEventListener('DOMContentLoaded', () => {
+    // Demo-only: report valid submits in place, clear the status on reset.
+    for (const form of document.querySelectorAll('.kfl-form')) {
+      const status = form.querySelector('[role="status"]');
+      form.addEventListener('kfl:valid', (e) => {
+        e.preventDefault();
+        if (status) status.textContent = 'Validation passed — demo only; nothing was saved or sent.';
+      });
+      form.addEventListener('reset', () => {
+        for (const el of form.querySelectorAll('.kfl-field__error')) el.remove();
+        for (const el of form.querySelectorAll('[aria-invalid]')) el.removeAttribute('aria-invalid');
+        if (status) status.textContent = '';
+        delete form.dataset.checked;
+      });
+    }
+    const dlg = document.getElementById('dlg-delete-ws');
+    dlg.addEventListener('close', () => {
+      if (dlg.returnValue === 'confirm') dlg.querySelector('input').value = '';
+    });
+  });
+</script>
+</body>
+</html>

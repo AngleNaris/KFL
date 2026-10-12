@@ -1,0 +1,116 @@
+{
+  "name": "kfl-examples",
+  "overlayColor": "#e00087",
+  "breakpoints": [
+    {
+      "id": "mobile",
+      "minWidth": 0,
+      "columns": 4,
+      "gutter": 16,
+      "margin": 16,
+      "rationale": "phone widths: 4 columns so pairs can sit side by side (2 + 2) while every text block takes the full width; 16px margin and gutter keep 343px of content at 375px"
+    },
+    {
+      "id": "tablet",
+      "minWidth": 768,
+      "columns": 8,
+      "gutter": 24,
+      "margin": 32,
+      "container": 800,
+      "rationale": "8 columns hold a 6-column text block at 50-67ch and the 5 + 3 and 3 + 3 + 2 splits the grid specimens use (4 columns could not); the frame stops at 800px so text cannot outgrow its measure before the 12-column layout takes over"
+    },
+    {
+      "id": "desktop",
+      "minWidth": 1120,
+      "columns": 12,
+      "gutter": 24,
+      "margin": 48,
+      "container": 1280,
+      "rationale": "12 columns from the width where a 3-column label and a 3-column aside can flank a 6-column text block; the container stops at 1280px, where 6 columns of body text still read under 75ch"
+    }
+  ],
+  "regions": [
+    {
+      "role": "kicker",
+      "spans": { "mobile": 4, "tablet": 8, "desktop": 3 },
+      "rationale": "running label (page number, collection) hangs in the first three columns"
+    },
+    {
+      "role": "title",
+      "spans": { "mobile": 4, "tablet": 8, "desktop": 9 },
+      "rationale": "display title starts on column 4, the page's main reading edge"
+    },
+    {
+      "role": "lede",
+      "kind": "measure",
+      "spans": { "mobile": 4, "tablet": 8, "desktop": 7 },
+      "starts": { "desktop": 4 },
+      "rationale": "20px introduction; 7 of 12 columns keeps it inside 45-75ch at that size and shares the title's start edge"
+    },
+    {
+      "role": "section-label",
+      "spans": { "mobile": 4, "tablet": 8, "desktop": 3 },
+      "rationale": "section number and name hang in the first three columns, so every section starts on the same edge"
+    },
+    {
+      "role": "section-text",
+      "kind": "measure",
+      "spans": { "mobile": 4, "tablet": 6, "desktop": 6 },
+      "rationale": "explanatory prose at 16px, 48-70ch across the tablet and desktop ranges"
+    },
+    {
+      "role": "section-aside",
+      "spans": { "mobile": 4, "tablet": 8, "desktop": 3 },
+      "rationale": "keyboard, token and usage notes beside the prose; below it on smaller screens"
+    },
+    {
+      "role": "section-body",
+      "spans": { "mobile": 4, "tablet": 8, "desktop": 9 },
+      "starts": { "desktop": 4 },
+      "rationale": "component specimens share the prose column's start edge; the label column stays empty beside them"
+    },
+    {
+      "role": "specimen",
+      "spans": { "mobile": 4, "tablet": 8, "desktop": 12 },
+      "rationale": "full-width grid specimens whose blocks sit on page columns through subgrid"
+    },
+    {
+      "role": "demo",
+      "min": 1,
+      "rationale": "blocks inside a grid specimen: spans differ per pattern, so only their track edges are audited"
+    },
+    {
+      "role": "settings-nav",
+      "spans": { "mobile": 4, "tablet": 8, "desktop": 3 },
+      "rationale": "settings sections: a rail beside the form on desktop, a row of links above it below that"
+    },
+    {
+      "role": "settings-main",
+      "spans": { "mobile": 4, "tablet": 8, "desktop": 7 },
+      "rationale": "one form column; the two empty tracks at the end keep fields near the reading edge"
+    },
+    {
+      "role": "page-header",
+      "spans": { "mobile": 4, "tablet": 8, "desktop": 12 },
+      "rationale": "page title, its primary action and the filter bar span the frame"
+    },
+    {
+      "role": "workspace",
+      "spans": { "mobile": 4, "tablet": 8, "desktop": 12 },
+      "rationale": "the records workspace takes the whole frame; its rail and table use a local layout"
+    },
+    {
+      "role": "filters",
+      "kind": "fixed",
+      "min": 200,
+      "max": 288,
+      "rationale": "filter rail at a functional width (a bounded track, not a column count); moves into a drawer below desktop"
+    },
+    {
+      "role": "records",
+      "kind": "fixed",
+      "min": 280,
+      "rationale": "the table takes the remaining space and scrolls locally when it needs more"
+    }
+  ]
+}

@@ -6,6 +6,7 @@
 // Usage: node generate.mjs <manifest.json> [outdir]
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
+import { resolveManifest } from '../lib/manifest.mjs';
 
 function fail(msg) { console.error(`generate: ${msg}`); process.exit(1); }
 
@@ -17,55 +18,10 @@ let manifest;
 try { manifest = JSON.parse(readFileSync(resolve(manifestPath), 'utf8')); }
 catch (e) { fail(`cannot read manifest: ${e.message}`); }
 
-function intOr(v, def, min, max, label) {
-  if (v === undefined) return def;
-  const n = Number(v);
-  if (!Number.isInteger(n) || n < min || n > max) fail(`${label} must be an integer in [${min}, ${max}]`);
-  return n;
-}
-function numOr(v, def, label) {
-  if (v === undefined) return def;
-  const n = Number(v);
-  if (!Number.isFinite(n) || n < 0) fail(`${label} must be a non-negative number`);
-  return n;
-}
 const px = (n) => `${n}px`;
-
-// Breakpoints inherit unspecified fields from the previous one; the first one
-// inherits the Swiss grid reference defaults (12 / 20 / 40 / 1440).
-const bps = [];
-let prev = { columns: 12, gutter: 20, margin: 40, container: 1440 };
-for (const bp of manifest.breakpoints ?? []) {
-  const id = String(bp.id ?? `bp${bps.length}`);
-  if (bps.length && !(bp.minWidth > bps[bps.length - 1].minWidth)) fail(`breakpoint "${id}": minWidth must be strictly ascending`);
-  const r = {
-    id,
-    minWidth: numOr(bp.minWidth, undefined, `minWidth@${id}`),
-    columns: intOr(bp.columns, prev.columns, 1, 24, `columns@${id}`),
-    gutter: numOr(bp.gutter, prev.gutter, `gutter@${id}`),
-    margin: numOr(bp.margin, prev.margin, `margin@${id}`),
-    container: numOr(bp.container, prev.container, `container@${id}`),
-    spans: {},
-  };
-  if (!Number.isFinite(r.minWidth)) fail(`breakpoint "${id}": minWidth is required`);
-  bps.push(r);
-  prev = r;
-}
-if (!bps.length) fail('manifest.breakpoints must not be empty');
-
-// Region spans inherit down the breakpoint list like breakpoint fields do.
-const regions = manifest.regions ?? [];
-for (const region of regions) {
-  if (!region.role) fail('every region needs a "role"');
-  let prevSpan;
-  for (const bp of bps) {
-    const s = intOr(region.spans?.[bp.id] ?? prevSpan, undefined, 1, 24, `region "${region.role}" spans@${bp.id}`);
-    if (s === undefined) fail(`region "${region.role}" needs spans.${bp.id}`);
-    if (s > bp.columns) fail(`region "${region.role}" spans ${s} columns at "${bp.id}" but that breakpoint has ${bp.columns}`);
-    bp.spans[region.role] = s;
-    prevSpan = s;
-  }
-}
+const { bps, regions } = resolveManifest(manifest, fail);
+// Roles without a span map (local-layout regions, specimen blocks) get no span CSS.
+const spanned = regions.filter((r) => !r.local);
 
 const maxCols = Math.max(...bps.map((b) => b.columns));
 const overlayColor = manifest.overlayColor ?? '#e00087';
@@ -79,12 +35,17 @@ css += `
 .grid-container { box-sizing: border-box; width: 100%; max-width: calc(var(--container) + 2 * var(--page-margin)); margin-inline: auto; padding-inline: var(--page-margin); }
 .grid-row { display: grid; grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr)); column-gap: var(--gutter); }
 `;
-for (let n = 1; n <= maxCols; n++) css += `.c-${n} { grid-column: span ${n}; }\n`;
+// Spans set only the end line, so a start (.cs-N or a manifest start) never gets reset.
+for (let n = 1; n <= maxCols; n++) css += `.c-${n} { grid-column-end: span ${n}; }\n`;
 for (let n = 1; n <= maxCols; n++) css += `.cs-${n} { grid-column-start: ${n}; }\n`;
-for (const region of regions) {
-  css += `[data-region="${region.role}"] { grid-column: span ${bps[0].spans[region.role]}; }\n`;
+// A region with declared starts pins its first track at every breakpoint; others
+// emit only the span, leaving placement to flow (or to a .cs-N utility).
+const pinned = (region) => Object.values(region.starts).some((st) => st !== 'auto');
+const place = (region, bp) => (pinned(region) ? `grid-column-start: ${region.starts[bp.id]}; ` : '') + `grid-column-end: span ${region.spans[bp.id]};`;
+for (const region of spanned) {
+  css += `[data-region="${region.role}"] { ${place(region, bps[0])} }\n`;
   for (const bp of bps.slice(1)) {
-    css += `@media (min-width: ${bp.minWidth}px) { [data-region="${region.role}"] { grid-column: span ${bp.spans[region.role]}; } }\n`;
+    css += `@media (min-width: ${bp.minWidth}px) { [data-region="${region.role}"] { ${place(region, bp)} } }\n`;
   }
 }
 // The overlay draws the same tracks the layout uses. Opacity-only toggle so the
@@ -109,24 +70,27 @@ for (let i = 0; i < maxCols; i++) overlay += `  <span></span>\n`;
 overlay += `</div></div>\n<script>addEventListener('keydown', function (e) { if (e.ctrlKey && !e.shiftKey && !e.altKey && e.key.toLowerCase() === 'g') document.body.classList.toggle('grid-debug'); });</script>\n`;
 writeFileSync(join(outDir, 'grid-overlay.html'), overlay);
 
-console.log(`generate: wrote grid.css and grid-overlay.html to ${outDir} (${bps.length} breakpoints, ${regions.length} regions, max ${maxCols} columns)`);
+console.log(`generate: wrote grid.css and grid-overlay.html to ${outDir} (${bps.length} breakpoints, ${spanned.length} spanned regions, ${regions.length - spanned.length} without a span map, max ${maxCols} columns)`);
 
 // Declaration lint — soft warnings about the derivation, never blockers.
 const gcd = (a, b) => (b ? gcd(b, a % b) : a);
 for (const bp of bps) {
-  const used = [...new Set(Object.values(bp.spans))];
+  const used = [...new Set(spanned.map((r) => r.spans[bp.id]))];
   const g = used.reduce((a, v) => gcd(a, v), used[0] ?? 1);
   if (used.length && g > 1 && bp.columns / g >= 2)
     console.warn(`lint @${bp.id}: every used span divides by ${g} — consider ${bp.columns / g} columns unless the spare granularity is deliberate`);
   if (bp.margin < bp.gutter)
     console.warn(`lint @${bp.id}: margin ${bp.margin}px is below gutter ${bp.gutter}px — confirm the medium justifies it`);
 }
-for (const bp of manifest.breakpoints ?? [])
+for (const bp of bps)
   if (!bp.rationale) console.warn(`lint: breakpoint "${bp.id}" declares no rationale`);
-for (const r of regions)
+for (const r of regions) {
   if (!r.rationale) console.warn(`lint: region "${r.role}" declares no rationale`);
+  if (r.local && r.min === undefined && r.max === undefined)
+    console.warn(`lint: region "${r.role}" has no span map and no min/max — give its width rule a bound the audit can check`);
+}
 const notes = [
-  ...(manifest.breakpoints ?? []).filter((b) => b.rationale).map((b) => `  ${b.id}: ${b.rationale}`),
-  ...regions.filter((r) => r.rationale).map((r) => `  ${r.role}: ${r.rationale}`),
+  ...bps.filter((b) => b.rationale).map((b) => `  ${b.id}: ${b.rationale}`),
+  ...regions.filter((r) => r.rationale).map((r) => `  ${r.role}${r.local ? ' (no span map)' : ''}: ${r.rationale}`),
 ];
 if (notes.length) console.log(`design notes:\n${notes.join('\n')}`);

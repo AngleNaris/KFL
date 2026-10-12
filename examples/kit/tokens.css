@@ -1,0 +1,147 @@
+/* KFL reference kit — tokens
+   Every raw value in the kit lives here; components read only these names.
+   To adapt the kit to a product, change tokens (typeface, accent, action),
+   never component internals. Colors use light-dark(), so each token shows its
+   light and dark value side by side; contrast of every text and control pair
+   is listed in references/visual-system.md. */
+
+:root {
+  color-scheme: light dark;
+
+  /* Surfaces — large areas stay near-neutral and low in saturation. */
+  --kfl-bg: light-dark(#F6F6F3, #121211);           /* page */
+  --kfl-surface: light-dark(#FFFFFF, #1C1C1A);      /* raised sheets: fields, menus, dialogs, cards */
+  --kfl-sunken: light-dark(#EDEDE9, #0B0B0A);       /* wells: table header, code, skeleton */
+  --kfl-hover: light-dark(#EDEDE9, #272725);        /* pointer-over fill for rows and quiet buttons */
+  --kfl-inverse: light-dark(#161615, #EDEDE8);      /* tooltip, toast, selected segment */
+  --kfl-on-inverse: light-dark(#F6F6F3, #121211);
+
+  /* Text — three levels; hierarchy comes from size, weight and space first. */
+  --kfl-text: light-dark(#161615, #EDEDE8);
+  --kfl-text-2: light-dark(#484843, #BDBDB6);
+  --kfl-text-3: light-dark(#63635D, #9A9A93);       /* still >= 4.5:1 on bg, surface and sunken */
+  --kfl-text-disabled: light-dark(#9E9E97, #6C6C66);
+
+  /* Lines */
+  --kfl-rule: light-dark(#DADAD4, #34342F);         /* decorative dividers; never a control's only edge */
+  --kfl-line: light-dark(#85857E, #7C7C75);         /* control boundaries: >= 3:1 on every surface */
+  --kfl-line-strong: light-dark(#161615, #EDEDE8);  /* structural rules, hovered edges */
+
+  /* Action — the fill of primary buttons. Ink by default, which keeps the accent
+     free to mean "interactive state"; point it at the accent for a brand-colored primary. */
+  --kfl-action: light-dark(#161615, #EDEDE8);
+  --kfl-action-hover: light-dark(#3A3A36, #FFFFFF);
+  --kfl-on-action: light-dark(#FFFFFF, #121211);
+
+  /* Accent — the interactive signal: links, focus, current, selected, checked, progress. */
+  --kfl-accent: light-dark(#2B44D1, #93A3FF);
+  --kfl-accent-hover: light-dark(#2236AB, #B4C0FF);
+  --kfl-on-accent: light-dark(#FFFFFF, #121211);
+  --kfl-accent-tint: light-dark(#E8EBFA, #1C2140);
+  --kfl-focus: var(--kfl-accent);
+
+  /* States — only for states that really exist (KFL Status Integrity). */
+  --kfl-danger: light-dark(#C0271E, #FF8C82);
+  --kfl-danger-hover: light-dark(#9E1F18, #FFB0A9);
+  --kfl-on-danger: light-dark(#FFFFFF, #121211);
+  --kfl-danger-tint: light-dark(#FBEAE7, #2F1512);
+  --kfl-warning: light-dark(#8F5800, #F2B84B);
+  --kfl-warning-tint: light-dark(#FBF0DA, #2C220F);
+  --kfl-success: light-dark(#1B7340, #63CE90);
+  --kfl-success-tint: light-dark(#E3F2E8, #11261A);
+
+  --kfl-scrim: light-dark(rgb(22 22 21 / 0.48), rgb(0 0 0 / 0.64));
+  --kfl-shadow: light-dark(rgb(22 22 21 / 0.14), rgb(0 0 0 / 0.72));
+
+  /* Typography — one family for the interface, one for code. The stack reaches a
+     neo-grotesque on every platform, then the platform's CJK face. */
+  --kfl-font-sans: "Helvetica Neue", Helvetica, "Segoe UI", system-ui, Arial,
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
+  --kfl-font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* Type scale: size / line height. Line heights land on the 4px rhythm at a 16px root. */
+  --kfl-fs-caption: 0.75rem;  --kfl-lh-caption: 1rem;      /* 12/16 — also the CJK floor */
+  --kfl-fs-small: 0.875rem;   --kfl-lh-small: 1.25rem;     /* 14/20 */
+  --kfl-fs-body: 1rem;        --kfl-lh-body: 1.5rem;       /* 16/24 */
+  --kfl-fs-lead: 1.25rem;     --kfl-lh-lead: 1.75rem;      /* 20/28 */
+  --kfl-fs-h3: 1.5rem;        --kfl-lh-h3: 2rem;           /* 24/32 */
+  --kfl-fs-h2: 2rem;          --kfl-lh-h2: 2.5rem;         /* 32/40 */
+  --kfl-fs-h1: 3rem;          --kfl-lh-h1: 3.25rem;        /* 48/52 */
+  --kfl-fs-display: clamp(3rem, 1.5rem + 4.5vw, 6rem);
+  --kfl-lh-display: 1;
+  --kfl-fw-regular: 400;
+  --kfl-fw-medium: 500;
+  --kfl-fw-bold: 700;
+  --kfl-measure: 66ch;                                     /* prose line length */
+
+  /* Space — a 4px base. Related things sit closer than unrelated groups. */
+  --kfl-space-1: 0.25rem;  /*  4 */
+  --kfl-space-2: 0.5rem;   /*  8 */
+  --kfl-space-3: 0.75rem;  /* 12 */
+  --kfl-space-4: 1rem;     /* 16 */
+  --kfl-space-5: 1.5rem;   /* 24 */
+  --kfl-space-6: 2rem;     /* 32 */
+  --kfl-space-7: 3rem;     /* 48 */
+  --kfl-space-8: 4rem;     /* 64 */
+  --kfl-space-9: 6rem;     /* 96 */
+
+  /* Controls — heights; touch devices get 44px everywhere (see below). */
+  --kfl-control-sm: 2rem;      /* 32 — dense desktop toolbars and tables */
+  --kfl-control-md: 2.5rem;    /* 40 — default */
+  --kfl-control-lg: 3rem;      /* 48 — prominent actions */
+  --kfl-hit-min: 1.5rem;       /* 24 — smallest pointer target (WCAG 2.5.8) */
+  --kfl-icon-size: 1.25rem;    /* 20 — icons sit on the text line they label */
+
+  /* Geometry — square by contract. There is no radius scale to choose from:
+     base.css pins every box to 0, and tools/surface/audit.mjs verifies it. */
+  --kfl-radius: 0;
+  --kfl-border: 1px;
+  --kfl-border-strong: 2px;
+  --kfl-rule-heavy: 4px;       /* the rule above a major section */
+  --kfl-focus-width: 2px;
+  --kfl-focus-offset: 2px;
+  --kfl-elevation: 4px;        /* hard offset of a floating layer — drawn, never blurred */
+
+  /* Motion — feedback inside 0.1 s; surfaces leave along the path they entered.
+     The exit curve is the enter curve reversed in time: cubic-bezier(x1,y1,x2,y2)
+     reversed is cubic-bezier(1-x2, 1-y2, 1-x1, 1-y1). */
+  --kfl-dur-state: 100ms;      /* hover, press, check */
+  --kfl-dur-small: 160ms;      /* menus, tooltips */
+  --kfl-dur-panel: 240ms;      /* dialogs, drawers, toasts */
+  --kfl-ease-enter: cubic-bezier(0.2, 0, 0, 1);
+  --kfl-ease-exit: cubic-bezier(1, 0, 0.8, 1);
+  --kfl-travel: 0.5rem;        /* how far a surface moves while it enters or leaves */
+
+  --kfl-z-sticky: 10;
+  --kfl-z-dropdown: 100;
+  --kfl-z-toast: 1000;
+}
+
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+
+/* CJK text needs more leading than Latin at the same size; applies to a whole
+   document or to any subtree marked with lang. */
+:is(:lang(zh), :lang(ja), :lang(ko)) {
+  --kfl-lh-body: 1.75rem;
+  --kfl-lh-small: 1.5rem;
+  --kfl-lh-lead: 2rem;
+}
+
+/* Coarse pointers: every control reaches 44px (KFL Interaction Baseline). */
+@media (pointer: coarse) {
+  :root {
+    --kfl-control-sm: 2.75rem;
+    --kfl-control-md: 2.75rem;
+    --kfl-hit-min: 2.75rem;
+  }
+}
+
+/* Reduced motion: no travel, shorter fades; state still changes visibly. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --kfl-travel: 0px;
+    --kfl-dur-small: 80ms;
+    --kfl-dur-panel: 120ms;
+  }
+}

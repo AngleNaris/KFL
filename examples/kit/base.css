@@ -1,0 +1,95 @@
+/* KFL reference kit — base
+   Element defaults, typography roles and layout primitives. Load after tokens.css. */
+
+/* Square geometry is a hard rule of the kit: no rounded rectangles and no pills,
+   including native controls and third-party markup. The only curve a component
+   may reintroduce is a true circle whose shape is itself the affordance (the
+   radio control). tools/surface/audit.mjs verifies the rendered page. */
+*, *::before, *::after { box-sizing: border-box; border-radius: var(--kfl-radius); }
+::file-selector-button { border-radius: var(--kfl-radius); }
+
+html {
+  font-family: var(--kfl-font-sans);
+  font-size: 100%;                 /* respect the reader's chosen default size */
+  line-height: var(--kfl-lh-body);
+  color: var(--kfl-text);
+  background: var(--kfl-bg);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  font-kerning: normal;
+  scrollbar-gutter: stable;        /* locking scroll for a modal must not shift the page */
+}
+html:has(dialog:modal) { overflow: hidden; }
+body { margin: 0; min-height: 100vh; font-size: var(--kfl-fs-body); }
+
+h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd, ul, ol, pre, fieldset { margin: 0; }
+h1, h2, h3, h4, h5, h6 { font-size: inherit; font-weight: var(--kfl-fw-bold); text-wrap: balance; }
+p, li, dd, blockquote, figcaption { text-wrap: pretty; }
+ul[role="list"], ol[role="list"] { list-style: none; padding: 0; }
+fieldset { border: 0; padding: 0; min-inline-size: 0; }
+legend { padding: 0; }
+img, video, canvas { display: block; max-inline-size: 100%; block-size: auto; }
+table { border-collapse: collapse; }
+hr { border: 0; border-block-start: var(--kfl-border) solid var(--kfl-rule); margin: 0; }
+[hidden] { display: none !important; }
+
+button, input, select, textarea { font: inherit; color: inherit; letter-spacing: inherit; margin: 0; }
+button, summary, label:has(> input:is([type="checkbox"], [type="radio"])) { cursor: pointer; }
+:disabled { cursor: not-allowed; }
+
+/* Links look like links wherever they sit in running text: underlined, accent colored. */
+a { color: var(--kfl-accent); text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+a:hover { color: var(--kfl-accent-hover); text-decoration-thickness: 2px; }
+
+/* One focus treatment everywhere: a 2px accent outline, square, never removed. */
+:focus-visible { outline: var(--kfl-focus-width) solid var(--kfl-focus); outline-offset: var(--kfl-focus-offset); }
+[tabindex="-1"]:focus { outline: none; } /* containers focused by script (skip target, error summary) */
+::selection { background: var(--kfl-accent-tint); color: var(--kfl-text); }
+
+code, kbd, samp, pre { font-family: var(--kfl-font-mono); font-size: 0.875em; }
+
+/* CJK: no tracking changes, no synthetic italics. */
+:is(:lang(zh), :lang(ja), :lang(ko)) { letter-spacing: 0; }
+:is(:lang(zh), :lang(ja), :lang(ko)) :is(em, i, cite) { font-style: normal; font-weight: var(--kfl-fw-bold); }
+
+/* ---- Typography roles --------------------------------------------------
+   Use roles, not raw sizes. A view normally needs four or five of them. */
+.kfl-display { font-size: var(--kfl-fs-display); line-height: var(--kfl-lh-display); font-weight: var(--kfl-fw-bold); letter-spacing: -0.03em; }
+.kfl-h1 { font-size: var(--kfl-fs-h1); line-height: var(--kfl-lh-h1); font-weight: var(--kfl-fw-bold); letter-spacing: -0.02em; }
+.kfl-h2 { font-size: var(--kfl-fs-h2); line-height: var(--kfl-lh-h2); font-weight: var(--kfl-fw-bold); letter-spacing: -0.015em; }
+.kfl-h3 { font-size: var(--kfl-fs-h3); line-height: var(--kfl-lh-h3); font-weight: var(--kfl-fw-bold); letter-spacing: -0.01em; }
+.kfl-h4 { font-size: var(--kfl-fs-lead); line-height: var(--kfl-lh-lead); font-weight: var(--kfl-fw-bold); }
+.kfl-lead { font-size: var(--kfl-fs-lead); line-height: var(--kfl-lh-lead); color: var(--kfl-text-2); }
+.kfl-body { font-size: var(--kfl-fs-body); line-height: var(--kfl-lh-body); }
+.kfl-small { font-size: var(--kfl-fs-small); line-height: var(--kfl-lh-small); }
+.kfl-caption { font-size: var(--kfl-fs-caption); line-height: var(--kfl-lh-caption); color: var(--kfl-text-3); }
+.kfl-label { font-size: var(--kfl-fs-small); line-height: var(--kfl-lh-small); font-weight: var(--kfl-fw-medium); }
+.kfl-overline { font-size: var(--kfl-fs-caption); line-height: var(--kfl-lh-caption); font-weight: var(--kfl-fw-medium); letter-spacing: 0.08em; text-transform: uppercase; color: var(--kfl-text-2); }
+:is(.kfl-display, .kfl-h1, .kfl-h2, .kfl-h3, .kfl-overline):is(:lang(zh), :lang(ja), :lang(ko)) { letter-spacing: 0; }
+.kfl-muted { color: var(--kfl-text-2); }
+.kfl-subtle { color: var(--kfl-text-3); }
+.kfl-num { font-variant-numeric: tabular-nums lining-nums; }
+.kfl-mono { font-family: var(--kfl-font-mono); }
+.kfl-prose { max-inline-size: var(--kfl-measure); }
+.kfl-prose > * + * { margin-block-start: var(--kfl-space-4); }
+
+.kfl-visually-hidden {
+  position: absolute !important; inline-size: 1px; block-size: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap; margin: -1px; padding: 0; border: 0;
+}
+
+/* ---- Layout primitives ---------------------------------------------------
+   Page structure comes from the generated grid (grid/grid.css). These only
+   arrange items inside a region, with gaps taken from the space scale. */
+.kfl-stack { display: flex; flex-direction: column; gap: var(--kfl-gap, var(--kfl-space-4)); }
+.kfl-cluster { display: flex; flex-wrap: wrap; align-items: center; gap: var(--kfl-gap, var(--kfl-space-3)); }
+.kfl-cluster[data-justify="end"] { justify-content: flex-end; }
+.kfl-cluster[data-justify="between"] { justify-content: space-between; }
+.kfl-cluster[data-align="baseline"] { align-items: baseline; }
+:is(.kfl-stack, .kfl-cluster)[data-gap="1"] { --kfl-gap: var(--kfl-space-1); }
+:is(.kfl-stack, .kfl-cluster)[data-gap="2"] { --kfl-gap: var(--kfl-space-2); }
+:is(.kfl-stack, .kfl-cluster)[data-gap="3"] { --kfl-gap: var(--kfl-space-3); }
+:is(.kfl-stack, .kfl-cluster)[data-gap="5"] { --kfl-gap: var(--kfl-space-5); }
+:is(.kfl-stack, .kfl-cluster)[data-gap="6"] { --kfl-gap: var(--kfl-space-6); }
+:is(.kfl-stack, .kfl-cluster)[data-gap="7"] { --kfl-gap: var(--kfl-space-7); }
+:is(.kfl-stack, .kfl-cluster)[data-gap="8"] { --kfl-gap: var(--kfl-space-8); }
