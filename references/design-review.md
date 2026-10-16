@@ -7,6 +7,12 @@ Use this within the existing G2 image review and post-implementation verificatio
 3. **Preserve approved choices.** Gradients, rounded corners, colors and decoration in an approved design remain valid choices. Carry forward the decision and its scope so later reviews do not reopen it without new evidence or changed requirements. A real conflict follows the existing realignment/G1/G2 route.
 4. **Review the result.** Before G2 approval, inspect the actual generated image and its supplementary contract. After implementation, compare the same fixtures/viewports against that approved package and inspect sibling pages affected by shared changes. Record visual findings separately from keyboard, task-flow and persistence evidence. No scan result proves visual quality or working behavior.
 
+## Mandatory implementation review
+
+A changed UI cannot be marked complete without actual inspection of its running screenshots and real relevant interactions, even for a small repair or an explicit design-image waiver. Check adjacent icon/control scale and baselines, spacing, labels and focus/open/close states; rerun affected checks after fixes. An inaccessible screenshot or unavailable browser is unverified evidence, not a passed review. Builds and DOM measurements do not replace looking at the rendered result.
+
+Choose the matrix from the product's declared devices and supported window range. For non-mobile GUIs, do not add unrelated phone/tablet widths or 320/375 CSS-pixel reflow; retain agreed accessibility/desktop enlargement checks. In every interaction state reject outline frames and visually equivalent outer rings, while requiring a clear non-outline keyboard focus indicator. Record actual environment, states, observations and evidence in the existing ledger; do not invent an additional approval stage.
+
 ## Example acceptance cases
 
 | Observation | Disposition and next step |

@@ -46,6 +46,8 @@ Use browser geometry for alignment, real keyboard/pointer journeys for behavior,
 for data claims. Grid/surface CLI exit 0 proves only the configured measured checks, not G2 approval or G3 completion.
 Map evidence to the existing VIS/FLOW/DATA/ENG acceptance items and supported verification surfaces;
 keep the original delivery/review ledger as the sole completion record.
+Every changed UI slice requires VIS and FLOW evidence, including repairs and explicit design-image waivers. Actually inspect running UI screenshots and exercise affected interactions; screenshot failure or unperformed interaction leaves required evidence unverified and prevents UI completion. Do not replace it with builds, geometry or an uninspected file path.
+Declare the supported platform/window range in the existing plan: desktop-only GUIs do not inherit phone/tablet or 320/375 CSS-pixel checks. Keep agreed accessibility/enlargement requirements without inventing mobile scope. Verify no interaction-triggered outline frame (including shadow/pseudo-element substitutes) and a clearly visible non-outline keyboard focus cue. These are acceptance requirements, not new CLI fields or an automatic visual-quality detector.
 Reapply the design review after shared-token/component fixes across affected pages; distinguish visual comparison from real interaction and persistence checks.
 
 ## Resume, change or repair
