@@ -16,7 +16,8 @@
       "columns": 8,
       "gutter": 20,
       "margin": 24,
-      "rationale": "smallest count that expresses the 5/3 text-over-rail split"
+      "container": 1040,
+      "rationale": "smallest count that expresses the 5/3 text-over-rail split; the frame stops at 1040px so 5 columns of text stay under 75ch until 12 columns take over"
     },
     {
       "id": "desktop",

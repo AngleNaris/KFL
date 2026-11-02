@@ -20,6 +20,21 @@ html {
   scrollbar-gutter: stable;        /* locking scroll for a modal must not shift the page */
 }
 html:has(dialog:modal) { overflow: hidden; }
+
+/* Scrollbars: one token-colored, square scrollbar for every scroll container
+   (page, tables, dialogs, fields, code); the browser default never shows.
+   The standard properties leave the thumb's shape to the engine (Chromium draws
+   a rounded thumb with arrow buttons), so engines with the WebKit parts draw
+   those instead. Chromium ignores the parts once a standard property is set:
+   the standard pair applies only where the parts are unsupported (Firefox). */
+::-webkit-scrollbar { width: var(--kfl-scrollbar-size); height: var(--kfl-scrollbar-size); background: var(--kfl-scrollbar-track); }
+::-webkit-scrollbar-thumb { background: var(--kfl-scrollbar-thumb); }
+::-webkit-scrollbar-thumb:hover { background: var(--kfl-scrollbar-thumb-hover); }
+::-webkit-scrollbar-corner { background: transparent; }
+@supports not selector(::-webkit-scrollbar) {
+  html { scrollbar-color: var(--kfl-scrollbar-thumb) var(--kfl-scrollbar-track); }
+  * { scrollbar-width: thin; }
+}
 body { margin: 0; min-height: 100vh; font-size: var(--kfl-fs-body); }
 
 h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd, ul, ol, pre, fieldset { margin: 0; }
@@ -37,13 +52,22 @@ button, input, select, textarea { font: inherit; color: inherit; letter-spacing:
 button, summary, label:has(> input:is([type="checkbox"], [type="radio"])) { cursor: pointer; }
 :disabled { cursor: not-allowed; }
 
-/* Links look like links wherever they sit in running text: underlined, accent colored. */
-a { color: var(--kfl-accent); text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
-a:hover { color: var(--kfl-accent-hover); text-decoration-thickness: 2px; }
+/* Links look like links wherever they sit in running text: underlined, accent colored.
+   Hover changes colour only: a 1px thickness step reads as a flicker. Keyboard focus
+   thickens the underline and eases it in. text-decoration-thickness does not
+   interpolate in Chromium, so the thickness reads a registered length that does. */
+@property --kfl-underline { syntax: "<length>"; inherits: false; initial-value: 1px; }
+a {
+  color: var(--kfl-accent); text-decoration-line: underline; text-decoration-thickness: var(--kfl-underline); text-underline-offset: 0.2em;
+  transition: color var(--kfl-dur-state), --kfl-underline var(--kfl-dur-small) var(--kfl-ease-enter);
+}
+a:hover { color: var(--kfl-accent-hover); }
 
-/* One focus treatment everywhere: a 2px accent outline, square, never removed. */
-:focus-visible { outline: var(--kfl-focus-width) solid var(--kfl-focus); outline-offset: var(--kfl-focus-offset); }
-[tabindex="-1"]:focus { outline: none; } /* containers focused by script (skip target, error summary) */
+/* Focus never draws an outline frame: not for pointer, keyboard, script or restored
+   focus. The cue follows what an element already draws (components.css, Focus cues):
+   a border changes colour (never width), an underline thickens, otherwise the text changes colour. */
+:focus { outline: none; }
+a:focus-visible { --kfl-underline: var(--kfl-focus-bar); } /* links already underline */
 ::selection { background: var(--kfl-accent-tint); color: var(--kfl-text); }
 
 code, kbd, samp, pre { font-family: var(--kfl-font-mono); font-size: 0.875em; }
@@ -70,7 +94,7 @@ code, kbd, samp, pre { font-family: var(--kfl-font-mono); font-size: 0.875em; }
 .kfl-subtle { color: var(--kfl-text-3); }
 .kfl-num { font-variant-numeric: tabular-nums lining-nums; }
 .kfl-mono { font-family: var(--kfl-font-mono); }
-.kfl-prose { max-inline-size: var(--kfl-measure); }
+.kfl-prose > *, p.kfl-prose { max-inline-size: var(--kfl-measure); } /* the measure caps text, not its grid region */
 .kfl-prose > * + * { margin-block-start: var(--kfl-space-4); }
 
 .kfl-visually-hidden {

@@ -2,8 +2,8 @@
    Every raw value in the kit lives here; components read only these names.
    To adapt the kit to a product, change tokens (typeface, accent, action),
    never component internals. Colors use light-dark(), so each token shows its
-   light and dark value side by side; contrast of every text and control pair
-   is listed in references/visual-system.md. */
+   light and dark value side by side. Text pairs keep 4.5:1 and control and
+   state cues 3:1 on every surface they meet (KFL Color System). */
 
 :root {
   color-scheme: light dark;
@@ -26,6 +26,9 @@
   --kfl-rule: light-dark(#DADAD4, #34342F);         /* decorative dividers; never a control's only edge */
   --kfl-line: light-dark(#85857E, #7C7C75);         /* control boundaries: >= 3:1 on every surface */
   --kfl-line-strong: light-dark(#161615, #EDEDE8);  /* structural rules, hovered edges */
+  --kfl-scrollbar-thumb: var(--kfl-line);           /* every scroll container; >= 3:1 like any control edge */
+  --kfl-scrollbar-thumb-hover: var(--kfl-line-strong);
+  --kfl-scrollbar-track: transparent;
 
   /* Action — the fill of primary buttons. Ink by default, which keeps the accent
      free to mean "interactive state"; point it at the accent for a brand-colored primary. */
@@ -39,6 +42,12 @@
   --kfl-on-accent: light-dark(#FFFFFF, #121211);
   --kfl-accent-tint: light-dark(#E8EBFA, #1C2140);
   --kfl-focus: var(--kfl-accent);
+  /* Focus colours: each changes the colour it replaces by >= 3:1 (KFL Interaction
+     Baseline); text in --kfl-focus-shift still reads at 4.5:1. */
+  --kfl-focus-shift: light-dark(#3B56E3, #677CE9);        /* replaces text-coloured ink or edges, --kfl-rule and surface edges */
+  --kfl-focus-shift-line: light-dark(#162C9C, #D7DCF9);   /* replaces --kfl-line edges */
+  --kfl-focus-shift-accent: light-dark(#94A3F0, #2442E0); /* replaces accent edges (checked) */
+  --kfl-focus-shift-danger: light-dark(#050A24, #2946E0); /* replaces danger edges */
 
   /* States — only for states that really exist (KFL Status Integrity). */
   --kfl-danger: light-dark(#C0271E, #FF8C82);
@@ -60,6 +69,7 @@
   --kfl-font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "Liberation Mono", monospace;
 
   /* Type scale: size / line height. Line heights land on the 4px rhythm at a 16px root. */
+  --kfl-fs-floor: 0.625rem;   /* 10 — the Latin type floor; never a default size */
   --kfl-fs-caption: 0.75rem;  --kfl-lh-caption: 1rem;      /* 12/16 — also the CJK floor */
   --kfl-fs-small: 0.875rem;   --kfl-lh-small: 1.25rem;     /* 14/20 */
   --kfl-fs-body: 1rem;        --kfl-lh-body: 1.5rem;       /* 16/24 */
@@ -98,8 +108,10 @@
   --kfl-border: 1px;
   --kfl-border-strong: 2px;
   --kfl-rule-heavy: 4px;       /* the rule above a major section */
-  --kfl-focus-width: 2px;
-  --kfl-focus-offset: 2px;
+  --kfl-indicator: 0.1875rem;  /* current/selected bars */
+  --kfl-focus-bar: var(--kfl-indicator); /* keyboard focus: underline or inset bar, never an outline frame */
+  --kfl-focus-gap: 0.25em;     /* focus underline offset below the text */
+  --kfl-scrollbar-size: 0.5rem; /* 8 — WebKit-part track; standard-only engines draw "thin" */
   --kfl-elevation: 4px;        /* hard offset of a floating layer — drawn, never blurred */
 
   /* Motion — feedback inside 0.1 s; surfaces leave along the path they entered.
@@ -111,6 +123,11 @@
   --kfl-ease-enter: cubic-bezier(0.2, 0, 0, 1);
   --kfl-ease-exit: cubic-bezier(1, 0, 0.8, 1);
   --kfl-travel: 0.5rem;        /* how far a surface moves while it enters or leaves */
+  --kfl-tooltip-delay: 400ms;  /* hover intent before a tooltip shows; focus shows it at once */
+  --kfl-dur-loop: 1.6s;        /* indeterminate progress, skeleton pulse */
+  --kfl-dur-loader: 900ms;     /* one cycle of the three-dot loader */
+  --kfl-loader-dot: 0.375rem;
+  --kfl-loader-gap: 0.1875rem;
 
   --kfl-z-sticky: 10;
   --kfl-z-dropdown: 100;
@@ -143,5 +160,6 @@
     --kfl-travel: 0px;
     --kfl-dur-small: 80ms;
     --kfl-dur-panel: 120ms;
+    --kfl-dur-loader: 1800ms;
   }
 }

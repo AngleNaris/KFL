@@ -2,7 +2,7 @@
    One family, one drawing contract: 24px grid, 2px stroke, square caps, miter
    joins (a round cap turns every stroke into a pill, so it is excluded with the
    rest of the rounded geometry). Icons are CSS masks painted with currentColor,
-   so they follow text color, theme and forced-colors mode, and work from file://.
+   so they follow text color and theme, and work from file://.
 
    Each glyph is defined once as --kfl-icon-<name>, so components can reuse it in
    CSS (checkbox tick, select chevron, sort arrows) without copying the drawing.
@@ -20,7 +20,6 @@
   vertical-align: -0.3em;
   background-color: currentColor;
   mask: var(--kfl-icon) center / contain no-repeat;
-  forced-color-adjust: none; /* keep painting with the (forced) text color */
 }
 .kfl-icon[data-size="sm"] { --kfl-icon-size: 1rem; }
 .kfl-icon[data-size="lg"] { --kfl-icon-size: 1.5rem; }
@@ -68,6 +67,14 @@
   --kfl-icon-lock: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='square' stroke-linejoin='miter'><path d='M5 10.5h14V20H5zM8.5 10.5V5.5h7v5'/></svg>");
   --kfl-icon-bell: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='square' stroke-linejoin='miter'><path d='M6 17V10l2-4.5h8l2 4.5v7M4 17h16M10 20.5h4'/></svg>");
   --kfl-icon-home: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='square' stroke-linejoin='miter'><path d='M4 11l8-7 8 7v9H4z'/><path d='M10 20v-6h4v6'/></svg>");
+  --kfl-icon-save: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='square' stroke-linejoin='miter'><path d='M4 4h12.5L20 7.5V20H4z'/><path d='M8 4v4.5h7V4M7.5 20v-6.5h9V20'/></svg>");
+  --kfl-icon-send: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='square' stroke-linejoin='miter'><path d='M20.5 3.5L3.5 11l7 2.5 2.5 7z'/><path d='M10.5 13.5l10-10'/></svg>");
+  --kfl-icon-archive: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='square' stroke-linejoin='miter'><path d='M3.5 4.5h17v4h-17z'/><path d='M5 8.5V20h14V8.5M10 12.5h4'/></svg>");
+  --kfl-icon-sign-out: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='square' stroke-linejoin='miter'><path d='M10 4H4.5v16H10'/><path d='M14.5 7.5L19 12l-4.5 4.5M19 12H9'/></svg>");
+  --kfl-icon-undo: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='square' stroke-linejoin='miter'><path d='M4.5 12a7.5 7.5 0 1 0 2.2-5.3'/><path d='M4.5 4.5v5h5'/></svg>");
+  --kfl-icon-user-minus: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='square' stroke-linejoin='miter'><path d='M5.5 4h7v7h-7zM2.5 20v-5h13v5M17 9.5h4.5'/></svg>");
+  --kfl-icon-publish: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='square' stroke-linejoin='miter'><path d='M5 4h14M12 20V8.5M7 13l5-5 5 5'/></svg>");
+  --kfl-icon-panel-open: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='square' stroke-linejoin='miter'><path d='M4 4h16v16H4zM14.5 4v16M10 9l-3 3 3 3'/></svg>");
 }
 
 [data-icon="check"] { --kfl-icon: var(--kfl-icon-check); }
@@ -112,3 +119,11 @@
 [data-icon="lock"] { --kfl-icon: var(--kfl-icon-lock); }
 [data-icon="bell"] { --kfl-icon: var(--kfl-icon-bell); }
 [data-icon="home"] { --kfl-icon: var(--kfl-icon-home); }
+[data-icon="save"] { --kfl-icon: var(--kfl-icon-save); }
+[data-icon="send"] { --kfl-icon: var(--kfl-icon-send); }
+[data-icon="archive"] { --kfl-icon: var(--kfl-icon-archive); }
+[data-icon="sign-out"] { --kfl-icon: var(--kfl-icon-sign-out); }
+[data-icon="undo"] { --kfl-icon: var(--kfl-icon-undo); }
+[data-icon="user-minus"] { --kfl-icon: var(--kfl-icon-user-minus); }
+[data-icon="publish"] { --kfl-icon: var(--kfl-icon-publish); }
+[data-icon="panel-open"] { --kfl-icon: var(--kfl-icon-panel-open); }

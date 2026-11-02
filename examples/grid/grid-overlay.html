@@ -12,4 +12,4 @@
   <span></span>
   <span></span>
 </div></div>
-<script>addEventListener('keydown', function (e) { if (e.ctrlKey && !e.shiftKey && !e.altKey && e.key.toLowerCase() === 'g') document.body.classList.toggle('grid-debug'); });</script>
+<script>addEventListener('keydown', function (e) { if (e.altKey && e.shiftKey && !e.ctrlKey && !e.metaKey && e.code === 'KeyG') { var on = document.body.classList.toggle('grid-debug'); document.querySelectorAll('[data-grid-toggle]').forEach(function (b) { b.setAttribute('aria-pressed', String(on)); }); } });</script>

@@ -2,14 +2,24 @@
 
 Read the sibling [visual specification](https://github.com/AngleNaris/starcode/blob/main/develop-with-visual-spec/SPEC.md) and
 [mancode adapter](https://github.com/AngleNaris/starcode/blob/main/develop-with-visual-spec/MANCODE.md) for stage authority.
-KFL is the design-quality specialist, not another workflow engine.
+KFL is the design-quality specialist, not another workflow engine. Its stages (SKILL.md) run inside the Starcode stages:
+
+| KFL stage | Starcode stage |
+| --- | --- |
+| 0 Load, 1 Clarify | before G1, inside the one consolidated question set |
+| 2 Spec | G1 logic approval, then the G2 image brief and visual approval |
+| 3 Plan slices | the final plan after G2, before execution confirmation |
+| 4 Build, 5 Verify | execution and evidence (VIS/FLOW/DATA/ENG) |
+| 6 Report | the existing delivery/review report |
 
 ## One contract, one conversation
 
 Use the existing TaskRef, requirements, policy and bound `docs/<module>.md` plan.
 Keep design approvals and image-generation records outside the runtime `delivery-record` block.
 Do not copy task/session status into KFL files or extend `design-policy.json` with custom fields.
-The coordinating assistant asks one consolidated set of unresolved decisions. KFL must reuse answers and approved directions instead of starting another style questionnaire.
+The KFL spec lives as a section of the bound plan: answers, design contract, slice rule IDs and the rule checklist.
+Stage and approval status stay in Starcode's own ledger; checklist evidence points to the existing acceptance items instead of restating them.
+The coordinating assistant asks one consolidated set of unresolved decisions, including any open item of KFL's must-ask list. KFL must reuse answers and approved directions instead of starting another style questionnaire.
 
 ## G1: define what the user can do
 

@@ -28,14 +28,25 @@ See [grid tool details](../tools/grid/README.md).
 ## Surface
 
 ```sh
-npm run surface:audit -- --html ../examples/components.html --viewports 375t,1440 --strict-touch --json /absolute/path/to/surface-report.json
+npm run surface:audit -- --html /path/to/page.html --viewports 375t,1440 --json /absolute/path/to/surface-report.json
+npm run surface:audit -- --html ../examples/components.html --viewports 375t,1440 --geometry square
 ```
 
-This detects selected type-floor and target-size risks, and the reference kit's geometry policy.
-The current surface checker always applies square geometry. Run it only for an explicitly selected square-geometry contract; it cannot validate an approved rounded visual system. Keep that project's own geometry checks instead.
+This detects selected type-floor and target-size risks, default browser scrollbars (SCR) and corner geometry.
+The scrollbar check covers the page when it scrolls and every element with `overflow: auto|scroll`, hidden ones included,
+and passes when the standard `scrollbar-color` or `scrollbar-width` is set or `::-webkit-scrollbar` is sized; it does not judge the thumb's shape or contrast.
+Headless Chromium hides scrollbars in screenshots; to inspect them (SCR-4), launch a full Chromium without `--hide-scrollbars`. The default `--geometry rounded`
+measures KFL's Corner Radius rules: one radius per component family, a larger radius for a clearly larger
+family (short side at least 2x), and concentric nested corners. Square-only pages pass it trivially.
+`--geometry square` is the reference kit's stricter contract: any rounded rectangle, pill, round SVG cap/join or
+rounded clip fails. Use it only for a project that explicitly chose square geometry.
+Families are keyed by an element's first class (plus `data-size`); a family named differently is not compared.
 The checker samples hit areas; it is not a complete WCAG conformance engine, keyboard audit or behavior test.
 Primary touch controls still need KFL's 44px target check; the optional warning mode does not lower an approved requirement.
 Native control behavior and an approved icon family must not be replaced merely to silence an aesthetic finding.
+
+Exit codes for both audits: 0 = the configured checks passed, 1 = violations, 2 = not tested
+(bad input, missing page, unavailable browser). Never report exit 2 as a pass or a failure.
 
 Keep generated reports/screenshots outside the distributed skill. Record command, environment, result, measured scope,
 unmeasured requirements and exceptions in the original task ledger. Do not upload private page content without authorization.
@@ -45,3 +56,5 @@ unmeasured requirements and exceptions in the original task ledger. Do not uploa
 `examples/` is a local synthetic component specimen, not an approved image package or a production backend.
 Its geometry, tokens and data demonstrate one direction; use only parts consistent with the project's approved contract.
 Demo feedback and browser storage cannot establish real identity, server persistence or business integration.
+Its focus cues follow the Interaction Baseline order (border, then underline, then color) with
+3:1 focus tokens per resting color; tab through the components page to inspect them.

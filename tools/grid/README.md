@@ -47,7 +47,7 @@ node generate.mjs grid.manifest.json [outdir]
 
 Emits `grid.css` (tokens, `.grid-container`, `.grid-row`, `.c-N`/`.cs-N` utilities,
 per-breakpoint `[data-region]` spans, debug overlay) and `grid-overlay.html`
-(Ctrl+G toggle). The overlay animates opacity only, per Law 3.
+(Alt+Shift+G toggle; Ctrl+G stays with the browser). The overlay animates opacity only, per Law 3.
 
 `generate.mjs` also lints the declaration — soft warnings, never blockers: unused
 granularity (every span divisible, so a smaller column count would express the same
@@ -76,7 +76,7 @@ node audit.mjs --manifest grid.manifest.json --url http://localhost:5173 --json 
 ```
 
 Default viewports: a phone width, both sides of each breakpoint, and a container-fitting width.
-Checks, all against the manifest numbers (±1px, per the Interaction Baseline):
+Checks, all against the manifest numbers (±1px, per Law 1's anchor check):
 
 - every `[data-region]` left/right edge resolves to a track line
 - region width matches the declared span
@@ -86,9 +86,9 @@ Checks, all against the manifest numbers (±1px, per the Interaction Baseline):
   1ch is measured live from the region's own typography, not estimated)
 - declared `min`/`max` bounds hold
 
-Exit code 0 = configured geometry checks passed, 1 = violations, 2 = invalid input.
-No visible annotated regions is a failure, not a vacuous pass. Browser/environment
-errors are blocked checks, regardless of their process exit code. Treat the report the way the review section of
+Exit code 0 = configured geometry checks passed, 1 = violations, 2 = not tested
+(invalid input, a page that cannot load, no usable browser).
+No visible annotated regions is a failure, not a vacuous pass. Treat the report the way the review section of
 KFL requires: fix the shared root cause (tokens, span map, or placement), never the
 symptom. Screenshots are captured with the overlay on and serve as visual evidence
 alongside the geometry report.
@@ -96,7 +96,7 @@ alongside the geometry report.
 ## Scope
 
 The horizontal substrate is the auditable contract. Vertical rhythm is set with
-spacing tokens and reviewed under Information Hierarchy; transient surfaces
+spacing tokens and reviewed under Law 4's information weight; transient surfaces
 (dialogs, popovers) are exempt from region checks but remain bound by Law 1 and the
 Interaction Baseline.
 

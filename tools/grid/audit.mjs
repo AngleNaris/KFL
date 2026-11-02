@@ -18,7 +18,7 @@
 //   node audit.mjs --manifest <file> (--url <url> | --html <file>)
 //                  [--viewports 375,768,1440] [--tolerance 1]
 //                  [--screenshot <dir>] [--json <file>]
-// Exit code 0 = pass, 1 = violations, 2 = usage/environment error.
+// Exit code 0 = pass, 1 = violations, 2 = not tested (usage, page or browser error).
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -134,10 +134,13 @@ function measure() {
       within: all.filter((a) => a !== el && a.contains(el)).map((a) => all.indexOf(a)),
     });
   }
-  return { grids, regions, viewportWidth: document.documentElement.clientWidth };
+  // The root box, not clientWidth: a reserved scrollbar gutter (scrollbar-gutter: stable)
+  // narrows the layout while headless Chromium still reports the full clientWidth.
+  return { grids, regions, viewportWidth: document.documentElement.getBoundingClientRect().width };
 }
 
-function label(r) { return `[data-region="${r.role}"]` + (r.index ? `:nth-of-type(${r.index + 1})` : ''); }
+// The nth occurrence of a role in document order (1-based), not a CSS selector.
+function label(r) { return `[data-region="${r.role}"]` + (r.index ? ` #${r.index + 1}` : ''); }
 
 // Track [start, end] pairs from the grid's own computed tracks and gap.
 function trackLines(g) {
@@ -252,7 +255,8 @@ function auditViewport(m, bp, vpWidth) {
   return { violations, notes, edges, gaps, regions: m.regions.length };
 }
 
-const browser = await launchChromium('audit');
+// Browser or page failures are blocked checks (exit 2), never violations (exit 1).
+const browser = await launchChromium('audit').catch((e) => fail(`browser unavailable — not tested (${e.message})`));
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
 const results = [];
 try {
@@ -280,6 +284,9 @@ try {
       await page.screenshot({ path: resolve(opt('screenshot'), `grid-${vp}.png`), fullPage: true });
     }
   }
+} catch (e) {
+  await browser.close();
+  fail(`page could not be measured — not tested (${e.message})`);
 } finally {
   await browser.close();
 }

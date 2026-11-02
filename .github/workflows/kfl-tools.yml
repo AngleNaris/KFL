@@ -21,3 +21,10 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npx playwright install --with-deps chromium
       - run: npm test
+      # The reference pages must pass their own audits, so the kit cannot drift from the law.
+      - run: npm run grid:audit -- --manifest grid/demo/demo.manifest.json --html grid/demo/index.html
+      - run: |
+          for page in index grid components settings; do
+            npm run grid:audit -- --manifest ../examples/grid/kfl.manifest.json --html ../examples/$page.html
+            npm run surface:audit -- --html ../examples/$page.html --viewports 375t,1440 --geometry square
+          done

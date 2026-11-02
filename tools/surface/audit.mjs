@@ -1,24 +1,37 @@
 #!/usr/bin/env node
 // KFL surface tools — audit.mjs
 // Audits what a rendered page paints, independent of any grid manifest:
-//   corners  Square Geometry: no rounded rectangles. Every rendered box and
-//            ::before/::after is sharp, or a true circle/ellipse with no straight
-//            edge left. Pills, partly rounded corners, SVG <rect rx>, round
-//            stroke caps/joins, and clip-path "round" insets all fail. Circles
-//            are listed so a reviewer can confirm each one is an affordance.
+//   radius   --geometry rounded (default), KFL Corner Radius: one radius per
+//            component family; a clearly larger family (short side >= 2x) uses a
+//            larger radius, because equal CSS radii look sharper on larger boxes;
+//            a rounded box sitting in a rounded ancestor's corner is concentric
+//            (inner radius = outer radius - inset) and leaves the size scale.
+//            Square boxes, pills and circles are exempt; square-only designs pass.
+//   corners  --geometry square, the reference kit's contract: no rounded
+//            rectangles. Every rendered box and ::before/::after is sharp, or a
+//            true circle/ellipse with no straight edge left. Pills, partly rounded
+//            corners, SVG <rect rx>, round stroke caps/joins, and clip-path "round"
+//            insets all fail. Circles are listed so a reviewer can confirm each
+//            one is an affordance.
 //   type     Type Legibility floors on the rendered size (transforms included):
 //            10px for Latin text, 12px for text containing CJK.
 //   targets  Interaction Baseline: every pointer target offers a 24x24 hit area
 //            (WCAG 2.5.8). Touch viewports also report targets under 44x44.
 //            Hit-tested, so associated labels and pseudo-element hit areas count;
-//            inline links inside running text are exempt.
+//            inline links inside running text and targets parked outside the
+//            viewport (a skip link before focus) are exempt.
+//   scrollbar  every scroll container (the page when it scrolls, and any element
+//            with overflow auto/scroll) is styled: the standard scrollbar-color
+//            or scrollbar-width (inherited color included), or a sized
+//            ::-webkit-scrollbar. The browser default fails.
 //
 // Usage:
 //   node audit.mjs (--url <url> | --html <file>) [--viewports 375t,1440]
-//                  [--strict-touch] [--screenshot <dir>] [--json <file>]
+//                  [--geometry rounded|square] [--strict-touch]
+//                  [--screenshot <dir>] [--json <file>]
 // A viewport suffixed with "t" is emulated as a touch device (coarse pointer).
 // --strict-touch turns touch targets under 44x44 from warnings into violations.
-// Exit code 0 = pass, 1 = violations, 2 = usage/environment error.
+// Exit code 0 = pass, 1 = violations, 2 = not tested (usage, page or browser error).
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -30,7 +43,9 @@ const args = process.argv.slice(2);
 const opt = (name) => { const i = args.indexOf('--' + name); return i >= 0 ? args[i + 1] : undefined; };
 const url = opt('url');
 const html = opt('html');
-if (Boolean(url) === Boolean(html)) fail('usage: node audit.mjs (--url <url> | --html <file>) [--viewports 375t,1440] [--strict-touch] [--screenshot <dir>] [--json <file>]');
+if (Boolean(url) === Boolean(html)) fail('usage: node audit.mjs (--url <url> | --html <file>) [--viewports 375t,1440] [--geometry rounded|square] [--strict-touch] [--screenshot <dir>] [--json <file>]');
+const geometry = opt('geometry') ?? 'rounded';
+if (!['rounded', 'square'].includes(geometry)) fail('--geometry must be "rounded" or "square"');
 const target = url ?? pathToFileURL(resolve(html)).href;
 const strictTouch = args.includes('--strict-touch');
 const viewports = (opt('viewports') ?? '375t,1440').split(',').map((v) => {
@@ -40,8 +55,8 @@ const viewports = (opt('viewports') ?? '375t,1440').split(',').map((v) => {
 });
 
 // Runs in the page. Returns findings for the current viewport.
-function inspect({ touch }) {
-  const out = { corners: [], circles: [], type: [], targets: [], warnings: [] };
+function inspect({ touch, geometry }) {
+  const out = { corners: [], radius: [], circles: [], type: [], targets: [], scrollbars: [], warnings: [] };
   const px = (v) => parseFloat(v) || 0;
   const shown = (el) => el.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true });
   function name(el) {
@@ -72,12 +87,68 @@ function inspect({ touch }) {
     if (!curved.some(Boolean)) return { kind: 'sharp' };
     const straight = [w - r[0][0] - r[1][0], w - r[3][0] - r[2][0], h - r[0][1] - r[3][1], h - r[1][1] - r[2][1]];
     if (curved.every(Boolean) && straight.every((s) => s <= 1)) return { kind: Math.abs(w - h) <= 1 ? 'circle' : 'ellipse' };
-    return { kind: 'rounded', radius: cs.borderRadius };
+    // Circular radii per corner (0 where the corner is straight), for the radius scale.
+    const circular = r.map(([x, y], i) => (curved[i] ? Math.min(x, y) : 0));
+    const pill = Math.min(...circular) >= Math.min(w, h) / 2 - 0.5;
+    return { kind: pill ? 'pill' : 'rounded', radius: cs.borderRadius, radii: circular };
+  }
+  // --- radius scale (geometry rounded) ------------------------------------
+  const rounded = [];
+  function recordRadius(el, cs, label) {
+    const w = el.offsetWidth, h = el.offsetHeight;
+    if (w < 1 || h < 1) return;
+    const s = shape(cs, w, h);
+    if (s.kind !== 'rounded') return;
+    const cls = el.classList[0];
+    rounded.push({ el, label, w, h, radii: s.radii, r: Math.max(...s.radii), family: cls ? '.' + cls + (el.dataset.size ? `[data-size=${el.dataset.size}]` : '') : null });
+  }
+  function checkRadius() {
+    const tol = 1;
+    // Concentric first: a rounded box in the corner zone of its nearest rounded ancestor
+    // takes its radius from that ancestor (inner = outer - inset), not from the size scale.
+    const byEl = new Map(rounded.map((b) => [b.el, b]));
+    for (const c of rounded) {
+      let p = null;
+      for (let e = c.el.parentElement; e && !p; e = e.parentElement) p = byEl.get(e) ?? null;
+      if (!p) continue;
+      const cr = c.el.getBoundingClientRect(), pr = p.el.getBoundingClientRect();
+      const insets = [[cr.left - pr.left, cr.top - pr.top], [pr.right - cr.right, cr.top - pr.top],
+        [pr.right - cr.right, pr.bottom - cr.bottom], [cr.left - pr.left, pr.bottom - cr.bottom]];
+      insets.forEach(([dx, dy], i) => {
+        const rp = p.radii[i];
+        if (rp <= 0 || dx < -0.5 || dy < -0.5 || dx >= rp || dy >= rp || Math.abs(dx - dy) > tol) return;
+        c.nested = true;
+        const expected = Math.max(0, rp - (dx + dy) / 2);
+        if (Math.abs(c.radii[i] - expected) > tol)
+          out.radius.push({ check: 'radius-not-concentric', element: c.label,
+            detail: `${CORNERS[i]} radius ${c.radii[i].toFixed(1)}px inside ${p.label} (${rp.toFixed(1)}px, inset ${((dx + dy) / 2).toFixed(1)}px); concentric is ${expected.toFixed(1)}px` });
+      });
+    }
+    const families = new Map();
+    for (const b of rounded) {
+      if (!b.family) continue;
+      if (!families.has(b.family)) families.set(b.family, []);
+      families.get(b.family).push(b);
+    }
+    const median = (xs) => { const s = [...xs].sort((a, b) => a - b); return s[Math.floor(s.length / 2)]; };
+    const fams = [];
+    for (const [family, bs] of families) {
+      const radii = [...new Set(bs.map((b) => Math.round(b.r * 2) / 2))];
+      if (Math.max(...radii) - Math.min(...radii) > tol)
+        out.radius.push({ check: 'radius-family-mismatch', element: family, detail: `${bs.length} boxes use ${radii.join(', ')}px; one component family keeps one radius` });
+      const free = bs.filter((b) => !b.nested);
+      if (free.length) fams.push({ family, r: median(free.map((b) => b.r)), short: median(free.map((b) => Math.min(b.w, b.h))) });
+    }
+    for (const big of fams) for (const small of fams) {
+      if (big.short >= 2 * small.short && big.r <= small.r + 0.5)
+        out.radius.push({ check: 'radius-scale-inverted', element: `${big.family} vs ${small.family}`,
+          detail: `${big.family} (short side ${big.short.toFixed(0)}px) uses ${big.r.toFixed(1)}px, not larger than ${small.family} (short side ${small.short.toFixed(0)}px, ${small.r.toFixed(1)}px); a larger tier needs a larger radius to look equally round` });
+    }
   }
   function checkBox(el, cs, w, h, label) {
     if (w < 1 || h < 1) return;
     const s = shape(cs, w, h);
-    if (s.kind === 'rounded') out.corners.push({ element: label, detail: `border-radius ${s.radius} on a ${w.toFixed(0)}x${h.toFixed(0)} box` });
+    if (s.kind === 'rounded' || s.kind === 'pill') out.corners.push({ element: label, detail: `border-radius ${s.radius} on a ${w.toFixed(0)}x${h.toFixed(0)} box` });
     else if (s.kind !== 'sharp') out.circles.push({ element: label, detail: `${s.kind} ${w.toFixed(0)}x${h.toFixed(0)}` });
     if (/\b(inset|rect|xywh)\([^)]*\bround\b/.test(cs.clipPath)) out.corners.push({ element: label, detail: `clip-path ${cs.clipPath}` });
   }
@@ -85,6 +156,10 @@ function inspect({ touch }) {
   for (const el of document.body.querySelectorAll('*')) {
     if (!shown(el)) continue;
     const cs = getComputedStyle(el);
+    if (geometry === 'rounded') {
+      if (!(el instanceof SVGElement)) recordRadius(el, cs, name(el));
+      continue;
+    }
     if (el instanceof SVGElement) {
       if (el instanceof SVGSVGElement) continue;
       const root = el.ownerSVGElement;
@@ -117,6 +192,7 @@ function inspect({ touch }) {
     if (native && cs.appearance !== 'none') out.warnings.push({ element: name(el), detail: `appearance: ${cs.appearance} — the platform paints this control and may round it; set appearance: none (or base-select) and draw it square` });
   }
   for (const [root, why] of svgRounded) out.corners.push({ element: name(root), detail: `SVG ${[...why].join(', ')}` });
+  if (geometry === 'rounded') checkRadius();
 
   // --- type floors ---------------------------------------------------------
   const CJK = /[⺀-⿟　-ヿ㄀-ㄯ㆐-ㇿ㐀-䶿一-鿿가-힯豈-﫿︰-﹏＀-￯]/;
@@ -158,6 +234,19 @@ function inspect({ touch }) {
       out.warnings.push({ element: name(p), detail: `long-form text at ${getComputedStyle(p).fontSize}; primary reading text should be at least 16px` });
   }
 
+  // --- scrollbars ----------------------------------------------------------
+  // Styling is static CSS, so hidden containers (closed dialogs and disclosures)
+  // count too. Chromium ignores ::-webkit-scrollbar once a standard property is
+  // set, so a page may legitimately use either route.
+  const rootScrolls = document.documentElement.scrollHeight > innerHeight || document.documentElement.scrollWidth > innerWidth;
+  for (const el of [document.documentElement, ...document.body.querySelectorAll('*')]) {
+    const cs = getComputedStyle(el);
+    const container = el === document.documentElement ? rootScrolls : /auto|scroll/.test(cs.overflowX + cs.overflowY);
+    const wk = getComputedStyle(el, '::-webkit-scrollbar');
+    if (container && cs.scrollbarColor === 'auto' && cs.scrollbarWidth === 'auto' && wk.width === 'auto' && wk.height === 'auto')
+      out.scrollbars.push({ element: el === document.documentElement ? 'html (page scroll)' : name(el), detail: 'browser default scrollbar; style it from shared tokens (scrollbar-color/scrollbar-width or ::-webkit-scrollbar)' });
+  }
+
   // --- targets -------------------------------------------------------------
   const TARGETS = 'a[href], button, input:not([type=hidden]), select, textarea, summary, [role=button], [role=link], [role=checkbox], [role=radio], [role=switch], [role=tab], [role=menuitem], [role=menuitemcheckbox], [role=menuitemradio], [role=option], [role=slider], [tabindex]:not([tabindex="-1"])';
   const inRunningText = (a) => {
@@ -165,11 +254,12 @@ function inspect({ touch }) {
     const block = a.parentElement;
     return block && block.textContent.replace(a.textContent, '').trim().length > 0;
   };
+  // 5x5 samples over a size x size square centred on one box, 1px inside its edges.
   function hitRatio(set, cx, cy, size) {
     let hits = 0, n = 0;
     for (let i = 0; i < 5; i++) for (let j = 0; j < 5; j++) {
-      const x = cx - size / 2 + 0.5 + (i * (size - 1)) / 4;
-      const y = cy - size / 2 + 0.5 + (j * (size - 1)) / 4;
+      const x = cx - size / 2 + 1 + (i * (size - 2)) / 4;
+      const y = cy - size / 2 + 1 + (j * (size - 2)) / 4;
       const hit = document.elementFromPoint(x, y);
       n++;
       if (hit && set.some((s) => s === hit || s.contains(hit))) hits++;
@@ -183,20 +273,25 @@ function inspect({ touch }) {
     const boxes = () => set.map((e) => e.getBoundingClientRect()).filter((r) => r.width >= 2 && r.height >= 2);
     if (!boxes().length) continue;
     const anchor = set.find((e) => { const r = e.getBoundingClientRect(); return r.width >= 2 && r.height >= 2; });
-    anchor.scrollIntoView({ block: 'center', inline: 'center' });
+    // Instant: a page's scroll-behavior: smooth would otherwise leave the target mid-scroll when sampled.
+    anchor.scrollIntoView({ block: 'center', inline: 'center', behavior: 'instant' });
     const b = boxes();
-    const left = Math.min(...b.map((r) => r.left)), right = Math.max(...b.map((r) => r.right));
-    const top = Math.min(...b.map((r) => r.top)), bottom = Math.max(...b.map((r) => r.bottom));
-    const cx = (left + right) / 2, cy = (top + bottom) / 2;
-    const detail = `${(right - left).toFixed(0)}x${(bottom - top).toFixed(0)} visible box`;
-    if (hitRatio(set, cx, cy, 24) < 0.9) out.targets.push({ element: name(el), size: 24, detail });
-    else if (touch && hitRatio(set, cx, cy, 44) < 0.9) out.targets.push({ element: name(el), size: 44, detail });
+    // Parked outside the viewport (a skip link before focus): not pointer-reachable in this state.
+    if (b.every((r) => r.bottom <= 0 || r.right <= 0 || r.top >= innerHeight || r.left >= innerWidth)) continue;
+    // The best of the target's own box and each associated label's box, not their union:
+    // the gap between a field label and its input belongs to neither hit area.
+    const best = (size) => Math.max(...b.map((r) => hitRatio(set, (r.left + r.right) / 2, (r.top + r.bottom) / 2, size)));
+    const own = el.getBoundingClientRect();
+    const detail = `${own.width.toFixed(0)}x${own.height.toFixed(0)} visible box`;
+    if (best(24) < 0.9) out.targets.push({ element: name(el), size: 24, detail });
+    else if (touch && best(44) < 0.9) out.targets.push({ element: name(el), size: 44, detail });
   }
-  window.scrollTo(0, 0);
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   return out;
 }
 
-const browser = await launchChromium('surface');
+// Browser or page failures are blocked checks (exit 2), never violations (exit 1).
+const browser = await launchChromium('surface').catch((e) => fail(`browser unavailable — not tested (${e.message})`));
 const results = [];
 try {
   for (const vp of viewports) {
@@ -209,19 +304,24 @@ try {
       mkdirSync(opt('screenshot'), { recursive: true });
       await page.screenshot({ path: resolve(opt('screenshot'), `surface-${vp.width}${vp.touch ? 't' : ''}.png`), fullPage: true });
     }
-    const found = await page.evaluate(inspect, { touch: vp.touch });
+    const found = await page.evaluate(inspect, { touch: vp.touch, geometry });
     const small = found.targets.filter((t) => t.size === 24);
     const touchSmall = found.targets.filter((t) => t.size === 44);
     const violations = [
       ...found.corners.map((f) => ({ check: 'rounded-rectangle', ...f })),
+      ...found.radius,
       ...found.type.map((f) => ({ check: 'type-floor', ...f })),
       ...small.map((f) => ({ check: 'target-under-24', ...f })),
+      ...found.scrollbars.map((f) => ({ check: 'default-scrollbar', ...f })),
       ...(strictTouch ? touchSmall.map((f) => ({ check: 'touch-target-under-44', ...f })) : []),
     ];
     const warnings = [...found.warnings, ...(strictTouch ? [] : touchSmall.map((f) => ({ element: f.element, detail: `touch target under 44x44 (${f.detail})` })))];
     results.push({ viewport: `${vp.width}${vp.touch ? ' touch' : ''}`, violations, warnings, circles: found.circles });
     await context.close();
   }
+} catch (e) {
+  await browser.close();
+  fail(`page could not be audited — not tested (${e.message})`);
 } finally {
   await browser.close();
 }
@@ -231,7 +331,7 @@ const list = (items, fmt) => {
   for (const it of items.slice(0, LIMIT)) console.log(fmt(it));
   if (items.length > LIMIT) console.log(`      … ${items.length - LIMIT} more (see --json)`);
 };
-console.log(`surface audit — ${target}`);
+console.log(`surface audit — ${target} (geometry ${geometry})`);
 for (const r of results) {
   console.log(`  @${r.viewport} violations=${r.violations.length} warnings=${r.warnings.length} circles=${r.circles.length}`);
   list(r.violations, (v) => `    FAIL ${v.check} ${v.element} — ${v.detail}`);
@@ -248,4 +348,4 @@ if (total) {
   console.log(`FAIL — ${total} violation${total > 1 ? 's' : ''}. Fix the shared token or component, not the instance.`);
   process.exit(1);
 }
-console.log('PASS — square geometry, type floors, and 24px targets hold at every audited viewport.');
+console.log(`PASS — ${geometry === 'square' ? 'square geometry' : 'radius scale'}, type floors, 24px targets and styled scrollbars hold at every audited viewport.`);

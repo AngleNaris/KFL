@@ -34,8 +34,8 @@
         <label><input type="radio" name="theme" value="light">Light</label>
         <label><input type="radio" name="theme" value="dark">Dark</label>
       </fieldset>
-      <button type="button" class="kfl-button" data-size="sm" data-variant="quiet" data-grid-toggle aria-pressed="false"><span class="kfl-icon" data-icon="columns" aria-hidden="true"></span>Grid</button>
-      <button type="button" class="kfl-button kfl-topbar__menu-button" data-size="sm" data-toggle aria-expanded="false" aria-controls="site-panel"><span class="kfl-icon" data-icon="menu" aria-hidden="true"></span>Menu</button>
+      <button type="button" class="kfl-button" data-size="sm" data-variant="quiet" data-icon-only aria-label="Grid overlay" data-tooltip="Grid overlay" data-tooltip-align="end" data-grid-toggle aria-pressed="false"><span class="kfl-icon" data-icon="columns" aria-hidden="true"></span></button>
+      <button type="button" class="kfl-button kfl-topbar__menu-button" data-size="sm" data-icon-only aria-label="Menu" data-tooltip="Menu" data-tooltip-align="end" data-toggle aria-expanded="false" aria-controls="site-panel"><span class="kfl-icon" data-icon="menu" aria-hidden="true"></span></button>
     </div>
   </div>
   <nav class="kfl-topbar__panel" id="site-panel" aria-label="Examples (menu)" hidden>
@@ -60,7 +60,6 @@
 <main id="main" class="grid-container" tabindex="-1">
 
   <header class="grid-row doc-masthead">
-    <p data-region="kicker" class="kfl-overline">KFL Reference Kit · 02</p>
     <h1 data-region="title" class="kfl-display">Components</h1>
     <p data-region="lede" class="kfl-lead">Thirty-one contracts, each with its states, keyboard behavior and the rule for when to use it. Every rectangle is square; the radio control is the only circle. Hover, focus and press states are live — use a pointer and the keyboard.</p>
   </header>
@@ -68,44 +67,44 @@
   <nav class="grid-row doc-index" aria-label="Components on this page">
     <div data-region="specimen">
       <ol>
-        <li><a href="#typography"><span>01</span>Typography</a></li>
-        <li><a href="#color"><span>02</span>Color</a></li>
-        <li><a href="#icons"><span>03</span>Icons</a></li>
-        <li><a href="#button"><span>04</span>Button</a></li>
-        <li><a href="#link"><span>05</span>Link</a></li>
-        <li><a href="#field"><span>06</span>Text field</a></li>
-        <li><a href="#choice"><span>07</span>Checkbox, radio</a></li>
-        <li><a href="#switch"><span>08</span>Switch</a></li>
-        <li><a href="#segmented"><span>09</span>Segmented control</a></li>
-        <li><a href="#slider"><span>10</span>Slider</a></li>
-        <li><a href="#tabs"><span>11</span>Tabs</a></li>
-        <li><a href="#breadcrumb"><span>12</span>Breadcrumb</a></li>
-        <li><a href="#pagination"><span>13</span>Pagination</a></li>
-        <li><a href="#steps"><span>14</span>Steps</a></li>
-        <li><a href="#sidenav"><span>15</span>Side navigation</a></li>
-        <li><a href="#table"><span>16</span>Table</a></li>
-        <li><a href="#list"><span>17</span>List</a></li>
-        <li><a href="#card"><span>18</span>Card</a></li>
-        <li><a href="#dl"><span>19</span>Description list</a></li>
-        <li><a href="#tag"><span>20</span>Tag, count</a></li>
-        <li><a href="#avatar"><span>21</span>Avatar</a></li>
-        <li><a href="#alert"><span>22</span>Alert</a></li>
-        <li><a href="#toast"><span>23</span>Toast</a></li>
-        <li><a href="#progress"><span>24</span>Progress, loading</a></li>
-        <li><a href="#empty"><span>25</span>Empty state</a></li>
-        <li><a href="#tooltip"><span>26</span>Tooltip</a></li>
-        <li><a href="#dialog"><span>27</span>Dialog</a></li>
-        <li><a href="#drawer"><span>28</span>Drawer</a></li>
-        <li><a href="#menu"><span>29</span>Menu</a></li>
-        <li><a href="#disclosure"><span>30</span>Disclosure</a></li>
-        <li><a href="#form"><span>31</span>Form</a></li>
+        <li><a href="#typography">Typography</a></li>
+        <li><a href="#color">Color</a></li>
+        <li><a href="#icons">Icons</a></li>
+        <li><a href="#button">Button</a></li>
+        <li><a href="#link">Link</a></li>
+        <li><a href="#field">Text field</a></li>
+        <li><a href="#choice">Checkbox, radio</a></li>
+        <li><a href="#switch">Switch</a></li>
+        <li><a href="#segmented">Segmented control</a></li>
+        <li><a href="#slider">Slider</a></li>
+        <li><a href="#tabs">Tabs</a></li>
+        <li><a href="#breadcrumb">Breadcrumb</a></li>
+        <li><a href="#pagination">Pagination</a></li>
+        <li><a href="#steps">Steps</a></li>
+        <li><a href="#sidenav">Side navigation</a></li>
+        <li><a href="#table">Table</a></li>
+        <li><a href="#list">List</a></li>
+        <li><a href="#card">Card</a></li>
+        <li><a href="#dl">Description list</a></li>
+        <li><a href="#tag">Tag, count</a></li>
+        <li><a href="#avatar">Avatar</a></li>
+        <li><a href="#alert">Alert</a></li>
+        <li><a href="#toast">Toast</a></li>
+        <li><a href="#progress">Progress, loading</a></li>
+        <li><a href="#empty">Empty state</a></li>
+        <li><a href="#tooltip">Tooltip</a></li>
+        <li><a href="#dialog">Dialog</a></li>
+        <li><a href="#drawer">Drawer</a></li>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#disclosure">Disclosure</a></li>
+        <li><a href="#form">Form</a></li>
       </ol>
     </div>
   </nav>
 
   <!-- 01 Typography -->
   <section class="grid-row doc-section" id="typography" aria-labelledby="typography-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">01 · Foundation</p><h2 id="typography-h" class="kfl-h3">Typography</h2></header>
+    <header data-region="section-label"><h2 id="typography-h" class="kfl-h3">Typography</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>One family, a handful of roles. Hierarchy comes from size steps of at least 1.25×, then weight, then space; color is the last lever, not the first. Line heights land on a 4px rhythm, and Chinese, Japanese or Korean text gets more leading automatically.</p>
     </div>
@@ -132,7 +131,7 @@
 
   <!-- 02 Color -->
   <section class="grid-row doc-section" id="color" aria-labelledby="color-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">02 · Foundation</p><h2 id="color-h" class="kfl-h3">Color</h2></header>
+    <header data-region="section-label"><h2 id="color-h" class="kfl-h3">Color</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>Neutral surfaces carry the page. One accent means “interactive state” — links, focus, selection, progress — and the primary action is ink, so the two never compete. State colors appear only for states that really exist, and always with words and an icon.</p>
     </div>
@@ -162,9 +161,9 @@
 
   <!-- 03 Icons -->
   <section class="grid-row doc-section" id="icons" aria-labelledby="icons-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">03 · Foundation</p><h2 id="icons-h" class="kfl-h3">Icons</h2></header>
+    <header data-region="section-label"><h2 id="icons-h" class="kfl-h3">Icons</h2></header>
     <div data-region="section-text" class="kfl-prose">
-      <p>One drawing contract: a 24px grid, 2px stroke, square caps and miter joins — a round cap would turn every stroke into a pill. Icons support a label and rarely replace one. Icon-only controls are for the universal few (close, search, menu, more) and still carry an accessible name and a tooltip.</p>
+      <p>One drawing contract: a 24px grid, 2px stroke, square caps and miter joins — a round cap would turn every stroke into a pill. Where an established icon names an action it replaces the label (KFL Law 4); the words move into the tooltip and the accessible name. A missing metaphor is drawn into this family or the words stay.</p>
     </div>
     <div data-region="section-aside" class="doc-aside">
       <div><h3 class="kfl-label">Never</h3><p>Emoji, letters, punctuation or Unicode symbols standing in for icons.</p></div>
@@ -177,39 +176,39 @@
 
   <!-- 04 Button -->
   <section class="grid-row doc-section" id="button" aria-labelledby="button-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">04 · Action</p><h2 id="button-h" class="kfl-h3">Button</h2></header>
+    <header data-region="section-label"><h2 id="button-h" class="kfl-h3">Button</h2></header>
     <div data-region="section-text" class="kfl-prose">
-      <p>Buttons act; links go somewhere. One primary button per view or region marks the next step, and everything else steps down to secondary or quiet. Labels are verbs that name the result — “Save changes”, “Export CSV” — never “OK” or “Submit”.</p>
+      <p>Buttons act; links go somewhere. One primary button per view or region marks the next step, and everything else steps down to secondary or quiet. An action with an established icon shows the icon alone; its verb — “Save changes”, “Export CSV”, never “OK” — becomes the tooltip and the accessible name. When the family lacks the metaphor, the icon is drawn into it first.</p>
     </div>
     <div data-region="section-aside" class="doc-aside">
       <div><h3 class="kfl-label">Keyboard</h3><p>Enter or Space activates.</p></div>
-      <div><h3 class="kfl-label">States</h3><ul><li>Hover, a 1px press, a focus ring.</li><li>Disabled says why, nearby.</li><li>Busy keeps its size and blocks repeats.</li></ul></div>
+      <div><h3 class="kfl-label">States</h3><ul><li>Hover, a 1px press, a focus cue: the border changes colour, or a quiet button's icon does — never an outline frame.</li><li>Disabled says why, nearby.</li><li>Busy keeps its size and blocks repeats.</li></ul></div>
       <div><h3 class="kfl-label">Sizes</h3><p>32, 40, 48px — all 44px on touch screens.</p></div>
     </div>
     <div data-region="section-body" class="doc-body">
       <div class="specimen">
         <p class="specimen__label kfl-caption">Variants — primary, secondary, quiet, danger, danger secondary</p>
         <div class="specimen__stage kfl-cluster">
-          <button type="button" class="kfl-button" data-variant="primary">Save changes</button>
-          <button type="button" class="kfl-button">Preview</button>
-          <button type="button" class="kfl-button" data-variant="quiet">Cancel</button>
-          <button type="button" class="kfl-button" data-variant="danger">Delete project</button>
-          <button type="button" class="kfl-button" data-variant="danger-secondary">Remove member</button>
+          <button type="button" class="kfl-button" data-variant="primary" data-icon-only aria-label="Save changes" data-tooltip="Save changes" data-tooltip-align="start"><span class="kfl-icon" data-icon="save" aria-hidden="true"></span></button>
+          <button type="button" class="kfl-button" data-icon-only aria-label="Preview" data-tooltip="Preview"><span class="kfl-icon" data-icon="eye" aria-hidden="true"></span></button>
+          <button type="button" class="kfl-button" data-variant="quiet" data-icon-only aria-label="Cancel" data-tooltip="Cancel"><span class="kfl-icon" data-icon="close" aria-hidden="true"></span></button>
+          <button type="button" class="kfl-button" data-variant="danger" data-icon-only aria-label="Delete project" data-tooltip="Delete project"><span class="kfl-icon" data-icon="trash" aria-hidden="true"></span></button>
+          <button type="button" class="kfl-button" data-variant="danger-secondary" data-icon-only aria-label="Remove member" data-tooltip="Remove member"><span class="kfl-icon" data-icon="user-minus" aria-hidden="true"></span></button>
         </div>
       </div>
       <div class="specimen">
         <p class="specimen__label kfl-caption">Sizes — sm, md, lg</p>
         <div class="specimen__stage kfl-cluster">
-          <button type="button" class="kfl-button" data-size="sm">Export CSV</button>
-          <button type="button" class="kfl-button">Export CSV</button>
-          <button type="button" class="kfl-button" data-size="lg">Export CSV</button>
+          <button type="button" class="kfl-button" data-size="sm" data-icon-only aria-label="Export CSV" data-tooltip="Export CSV" data-tooltip-align="start"><span class="kfl-icon" data-icon="download" aria-hidden="true"></span></button>
+          <button type="button" class="kfl-button" data-icon-only aria-label="Export CSV" data-tooltip="Export CSV"><span class="kfl-icon" data-icon="download" aria-hidden="true"></span></button>
+          <button type="button" class="kfl-button" data-size="lg" data-icon-only aria-label="Export CSV" data-tooltip="Export CSV"><span class="kfl-icon" data-icon="download" aria-hidden="true"></span></button>
         </div>
       </div>
       <div class="specimen">
-        <p class="specimen__label kfl-caption">With icons — a leading icon names the kind of action, a trailing arrow means “onward”</p>
+        <p class="specimen__label kfl-caption">Icon only — the words live in the tooltip, shown on hover and on keyboard focus</p>
         <div class="specimen__stage kfl-cluster">
-          <button type="button" class="kfl-button"><span class="kfl-icon" data-icon="download" aria-hidden="true"></span>Download report</button>
-          <button type="button" class="kfl-button" data-variant="primary">Continue<span class="kfl-icon" data-icon="arrow-right" aria-hidden="true"></span></button>
+          <button type="button" class="kfl-button" data-icon-only aria-label="Download report" data-tooltip="Download report" data-tooltip-align="start"><span class="kfl-icon" data-icon="download" aria-hidden="true"></span></button>
+          <button type="button" class="kfl-button" data-variant="primary" data-icon-only aria-label="Continue" data-tooltip="Continue"><span class="kfl-icon" data-icon="arrow-right" aria-hidden="true"></span></button>
           <button type="button" class="kfl-button" data-icon-only aria-label="Edit" data-tooltip="Edit"><span class="kfl-icon" data-icon="edit" aria-hidden="true"></span></button>
           <button type="button" class="kfl-button" data-icon-only data-variant="quiet" aria-label="Copy link" data-tooltip="Copy link"><span class="kfl-icon" data-icon="link" aria-hidden="true"></span></button>
         </div>
@@ -218,11 +217,11 @@
         <p class="specimen__label kfl-caption">Disabled, with its reason · Busy (demo: simulates a 1.5 s request, nothing is sent)</p>
         <div class="specimen__stage kfl-stack" data-gap="4">
           <div class="kfl-cluster">
-            <button type="button" class="kfl-button" data-variant="primary" disabled aria-describedby="publish-why">Publish</button>
+            <button type="button" class="kfl-button" data-variant="primary" aria-disabled="true" aria-describedby="publish-why" data-icon-only aria-label="Publish" data-tooltip="Publish" data-tooltip-align="start"><span class="kfl-icon" data-icon="publish" aria-hidden="true"></span></button>
             <p id="publish-why" class="kfl-small kfl-muted">Add a title to publish.</p>
           </div>
           <div class="kfl-cluster">
-            <button type="button" class="kfl-button" data-variant="primary" id="busy-demo">Save changes</button>
+            <button type="button" class="kfl-button" data-variant="primary" id="busy-demo" data-icon-only aria-label="Save changes" data-tooltip="Save changes" data-tooltip-align="start"><span class="kfl-icon" data-icon="save" aria-hidden="true"></span></button>
             <p class="kfl-small kfl-muted" id="busy-demo-status" role="status"></p>
           </div>
         </div>
@@ -232,7 +231,7 @@
 
   <!-- 05 Link -->
   <section class="grid-row doc-section" id="link" aria-labelledby="link-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">05 · Action</p><h2 id="link-h" class="kfl-h3">Link</h2></header>
+    <header data-region="section-label"><h2 id="link-h" class="kfl-h3">Link</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>Links navigate. In running text they are underlined and accent-colored, because that is what people look for. A standalone link adds an arrow when it leads onward; a link that leaves the product says so with the external icon.</p>
     </div>
@@ -253,7 +252,7 @@
 
   <!-- 06 Text field -->
   <section class="grid-row doc-section" id="field" aria-labelledby="field-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">06 · Input</p><h2 id="field-h" class="kfl-h3">Text field</h2></header>
+    <header data-region="section-label"><h2 id="field-h" class="kfl-h3">Text field</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>Label, hint, control, error — in that order. The label is always visible; a placeholder only shows an example format. Size a field to its expected answer, and mark the optional minority instead of starring the required majority. Use the right <code>type</code>, <code>inputmode</code> and <code>autocomplete</code> so phones show the right keyboard and browsers can fill it in.</p>
     </div>
@@ -290,7 +289,7 @@
           <label class="kfl-field__label" for="f-url">Workspace address</label>
           <div class="kfl-input-group">
             <input class="kfl-input" id="f-url" value="kfl.example/acme" readonly>
-            <button type="button" class="kfl-button" data-copy="#f-url"><span class="kfl-icon" data-icon="copy" aria-hidden="true"></span><span data-copy-label>Copy</span></button>
+            <button type="button" class="kfl-button" data-copy="#f-url" data-icon-only aria-label="Copy" data-tooltip="Copy" data-tooltip-align="end"><span class="kfl-icon" data-icon="copy" aria-hidden="true"></span></button>
           </div>
         </div>
         <div class="kfl-field">
@@ -336,7 +335,7 @@
 
   <!-- 07 Checkbox and radio -->
   <section class="grid-row doc-section" id="choice" aria-labelledby="choice-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">07 · Input</p><h2 id="choice-h" class="kfl-h3">Checkbox, radio</h2></header>
+    <header data-region="section-label"><h2 id="choice-h" class="kfl-h3">Checkbox, radio</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>A square box means “any number”; a circle means “exactly one”. That shape difference is a convention people rely on, which is why the radio is the kit's one sanctioned curve. Group related options in a fieldset with a legend; past about seven radio options, use a select.</p>
     </div>
@@ -369,7 +368,7 @@
 
   <!-- 08 Switch -->
   <section class="grid-row doc-section" id="switch" aria-labelledby="switch-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">08 · Input</p><h2 id="switch-h" class="kfl-h3">Switch</h2></header>
+    <header data-region="section-label"><h2 id="switch-h" class="kfl-h3">Switch</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>A switch changes a setting the moment it moves — there is no save button behind it. If the change waits for a form to be submitted, use a checkbox instead. The label names the setting, not the action.</p>
     </div>
@@ -388,7 +387,7 @@
 
   <!-- 09 Segmented control -->
   <section class="grid-row doc-section" id="segmented" aria-labelledby="segmented-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">09 · Input</p><h2 id="segmented-h" class="kfl-h3">Segmented control</h2></header>
+    <header data-region="section-label"><h2 id="segmented-h" class="kfl-h3">Segmented control</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>Switches between a few views of the same content, in place: two to five short options, one always selected. It is a radio group underneath, so it inherits native keyboard behavior and semantics.</p>
     </div>
@@ -414,7 +413,7 @@
 
   <!-- 10 Slider -->
   <section class="grid-row doc-section" id="slider" aria-labelledby="slider-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">10 · Input</p><h2 id="slider-h" class="kfl-h3">Slider</h2></header>
+    <header data-region="section-label"><h2 id="slider-h" class="kfl-h3">Slider</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>For values where the rough position matters more than the exact number, and always shown with the number it sets. When the exact number matters, use a field.</p>
     </div>
@@ -434,7 +433,7 @@
 
   <!-- 11 Tabs -->
   <section class="grid-row doc-section" id="tabs" aria-labelledby="tabs-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">11 · Navigation</p><h2 id="tabs-h" class="kfl-h3">Tabs</h2></header>
+    <header data-region="section-label"><h2 id="tabs-h" class="kfl-h3">Tabs</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>Peer views of one object, such as the parts of a record. Tabs switch panels in place; moving to another page is navigation and looks like navigation.</p>
     </div>
@@ -465,7 +464,7 @@
           <div class="kfl-empty" data-size="compact">
             <p class="kfl-empty__title">No files attached</p>
             <p class="kfl-muted">Attach receipts or contracts so they travel with the invoice.</p>
-            <div class="kfl-empty__actions"><button type="button" class="kfl-button"><span class="kfl-icon" data-icon="upload" aria-hidden="true"></span>Attach file</button></div>
+            <div class="kfl-empty__actions"><button type="button" class="kfl-button" data-icon-only aria-label="Attach file" data-tooltip="Attach file"><span class="kfl-icon" data-icon="upload" aria-hidden="true"></span></button></div>
           </div>
         </div>
       </div>
@@ -474,7 +473,7 @@
 
   <!-- 12 Breadcrumb -->
   <section class="grid-row doc-section" id="breadcrumb" aria-labelledby="breadcrumb-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">12 · Navigation</p><h2 id="breadcrumb-h" class="kfl-h3">Breadcrumb</h2></header>
+    <header data-region="section-label"><h2 id="breadcrumb-h" class="kfl-h3">Breadcrumb</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>Shows where a page sits in a hierarchy of three or more levels and offers a way up. It is a location, not a history of where someone has been.</p>
     </div>
@@ -491,14 +490,14 @@
 
   <!-- 13 Pagination -->
   <section class="grid-row doc-section" id="pagination" aria-labelledby="pagination-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">13 · Navigation</p><h2 id="pagination-h" class="kfl-h3">Pagination</h2></header>
+    <header data-region="section-label"><h2 id="pagination-h" class="kfl-h3">Pagination</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>For long, ordered collections where position matters and people come back to a place. Say where the reader is, keep Previous and Next in words, and let narrow screens drop the page list rather than shrink it.</p>
     </div>
     <div data-region="section-body" class="doc-body">
       <nav class="kfl-pagination" aria-label="Invoice pages">
         <p class="kfl-pagination__summary">Showing 21–40 of 312</p>
-        <a href="#pagination" rel="prev"><span class="kfl-icon" data-icon="chevron-left" aria-hidden="true"></span>Previous</a>
+        <a href="#pagination" rel="prev" data-icon-only aria-label="Previous page" data-tooltip="Previous page" data-tooltip-align="start"><span class="kfl-icon" data-icon="chevron-left" aria-hidden="true"></span></a>
         <ol class="kfl-pagination__pages">
           <li><a href="#pagination" aria-label="Page 1">1</a></li>
           <li><span aria-current="page" aria-label="Page 2, current">2</span></li>
@@ -507,14 +506,14 @@
           <li><a href="#pagination" aria-label="Page 16">16</a></li>
         </ol>
         <span class="kfl-pagination__status">Page 2 of 16</span>
-        <a href="#pagination" rel="next">Next<span class="kfl-icon" data-icon="chevron-right" aria-hidden="true"></span></a>
+        <a href="#pagination" rel="next" data-icon-only aria-label="Next page" data-tooltip="Next page" data-tooltip-align="end"><span class="kfl-icon" data-icon="chevron-right" aria-hidden="true"></span></a>
       </nav>
     </div>
   </section>
 
   <!-- 14 Steps -->
   <section class="grid-row doc-section" id="steps" aria-labelledby="steps-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">14 · Navigation</p><h2 id="steps-h" class="kfl-h3">Steps</h2></header>
+    <header data-region="section-label"><h2 id="steps-h" class="kfl-h3">Steps</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>Shows position and remaining effort in a multi-step task. Use steps people recognize as separate decisions; five is plenty.</p>
     </div>
@@ -530,25 +529,25 @@
 
   <!-- 15 Side navigation -->
   <section class="grid-row doc-section" id="sidenav" aria-labelledby="sidenav-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">15 · Navigation</p><h2 id="sidenav-h" class="kfl-h3">Side navigation</h2></header>
+    <header data-region="section-label"><h2 id="sidenav-h" class="kfl-h3">Side navigation</h2></header>
     <div data-region="section-text" class="kfl-prose">
-      <p>For an app or settings area with more than five sections. The product name at the top start links home and the current page is marked with a bar, weight and <code>aria-current</code> — the top bar of this page follows the same contract.</p>
+      <p>For an app or settings area with more than five sections. The product name at the top start links home and the current page is marked with a bar and <code>aria-current</code>; in the icon rail each name is its tooltip — the top bar of this page follows the same contract.</p>
     </div>
     <div data-region="section-body" class="doc-body">
-      <nav class="kfl-sidenav site-w-16" aria-label="Workspace (example)">
+      <nav class="kfl-sidenav" data-icon-only aria-label="Workspace (example)">
         <div class="kfl-sidenav__group">
           <p class="kfl-overline">Workspace</p>
           <ul>
-            <li><a href="#sidenav"><span class="kfl-icon" data-icon="home" aria-hidden="true"></span>Overview</a></li>
-            <li><a href="#sidenav" aria-current="page"><span class="kfl-icon" data-icon="document" aria-hidden="true"></span>Invoices<span class="kfl-count">12</span></a></li>
-            <li><a href="#sidenav"><span class="kfl-icon" data-icon="user" aria-hidden="true"></span>Customers</a></li>
+            <li><a href="#sidenav" data-icon-only aria-label="Overview" data-tooltip="Overview" data-tooltip-align="start"><span class="kfl-icon" data-icon="home" aria-hidden="true"></span></a></li>
+            <li><a href="#sidenav" aria-current="page" data-icon-only aria-label="Invoices, 12" data-tooltip="Invoices, 12" data-tooltip-align="start"><span class="kfl-icon" data-icon="document" aria-hidden="true"></span><span class="kfl-count" aria-hidden="true">12</span></a></li>
+            <li><a href="#sidenav" data-icon-only aria-label="Customers" data-tooltip="Customers" data-tooltip-align="start"><span class="kfl-icon" data-icon="user" aria-hidden="true"></span></a></li>
           </ul>
         </div>
         <div class="kfl-sidenav__group">
           <p class="kfl-overline">Settings</p>
           <ul>
-            <li><a href="#sidenav"><span class="kfl-icon" data-icon="sliders" aria-hidden="true"></span>Preferences</a></li>
-            <li><a href="#sidenav"><span class="kfl-icon" data-icon="lock" aria-hidden="true"></span>Security</a></li>
+            <li><a href="#sidenav" data-icon-only aria-label="Preferences" data-tooltip="Preferences" data-tooltip-align="start"><span class="kfl-icon" data-icon="sliders" aria-hidden="true"></span></a></li>
+            <li><a href="#sidenav" data-icon-only aria-label="Security" data-tooltip="Security" data-tooltip-align="start"><span class="kfl-icon" data-icon="lock" aria-hidden="true"></span></a></li>
           </ul>
         </div>
       </nav>
@@ -557,7 +556,7 @@
 
   <!-- 16 Table -->
   <section class="grid-row doc-section" id="table" aria-labelledby="table-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">16 · Data</p><h2 id="table-h" class="kfl-h3">Table</h2></header>
+    <header data-region="section-label"><h2 id="table-h" class="kfl-h3">Table</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>For comparing across rows. Numbers align to the end in tabular figures so digits line up; text aligns to the start; the table's first and last columns sit on the region's edges. On a narrow screen the wrapper scrolls sideways, never the page.</p>
     </div>
@@ -568,8 +567,8 @@
     <div data-region="section-body" class="doc-body">
       <div class="kfl-bulkbar" id="bulkbar" hidden>
         <p class="kfl-bulkbar__count" id="bulkbar-count" aria-live="polite"></p>
-        <button type="button" class="kfl-button" data-size="sm"><span class="kfl-icon" data-icon="download" aria-hidden="true"></span>Export</button>
-        <button type="button" class="kfl-button" data-size="sm" id="bulk-clear">Clear selection</button>
+        <button type="button" class="kfl-button" data-size="sm" data-icon-only aria-label="Export selected" data-tooltip="Export selected"><span class="kfl-icon" data-icon="download" aria-hidden="true"></span></button>
+        <button type="button" class="kfl-button" data-size="sm" id="bulk-clear" data-icon-only aria-label="Clear selection" data-tooltip="Clear selection"><span class="kfl-icon" data-icon="close" aria-hidden="true"></span></button>
       </div>
       <div class="kfl-table-wrap" role="region" aria-labelledby="invoices-caption" tabindex="0">
         <table class="kfl-table">
@@ -597,7 +596,7 @@
 
   <!-- 17 List -->
   <section class="grid-row doc-section" id="list" aria-labelledby="list-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">17 · Data</p><h2 id="list-h" class="kfl-h3">List</h2></header>
+    <header data-region="section-label"><h2 id="list-h" class="kfl-h3">List</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>A sequence of like items. A leading icon aligns with the first line of text, not with the middle of a two-line item; every row shares one text edge; trailing values align to the end.</p>
     </div>
@@ -612,7 +611,7 @@
 
   <!-- 18 Card -->
   <section class="grid-row doc-section" id="card" aria-labelledby="card-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">18 · Data</p><h2 id="card-h" class="kfl-h3">Card</h2></header>
+    <header data-region="section-label"><h2 id="card-h" class="kfl-h3">Card</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>Only for independently meaningful items in a collection — a project, a file, a person — never as the default wrapper for a page section. The title link covers the whole card. Inside a card grid, rows align across cards through subgrid, whatever the text length.</p>
     </div>
@@ -643,7 +642,7 @@
 
   <!-- 19 Description list -->
   <section class="grid-row doc-section" id="dl" aria-labelledby="dl-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">19 · Data</p><h2 id="dl-h" class="kfl-h3">Description list</h2></header>
+    <header data-region="section-label"><h2 id="dl-h" class="kfl-h3">Description list</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>Facts about one object: the term on the start side, the value beside it, both on one baseline and one rule. When its region is narrow, each pair stacks — the list responds to its own width, not the window's.</p>
     </div>
@@ -660,7 +659,7 @@
 
   <!-- 20 Tag and count -->
   <section class="grid-row doc-section" id="tag" aria-labelledby="tag-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">20 · Data</p><h2 id="tag-h" class="kfl-h3">Tag, count</h2></header>
+    <header data-region="section-label"><h2 id="tag-h" class="kfl-h3">Tag, count</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>Tags label a state or a category; they are not buttons, so they have no border and no hover. Tone always comes with words, and the square mark is a second cue besides hue. An applied filter is the exception: its remove control names what it removes.</p>
     </div>
@@ -688,7 +687,7 @@
 
   <!-- 21 Avatar -->
   <section class="grid-row doc-section" id="avatar" aria-labelledby="avatar-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">21 · Data</p><h2 id="avatar-h" class="kfl-h3">Avatar</h2></header>
+    <header data-region="section-label"><h2 id="avatar-h" class="kfl-h3">Avatar</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>Square, with initials when there is no picture. When the person's name is printed beside it, the avatar is decoration and is hidden from assistive technology.</p>
     </div>
@@ -702,7 +701,7 @@
 
   <!-- 22 Alert -->
   <section class="grid-row doc-section" id="alert" aria-labelledby="alert-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">22 · Feedback</p><h2 id="alert-h" class="kfl-h3">Alert</h2></header>
+    <header data-region="section-label"><h2 id="alert-h" class="kfl-h3">Alert</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>Inline and persistent, for conditions someone must notice or act on: a failed action, a limit reached, a change that affects this page. Place it next to what it is about, and give it a way forward.</p>
     </div>
@@ -721,7 +720,7 @@
 
   <!-- 23 Toast -->
   <section class="grid-row doc-section" id="toast" aria-labelledby="toast-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">23 · Feedback</p><h2 id="toast-h" class="kfl-h3">Toast</h2></header>
+    <header data-region="section-label"><h2 id="toast-h" class="kfl-h3">Toast</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>A brief confirmation of something that already happened, ideally with Undo. A toast never carries an error that needs action, and never holds the only copy of an action: here, archived rows can also be restored from the list itself.</p>
     </div>
@@ -733,8 +732,8 @@
       <div class="specimen">
         <p class="specimen__label kfl-caption">Demo — acts on this list only</p>
         <ul class="kfl-list site-w-36" role="list" id="toast-list" aria-label="Open invoices (sample data)">
-          <li class="kfl-list__item" data-id="INV-2044"><span class="kfl-icon" data-icon="document" aria-hidden="true"></span><div><p class="kfl-list__title">INV-2044</p><p class="kfl-list__meta">Kiln &amp; Co</p></div><button type="button" class="kfl-button" data-size="sm" data-archive>Archive</button></li>
-          <li class="kfl-list__item" data-id="INV-2043"><span class="kfl-icon" data-icon="document" aria-hidden="true"></span><div><p class="kfl-list__title">INV-2043</p><p class="kfl-list__meta">Studio Hale</p></div><button type="button" class="kfl-button" data-size="sm" data-archive>Archive</button></li>
+          <li class="kfl-list__item" data-id="INV-2044"><span class="kfl-icon" data-icon="document" aria-hidden="true"></span><div><p class="kfl-list__title">INV-2044</p><p class="kfl-list__meta">Kiln &amp; Co</p></div><button type="button" class="kfl-button" data-size="sm" data-archive data-icon-only aria-label="Archive" data-tooltip="Archive" data-tooltip-align="end"><span class="kfl-icon" data-icon="archive" aria-hidden="true"></span></button></li>
+          <li class="kfl-list__item" data-id="INV-2043"><span class="kfl-icon" data-icon="document" aria-hidden="true"></span><div><p class="kfl-list__title">INV-2043</p><p class="kfl-list__meta">Studio Hale</p></div><button type="button" class="kfl-button" data-size="sm" data-archive data-icon-only aria-label="Archive" data-tooltip="Archive" data-tooltip-align="end"><span class="kfl-icon" data-icon="archive" aria-hidden="true"></span></button></li>
         </ul>
         <p class="kfl-small kfl-muted" id="toast-archived"></p>
       </div>
@@ -743,7 +742,7 @@
 
   <!-- 24 Progress and loading -->
   <section class="grid-row doc-section" id="progress" aria-labelledby="progress-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">24 · Feedback</p><h2 id="progress-h" class="kfl-h3">Progress, loading</h2></header>
+    <header data-region="section-label"><h2 id="progress-h" class="kfl-h3">Progress, loading</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>Under a second, show nothing but the pressed state — a spinner that flashes is noise. Up to ten seconds, show that work is happening where the result will appear. Beyond that, show how much is done and offer a way out.</p>
     </div>
@@ -772,7 +771,7 @@
 
   <!-- 25 Empty state -->
   <section class="grid-row doc-section" id="empty" aria-labelledby="empty-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">25 · Feedback</p><h2 id="empty-h" class="kfl-h3">Empty state</h2></header>
+    <header data-region="section-label"><h2 id="empty-h" class="kfl-h3">Empty state</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>Say what belongs here and how to add the first one. An empty state caused by filters offers to clear them. No invented example content fills the gap, and no illustration is required.</p>
     </div>
@@ -782,13 +781,13 @@
           <span class="kfl-icon" data-icon="inbox" aria-hidden="true"></span>
           <p class="kfl-empty__title">No invoices yet</p>
           <p class="kfl-muted">Invoices you create or import appear here, newest first.</p>
-          <div class="kfl-empty__actions"><button type="button" class="kfl-button" data-variant="primary">Create invoice</button><button type="button" class="kfl-button">Import CSV</button></div>
+          <div class="kfl-empty__actions"><button type="button" class="kfl-button" data-variant="primary" data-icon-only aria-label="Create invoice" data-tooltip="Create invoice"><span class="kfl-icon" data-icon="plus" aria-hidden="true"></span></button><button type="button" class="kfl-button" data-icon-only aria-label="Import CSV" data-tooltip="Import CSV"><span class="kfl-icon" data-icon="upload" aria-hidden="true"></span></button></div>
         </div>
         <div class="kfl-empty">
           <span class="kfl-icon" data-icon="filter" aria-hidden="true"></span>
           <p class="kfl-empty__title">No invoices match these filters</p>
           <p class="kfl-muted">Status: Paid and Customer: Studio Hale.</p>
-          <div class="kfl-empty__actions"><button type="button" class="kfl-button">Clear filters</button></div>
+          <div class="kfl-empty__actions"><button type="button" class="kfl-button" data-icon-only aria-label="Clear filters" data-tooltip="Clear filters"><span class="kfl-icon" data-icon="close" aria-hidden="true"></span></button></div>
         </div>
       </div>
     </div>
@@ -796,7 +795,7 @@
 
   <!-- 26 Tooltip -->
   <section class="grid-row doc-section" id="tooltip" aria-labelledby="tooltip-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">26 · Feedback</p><h2 id="tooltip-h" class="kfl-h3">Tooltip</h2></header>
+    <header data-region="section-label"><h2 id="tooltip-h" class="kfl-h3">Tooltip</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>The visible name of an icon-only control, in the same words as its accessible name. It appears after a short delay on hover and at once on keyboard focus, stays while the pointer moves onto it, and hides with Escape. Never the only place for information someone needs.</p>
     </div>
@@ -812,7 +811,7 @@
 
   <!-- 27 Dialog -->
   <section class="grid-row doc-section" id="dialog" aria-labelledby="dialog-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">27 · Overlay</p><h2 id="dialog-h" class="kfl-h3">Dialog</h2></header>
+    <header data-region="section-label"><h2 id="dialog-h" class="kfl-h3">Dialog</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>A short, blocking decision that must be answered before going on. Name the object and the consequence, and label the confirming button with the action itself. Anything longer than a few fields gets a page, not a dialog, and dialogs never stack.</p>
     </div>
@@ -822,20 +821,19 @@
     </div>
     <div data-region="section-body" class="doc-body">
       <div class="kfl-cluster">
-        <button type="button" class="kfl-button" data-variant="danger-secondary" data-dialog-open="dlg-delete"><span class="kfl-icon" data-icon="trash" aria-hidden="true"></span>Delete project…</button>
-        <button type="button" class="kfl-button" data-dialog-open="dlg-rename">Rename…</button>
+        <button type="button" class="kfl-button" data-variant="danger-secondary" data-dialog-open="dlg-delete" data-icon-only aria-label="Delete project" data-tooltip="Delete project" data-tooltip-align="start"><span class="kfl-icon" data-icon="trash" aria-hidden="true"></span></button>
+        <button type="button" class="kfl-button" data-dialog-open="dlg-rename" data-icon-only aria-label="Rename" data-tooltip="Rename"><span class="kfl-icon" data-icon="edit" aria-hidden="true"></span></button>
         <p class="kfl-small kfl-muted" id="dialog-result" role="status"></p>
       </div>
       <dialog class="kfl-dialog" id="dlg-delete" aria-labelledby="dlg-delete-title" aria-describedby="dlg-delete-desc">
         <form class="kfl-dialog__frame" method="dialog">
           <header class="kfl-dialog__header">
             <h2 class="kfl-h3" id="dlg-delete-title">Delete “Website redesign”?</h2>
-            <button class="kfl-button" data-variant="quiet" data-icon-only value="cancel" formnovalidate aria-label="Close"><span class="kfl-icon" data-icon="close" aria-hidden="true"></span></button>
+            <button class="kfl-button" data-variant="quiet" value="cancel" formnovalidate autofocus data-icon-only aria-label="Cancel" data-tooltip="Cancel" data-tooltip-align="end"><span class="kfl-icon" data-icon="close" aria-hidden="true"></span></button>
           </header>
           <div class="kfl-dialog__body"><p id="dlg-delete-desc">This permanently deletes the project and its 48 files. It cannot be undone.</p></div>
           <footer class="kfl-dialog__footer">
-            <button class="kfl-button" value="cancel" autofocus>Cancel</button>
-            <button class="kfl-button" data-variant="danger" value="confirm">Delete project</button>
+            <button class="kfl-button" data-variant="danger" value="confirm" data-icon-only aria-label="Delete project" data-tooltip="Delete project" data-tooltip-align="end"><span class="kfl-icon" data-icon="trash" aria-hidden="true"></span></button>
           </footer>
         </form>
       </dialog>
@@ -843,14 +841,13 @@
         <form class="kfl-dialog__frame" method="dialog">
           <header class="kfl-dialog__header">
             <h2 class="kfl-h3" id="dlg-rename-title">Rename project</h2>
-            <button class="kfl-button" data-variant="quiet" data-icon-only value="cancel" formnovalidate aria-label="Close"><span class="kfl-icon" data-icon="close" aria-hidden="true"></span></button>
+            <button class="kfl-button" data-variant="quiet" value="cancel" formnovalidate data-icon-only aria-label="Cancel" data-tooltip="Cancel" data-tooltip-align="end"><span class="kfl-icon" data-icon="close" aria-hidden="true"></span></button>
           </header>
           <div class="kfl-dialog__body">
             <div class="kfl-field"><label class="kfl-field__label" for="rename-input">Project name</label><input class="kfl-input" id="rename-input" value="Website redesign" required></div>
           </div>
           <footer class="kfl-dialog__footer">
-            <button class="kfl-button" value="cancel" formnovalidate>Cancel</button>
-            <button class="kfl-button" data-variant="primary" value="save">Save name</button>
+            <button class="kfl-button" data-variant="primary" value="save" data-icon-only aria-label="Save name" data-tooltip="Save name" data-tooltip-align="end"><span class="kfl-icon" data-icon="save" aria-hidden="true"></span></button>
           </footer>
         </form>
       </dialog>
@@ -859,17 +856,17 @@
 
   <!-- 28 Drawer -->
   <section class="grid-row doc-section" id="drawer" aria-labelledby="drawer-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">28 · Overlay</p><h2 id="drawer-h" class="kfl-h3">Drawer</h2></header>
+    <header data-region="section-label"><h2 id="drawer-h" class="kfl-h3">Drawer</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>Detail or secondary work beside the current view, which stays in place underneath. It slides in from the end edge and returns there; with reduced motion it fades instead.</p>
     </div>
     <div data-region="section-body" class="doc-body">
-      <div><button type="button" class="kfl-button" data-dialog-open="drawer-demo">Show invoice details</button></div>
+      <div><button type="button" class="kfl-button" data-dialog-open="drawer-demo" data-icon-only aria-label="Show invoice details" data-tooltip="Show invoice details" data-tooltip-align="start"><span class="kfl-icon" data-icon="panel-open" aria-hidden="true"></span></button></div>
       <dialog class="kfl-drawer" id="drawer-demo" aria-labelledby="drawer-demo-title" data-light-dismiss>
         <form class="kfl-dialog__frame" method="dialog">
           <header class="kfl-dialog__header">
             <h2 class="kfl-h3" id="drawer-demo-title">INV-2041</h2>
-            <button class="kfl-button" data-variant="quiet" data-icon-only value="close" aria-label="Close"><span class="kfl-icon" data-icon="close" aria-hidden="true"></span></button>
+            <button class="kfl-button" data-variant="quiet" value="close" data-icon-only aria-label="Close" data-tooltip="Close" data-tooltip-align="end"><span class="kfl-icon" data-icon="close" aria-hidden="true"></span></button>
           </header>
           <div class="kfl-dialog__body">
             <span class="kfl-tag" data-tone="success">Paid</span>
@@ -880,8 +877,7 @@
             </dl>
           </div>
           <footer class="kfl-dialog__footer">
-            <button class="kfl-button" value="close">Close</button>
-            <button class="kfl-button" data-variant="primary" value="download"><span class="kfl-icon" data-icon="download" aria-hidden="true"></span>Download PDF</button>
+            <button class="kfl-button" data-variant="primary" value="download" data-icon-only aria-label="Download PDF" data-tooltip="Download PDF" data-tooltip-align="end"><span class="kfl-icon" data-icon="download" aria-hidden="true"></span></button>
           </footer>
         </form>
       </dialog>
@@ -890,7 +886,7 @@
 
   <!-- 29 Menu -->
   <section class="grid-row doc-section" id="menu" aria-labelledby="menu-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">29 · Overlay</p><h2 id="menu-h" class="kfl-h3">Menu</h2></header>
+    <header data-region="section-label"><h2 id="menu-h" class="kfl-h3">Menu</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>Actions on one object, behind a button when there are too many to show. Keep frequent actions in view and let the menu hold the rest; destructive items go last, after a separator. It opens from its trigger and collapses back toward it.</p>
     </div>
@@ -900,7 +896,7 @@
     <div data-region="section-body" class="doc-body">
       <div class="kfl-cluster">
         <div class="kfl-menu">
-          <button type="button" class="kfl-button" id="menu-btn" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-list">Actions<span class="kfl-icon" data-icon="chevron-down" aria-hidden="true"></span></button>
+          <button type="button" class="kfl-button" id="menu-btn" data-icon-only aria-label="Actions" data-tooltip="Actions" data-tooltip-align="start" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-list"><span class="kfl-icon" data-icon="more" aria-hidden="true"></span></button>
           <ul class="kfl-menu__list" role="menu" id="menu-list" aria-labelledby="menu-btn" hidden>
             <li role="none"><button type="button" class="kfl-menu__item" role="menuitem" tabindex="-1"><span class="kfl-icon" data-icon="copy" aria-hidden="true"></span>Duplicate</button></li>
             <li role="none"><button type="button" class="kfl-menu__item" role="menuitem" tabindex="-1"><span class="kfl-icon" data-icon="edit" aria-hidden="true"></span>Rename</button></li>
@@ -922,7 +918,7 @@
 
   <!-- 30 Disclosure -->
   <section class="grid-row doc-section" id="disclosure" aria-labelledby="disclosure-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">30 · Disclosure</p><h2 id="disclosure-h" class="kfl-h3">Disclosure</h2></header>
+    <header data-region="section-label"><h2 id="disclosure-h" class="kfl-h3">Disclosure</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>Progressive disclosure for secondary detail — answers, advanced options. The summaries stay visible, so people can scan before opening. Give several the same <code>name</code> to keep one open at a time.</p>
     </div>
@@ -937,7 +933,7 @@
 
   <!-- 31 Form -->
   <section class="grid-row doc-section" id="form" aria-labelledby="form-h">
-    <header data-region="section-label" class="doc-label"><p class="kfl-overline doc-label__number">31 · Composition</p><h2 id="form-h" class="kfl-h3">Form</h2></header>
+    <header data-region="section-label"><h2 id="form-h" class="kfl-h3">Form</h2></header>
     <div data-region="section-text" class="kfl-prose">
       <p>One column, in the order people think about the answers. Nothing is judged while someone types. On submit, every problem is listed at the top and marked at its field, every value stays, and each error clears the moment it is fixed. Try submitting it empty.</p>
     </div>
@@ -969,8 +965,8 @@
           <label class="kfl-choice"><input class="kfl-checkbox" type="checkbox" id="df-notify" name="notify" checked><span class="kfl-choice__text">Email them the invitation now</span></label>
         </div>
         <div class="kfl-form__actions">
-          <button type="submit" class="kfl-button" data-variant="primary">Send invitation</button>
-          <button type="reset" class="kfl-button" data-variant="quiet">Clear</button>
+          <button type="submit" class="kfl-button" data-variant="primary" data-icon-only aria-label="Send invitation" data-tooltip="Send invitation" data-tooltip-align="start"><span class="kfl-icon" data-icon="send" aria-hidden="true"></span></button>
+          <button type="reset" class="kfl-button" data-variant="quiet" data-icon-only aria-label="Clear" data-tooltip="Clear"><span class="kfl-icon" data-icon="undo" aria-hidden="true"></span></button>
           <p class="kfl-form__status" id="demo-form-status" role="status"></p>
         </div>
       </form>
@@ -979,16 +975,11 @@
 
 </main>
 
-<footer class="site-footer">
-  <div class="grid-container grid-row">
-    <p>Kasidia Frontend Law — reference kit examples. Every rectangle has square corners; the radio control is the only circle. <a href="index.html">Back to the index</a>.</p>
-  </div>
-</footer>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     // Icon grid: the names of the family in kit/icons.css (CSSOM is not readable over file://).
-    const names = ['check', 'close', 'plus', 'minus', 'chevron-down', 'chevron-up', 'chevron-right', 'chevron-left', 'arrow-right', 'arrow-left', 'arrow-up', 'arrow-down', 'sort', 'search', 'menu', 'more', 'info', 'success', 'warning', 'danger', 'external', 'copy', 'trash', 'edit', 'filter', 'download', 'upload', 'sliders', 'user', 'calendar', 'columns', 'list', 'grid', 'document', 'inbox', 'refresh', 'eye', 'eye-off', 'link', 'lock', 'bell', 'home'];
+    const names = ['check', 'close', 'plus', 'minus', 'chevron-down', 'chevron-up', 'chevron-right', 'chevron-left', 'arrow-right', 'arrow-left', 'arrow-up', 'arrow-down', 'sort', 'search', 'menu', 'more', 'info', 'success', 'warning', 'danger', 'external', 'copy', 'trash', 'edit', 'filter', 'download', 'upload', 'sliders', 'user', 'calendar', 'columns', 'list', 'grid', 'document', 'inbox', 'refresh', 'eye', 'eye-off', 'link', 'lock', 'bell', 'home', 'save', 'send', 'archive', 'sign-out', 'undo', 'user-minus', 'publish', 'panel-open'];
     document.getElementById('icon-grid').append(...names.map((n) => {
       const li = document.createElement('li');
       li.innerHTML = `<span class="kfl-icon" data-icon="${n}" aria-hidden="true"></span><span>${n}</span>`;
@@ -1099,7 +1090,7 @@
       row.remove();
       renderArchived();
       (focusNext ?? archivedNote.querySelector('button'))?.focus();
-      KFL.toast(`${id} archived.`, { action: 'Undo', onAction: () => restore(id) });
+      KFL.toast(`${id} archived.`, { action: 'Undo', icon: 'undo', onAction: () => restore(id) });
     });
 
     // Dialog outcomes are reported from the dialog's real return value.

@@ -103,18 +103,18 @@
   line-height: var(--kfl-lh-body);
   transition: border-color var(--kfl-dur-state), box-shadow var(--kfl-dur-state);
 }
-.kfl-textarea { display: block; padding-block: var(--kfl-space-2); min-block-size: calc(4lh + var(--kfl-space-4) + 2px); max-block-size: 24rem; resize: vertical; field-sizing: content; }
+.kfl-textarea { display: block; padding-block: var(--kfl-space-2); min-block-size: calc(4lh + var(--kfl-space-4) + 2 * var(--kfl-border)); max-block-size: 24rem; resize: vertical; field-sizing: content; }
 :is(.kfl-input, .kfl-textarea, .kfl-select > select):hover { border-color: var(--kfl-line-strong); }
-:is(.kfl-input, .kfl-textarea, .kfl-select > select):focus { outline: var(--kfl-focus-width) solid var(--kfl-focus); outline-offset: 0; border-color: var(--kfl-focus); }
+/* Where typing goes, for pointer and keyboard alike: an inset bar; the border stays put. */
 :is(.kfl-input, .kfl-textarea)::placeholder { color: var(--kfl-text-3); opacity: 1; }
 /* Invalid: red edge plus an inner bar — a shape cue that does not move the text. */
 :is(.kfl-input, .kfl-textarea, .kfl-select > select)[aria-invalid="true"] { border-color: var(--kfl-danger); box-shadow: inset 0.25rem 0 0 var(--kfl-danger); }
 :is(.kfl-input, .kfl-textarea, .kfl-select > select):disabled { background: var(--kfl-sunken); color: var(--kfl-text-disabled); border-color: var(--kfl-rule); }
 :is(.kfl-input, .kfl-textarea):read-only:not(:disabled) { background: transparent; border-color: var(--kfl-rule); }
 /* Width tells people how much to type: a postcode field is not a paragraph. */
-.kfl-input[data-width="xs"] { max-inline-size: calc(6ch + 2 * var(--kfl-space-3) + 2px); }
-.kfl-input[data-width="sm"] { max-inline-size: calc(12ch + 2 * var(--kfl-space-3) + 2px); }
-.kfl-input[data-width="md"] { max-inline-size: calc(24ch + 2 * var(--kfl-space-3) + 2px); }
+.kfl-input[data-width="xs"] { max-inline-size: calc(6ch + 2 * var(--kfl-space-3) + 2 * var(--kfl-border)); }
+.kfl-input[data-width="sm"] { max-inline-size: calc(12ch + 2 * var(--kfl-space-3) + 2 * var(--kfl-border)); }
+.kfl-input[data-width="md"] { max-inline-size: calc(24ch + 2 * var(--kfl-space-3) + 2 * var(--kfl-border)); }
 :is(.kfl-select, .kfl-input-group)[data-width="md"] { max-inline-size: calc(24ch + 4 * var(--kfl-space-3) + var(--kfl-icon-size)); }
 .kfl-input[type="search"]::-webkit-search-cancel-button { appearance: none; }
 
@@ -150,7 +150,6 @@
   }
   .kfl-select option { display: flex; align-items: center; gap: var(--kfl-space-3); min-block-size: var(--kfl-control-md); padding: 0 var(--kfl-space-4); }
   .kfl-select option:is(:hover, :focus-visible) { background: var(--kfl-hover); }
-  .kfl-select option:focus-visible { outline-offset: calc(-1 * var(--kfl-focus-width)); }
   .kfl-select option::checkmark {
     content: ""; order: 1; margin-inline-start: auto; inline-size: 1rem; block-size: 1rem;
     background: currentColor; mask: var(--kfl-icon-check) center / contain no-repeat;
@@ -187,6 +186,10 @@
 .kfl-checkbox:is(:checked, :indeterminate) { background: var(--kfl-accent); border-color: var(--kfl-accent); }
 .kfl-checkbox:is(:checked, :indeterminate)::before { scale: 1; }
 .kfl-checkbox:indeterminate::before { mask-image: var(--kfl-icon-minus); }
+/* The hit area reaches --kfl-hit-min around the drawn 1.25rem box (WCAG 2.5.8),
+   also where no label text sits beside it, as in table selection columns. */
+:is(.kfl-checkbox, .kfl-radio) { position: relative; }
+:is(.kfl-checkbox, .kfl-radio)::after { content: ""; position: absolute; inset: calc((1.25rem - 2 * var(--kfl-border-strong) - var(--kfl-hit-min)) / 2); }
 .kfl-radio { border-radius: 50%; }
 .kfl-radio::before { content: ""; inline-size: 0.5rem; block-size: 0.5rem; border-radius: 50%; background: var(--kfl-accent); scale: 0; transition: scale var(--kfl-dur-state) var(--kfl-ease-enter); }
 .kfl-radio:checked { border-color: var(--kfl-accent); }
@@ -227,13 +230,12 @@
   position: relative; display: inline-flex; align-items: center; justify-content: center; gap: var(--kfl-space-2);
   min-block-size: var(--kfl-control-md); padding: 0 var(--kfl-space-4);
   border: var(--kfl-border) solid var(--kfl-line-strong); color: var(--kfl-text); font-weight: var(--kfl-fw-medium);
-  transition: background-color var(--kfl-dur-state), color var(--kfl-dur-state);
+  transition: background-color var(--kfl-dur-state), border-color var(--kfl-dur-state), color var(--kfl-dur-state);
 }
 .kfl-segmented > label + label { margin-inline-start: calc(-1 * var(--kfl-border)); }
 .kfl-segmented input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
 .kfl-segmented > label:hover:not(:has(:checked)) { background: var(--kfl-hover); }
 .kfl-segmented > label:has(:checked) { background: var(--kfl-inverse); color: var(--kfl-on-inverse); border-color: var(--kfl-inverse); z-index: 1; }
-.kfl-segmented > label:has(:focus-visible) { outline: var(--kfl-focus-width) solid var(--kfl-focus); outline-offset: var(--kfl-focus-offset); z-index: 2; }
 .kfl-segmented[data-size="sm"] > label { min-block-size: var(--kfl-control-sm); padding-inline: var(--kfl-space-3); font-size: var(--kfl-fs-small); }
 
 
@@ -242,11 +244,10 @@
    --_pct in step with the value so the filled part tracks the thumb. */
 .kfl-slider { appearance: none; display: block; inline-size: 100%; block-size: var(--kfl-hit-min); margin: 0; background: transparent; cursor: pointer; }
 .kfl-slider::-webkit-slider-runnable-track { block-size: 0.25rem; background: linear-gradient(to right, var(--kfl-accent) var(--_pct, 50%), var(--kfl-line) var(--_pct, 50%)); }
-.kfl-slider::-webkit-slider-thumb { appearance: none; inline-size: 1rem; block-size: 1.5rem; margin-block-start: -0.625rem; border: var(--kfl-border-strong) solid var(--kfl-surface); background: var(--kfl-action); }
+.kfl-slider::-webkit-slider-thumb { appearance: none; inline-size: 1rem; block-size: 1.5rem; margin-block-start: -0.625rem; border: var(--kfl-border-strong) solid var(--kfl-surface); background: var(--kfl-action); transition: border-color var(--kfl-dur-state); }
 .kfl-slider::-moz-range-track { block-size: 0.25rem; background: var(--kfl-line); }
 .kfl-slider::-moz-range-progress { block-size: 0.25rem; background: var(--kfl-accent); }
-.kfl-slider::-moz-range-thumb { inline-size: 0.75rem; block-size: 1.25rem; border: var(--kfl-border-strong) solid var(--kfl-surface); border-radius: 0; background: var(--kfl-action); }
-.kfl-slider:focus-visible { outline-offset: var(--kfl-space-1); }
+.kfl-slider::-moz-range-thumb { inline-size: 0.75rem; block-size: 1.25rem; border: var(--kfl-border-strong) solid var(--kfl-surface); border-radius: 0; background: var(--kfl-action); transition: border-color var(--kfl-dur-state); }
 .kfl-slider-field { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: var(--kfl-space-4); }
 .kfl-slider-field > output { min-inline-size: 4ch; text-align: end; font-variant-numeric: tabular-nums; font-weight: var(--kfl-fw-medium); }
 
@@ -260,14 +261,12 @@
   min-block-size: var(--kfl-control-md); padding: 0 var(--kfl-space-3);
   border: 0; background: none; color: var(--kfl-text-2); font-weight: var(--kfl-fw-medium); white-space: nowrap;
 }
-.kfl-tab::after { content: ""; position: absolute; inset-inline: 0; inset-block-end: 0; block-size: 0.1875rem; background: transparent; transition: background-color var(--kfl-dur-state); }
+.kfl-tab::after { content: ""; position: absolute; inset-inline: 0; inset-block-end: 0; block-size: var(--kfl-indicator); background: transparent; transition: background-color var(--kfl-dur-state); }
 .kfl-tab:hover { color: var(--kfl-text); }
 .kfl-tab:hover::after { background: var(--kfl-rule); }
 .kfl-tab[aria-selected="true"] { color: var(--kfl-text); }
 .kfl-tab[aria-selected="true"]::after { background: var(--kfl-accent); }
-.kfl-tab:focus-visible { outline-offset: calc(-1 * var(--kfl-focus-width)); }
 .kfl-tabs__panel { padding-block-start: var(--kfl-space-5); }
-.kfl-tabs__panel:focus-visible { outline-offset: var(--kfl-space-2); }
 
 
 /* 8 Breadcrumb --------------------------------------------------------------
@@ -275,7 +274,7 @@
 .kfl-breadcrumb ol { display: flex; flex-wrap: wrap; align-items: center; margin: 0; padding: 0; list-style: none; font-size: var(--kfl-fs-small); line-height: var(--kfl-lh-small); }
 .kfl-breadcrumb li { display: inline-flex; align-items: center; color: var(--kfl-text-2); }
 .kfl-breadcrumb li + li::before { content: ""; inline-size: 1rem; block-size: 1rem; margin-inline: var(--kfl-space-1); background: var(--kfl-text-3); mask: var(--kfl-icon-chevron-right) center / contain no-repeat; }
-.kfl-breadcrumb a { display: inline-block; padding-block: max(0.125rem, (var(--kfl-hit-min) - 1lh) / 2); color: var(--kfl-text-2); text-decoration-color: var(--kfl-line); }
+.kfl-breadcrumb a { display: inline-block; min-inline-size: var(--kfl-hit-min); padding-block: max(0.125rem, (var(--kfl-hit-min) - 1lh) / 2); color: var(--kfl-text-2); text-decoration-color: var(--kfl-line); }
 .kfl-breadcrumb a:hover { color: var(--kfl-text); text-decoration-color: currentColor; }
 .kfl-breadcrumb [aria-current="page"] { color: var(--kfl-text); font-weight: var(--kfl-fw-medium); }
 
@@ -286,13 +285,13 @@
 .kfl-pagination { display: flex; flex-wrap: wrap; align-items: center; gap: var(--kfl-space-2) var(--kfl-space-4); }
 .kfl-pagination__summary { margin-inline-end: auto; color: var(--kfl-text-2); font-size: var(--kfl-fs-small); font-variant-numeric: tabular-nums; }
 .kfl-pagination__pages { display: flex; flex-wrap: wrap; gap: var(--kfl-space-1); margin: 0; padding: 0; list-style: none; }
-.kfl-pagination :is(a, [aria-current="page"], [aria-disabled="true"]) {
+.kfl-pagination :where(a, [aria-current="page"], [aria-disabled="true"]) { /* :where keeps state rules able to win */
   display: inline-flex; align-items: center; justify-content: center; gap: var(--kfl-space-2);
   min-inline-size: var(--kfl-control-md); min-block-size: var(--kfl-control-md); padding: 0 var(--kfl-space-3);
   border: var(--kfl-border) solid transparent; color: var(--kfl-text); font-weight: var(--kfl-fw-medium);
   text-decoration: none; font-variant-numeric: tabular-nums;
 }
-.kfl-pagination a:hover { border-color: var(--kfl-line-strong); }
+.kfl-pagination a:hover { background: var(--kfl-hover); }
 .kfl-pagination [aria-current="page"] { background: var(--kfl-inverse); color: var(--kfl-on-inverse); }
 .kfl-pagination [aria-disabled="true"] { color: var(--kfl-text-disabled); }
 .kfl-pagination__gap { display: inline-grid; place-content: center; min-inline-size: var(--kfl-control-sm); color: var(--kfl-text-3); }
@@ -361,6 +360,7 @@
 .kfl-alert__body { display: flex; flex-direction: column; gap: var(--kfl-space-1); min-inline-size: 0; }
 .kfl-alert__title { font-weight: var(--kfl-fw-bold); }
 .kfl-alert__actions { display: flex; flex-wrap: wrap; gap: var(--kfl-space-2) var(--kfl-space-5); margin-block-start: var(--kfl-space-2); }
+.kfl-alert__actions a { display: inline-flex; align-items: center; min-block-size: var(--kfl-hit-min); }
 .kfl-alert > .kfl-button[data-icon-only] { margin: calc((var(--kfl-lh-body) - var(--kfl-control-md)) / 2) calc(-1 * var(--kfl-space-2)) 0 0; }
 
 
@@ -387,7 +387,6 @@
 .kfl-toast__message { flex: 1; padding-block: var(--kfl-space-2); }
 .kfl-toast .kfl-button { --_fg: var(--kfl-on-inverse); --_edge: transparent; --_hover-bg: color-mix(in srgb, var(--kfl-on-inverse) 16%, transparent); }
 .kfl-toast__action { text-decoration: underline; text-underline-offset: 0.2em; }
-.kfl-toast :focus-visible { outline-color: var(--kfl-on-inverse); }
 
 
 /* 14 Dialog, drawer -----------------------------------------------------------
@@ -473,10 +472,8 @@
   border: 0; background: none; color: var(--kfl-text); font-size: var(--kfl-fs-body); text-align: start; text-decoration: none; white-space: nowrap;
 }
 .kfl-menu__item:is(:hover, :focus-visible) { background: var(--kfl-hover); color: var(--kfl-text); }
-.kfl-menu__item:focus-visible { outline-offset: calc(-1 * var(--kfl-focus-width)); }
-.kfl-menu__item[data-tone="danger"] { color: var(--kfl-danger); }
 .kfl-menu__item > .kfl-icon { color: var(--kfl-text-2); }
-.kfl-menu__item[data-tone="danger"] > .kfl-icon { color: inherit; }
+.kfl-menu__item[data-tone="danger"] > .kfl-icon { color: var(--kfl-danger); } /* ink text keeps the colour focus cue at 3:1 */
 .kfl-menu__hint { margin-inline-start: auto; padding-inline-start: var(--kfl-space-5); color: var(--kfl-text-3); font-size: var(--kfl-fs-small); }
 .kfl-menu__list > [role="separator"] { block-size: var(--kfl-border); margin: var(--kfl-space-1) 0; background: var(--kfl-rule); }
 
@@ -502,7 +499,7 @@
 }
 [data-tooltip]:is(:hover, :focus-visible):not([data-tooltip-dismissed])::after {
   opacity: 1; visibility: visible; pointer-events: auto; translate: -50% 0;
-  transition-timing-function: var(--kfl-ease-enter); transition-delay: 400ms, 400ms, 400ms;
+  transition-timing-function: var(--kfl-ease-enter); transition-delay: var(--kfl-tooltip-delay);
 }
 [data-tooltip]:focus-visible:not([data-tooltip-dismissed])::after { transition-delay: 0s; }
 [data-tooltip][data-tooltip-align="start"]::after { inset-inline-start: 0; translate: 0 calc(var(--kfl-travel) * 0.5); }
@@ -526,7 +523,6 @@
   transition: rotate var(--kfl-dur-small) var(--kfl-ease-exit);
 }
 .kfl-disclosure[open] > summary::after { rotate: 180deg; transition-timing-function: var(--kfl-ease-enter); }
-.kfl-disclosure > summary:focus-visible { outline-offset: calc(-1 * var(--kfl-focus-width)); }
 .kfl-disclosure::details-content { block-size: 0; overflow: clip; transition: block-size var(--kfl-dur-small) var(--kfl-ease-exit), content-visibility var(--kfl-dur-small) allow-discrete; }
 .kfl-disclosure[open]::details-content { block-size: auto; transition-timing-function: var(--kfl-ease-enter); }
 .kfl-disclosure__content { padding-block-end: var(--kfl-space-5); color: var(--kfl-text-2); }
@@ -539,7 +535,6 @@
    data-scroll="both" also bounds its height so the header row can stick. */
 .kfl-table-wrap { --_table-bg: var(--kfl-bg); overflow-x: auto; }
 .kfl-table-wrap[data-scroll="both"] { max-block-size: min(36rem, 70vh); overflow: auto; }
-.kfl-table-wrap:focus-visible { outline-offset: var(--kfl-focus-offset); }
 .kfl-table { inline-size: 100%; font-size: var(--kfl-fs-small); line-height: var(--kfl-lh-small); }
 .kfl-table > caption { caption-side: top; padding-block-end: var(--kfl-space-3); text-align: start; font-size: var(--kfl-fs-body); line-height: var(--kfl-lh-body); font-weight: var(--kfl-fw-bold); }
 .kfl-table :is(th, td) { padding: var(--kfl-space-3) var(--kfl-space-4); text-align: start; vertical-align: middle; }
@@ -547,7 +542,7 @@
 .kfl-table :is(th, td):last-child { padding-inline-end: 0; }
 .kfl-table thead th {
   position: sticky; inset-block-start: 0; z-index: 1;
-  background: var(--_table-bg, var(--kfl-bg)); color: var(--kfl-text-2); font-weight: var(--kfl-fw-medium); white-space: nowrap;
+  background: var(--_table-bg, var(--kfl-bg)); color: var(--kfl-text); font-weight: var(--kfl-fw-medium); white-space: nowrap;
   box-shadow: inset 0 calc(-1 * var(--kfl-border)) 0 var(--kfl-line-strong); /* the rule travels with a stuck header */
 }
 .kfl-table tbody tr { border-block-end: var(--kfl-border) solid var(--kfl-rule); }
@@ -556,6 +551,8 @@
 .kfl-table[data-density="compact"] :is(th, td) { padding-block: var(--kfl-space-2); }
 .kfl-table :is(th, td)[data-numeric] { text-align: end; font-variant-numeric: tabular-nums; }
 .kfl-table__select { inline-size: 1px; }
+/* A flush first column still leaves room for the checkbox hit area, which a scrolling wrap would clip. */
+.kfl-table .kfl-table__select:first-child { padding-inline-start: calc((var(--kfl-hit-min) - 1.25rem) / 2); }
 .kfl-table__select > .kfl-checkbox { margin-block-start: 0; vertical-align: middle; }
 .kfl-table__sort {
   --_pad: max(var(--kfl-space-1), (var(--kfl-hit-min) - 1lh) / 2);
@@ -565,8 +562,6 @@
 }
 .kfl-table__sort:hover { background: var(--kfl-hover); color: var(--kfl-text); }
 .kfl-table__sort > .kfl-icon { --kfl-icon-size: 1rem; --kfl-icon: var(--kfl-icon-sort); color: var(--kfl-text-3); }
-.kfl-table th[aria-sort="ascending"] { color: var(--kfl-text); }
-.kfl-table th[aria-sort="descending"] { color: var(--kfl-text); }
 .kfl-table th[aria-sort="ascending"] .kfl-table__sort > .kfl-icon { --kfl-icon: var(--kfl-icon-arrow-up); color: var(--kfl-text); }
 .kfl-table th[aria-sort="descending"] .kfl-table__sort > .kfl-icon { --kfl-icon: var(--kfl-icon-arrow-down); color: var(--kfl-text); }
 .kfl-table th[data-numeric] .kfl-table__sort { flex-direction: row-reverse; } /* label edge meets the numbers */
@@ -588,7 +583,6 @@
 @starting-style { .kfl-bulkbar:not([hidden]) { opacity: 0; translate: 0 calc(var(--kfl-travel) * -0.5); } }
 .kfl-bulkbar__count { margin-inline-end: auto; font-weight: var(--kfl-fw-medium); font-variant-numeric: tabular-nums; }
 .kfl-bulkbar .kfl-button { --_fg: var(--kfl-on-inverse); --_edge: color-mix(in srgb, var(--kfl-on-inverse) 40%, transparent); --_hover-bg: color-mix(in srgb, var(--kfl-on-inverse) 16%, transparent); }
-.kfl-bulkbar :focus-visible { outline-color: var(--kfl-on-inverse); }
 
 
 /* 19 List -------------------------------------------------------------------
@@ -620,10 +614,8 @@
 }
 .kfl-card-grid > .kfl-card { grid-row: span 4; grid-template-rows: subgrid; }
 .kfl-card:has(.kfl-card__link:hover) { border-color: var(--kfl-line-strong); }
-.kfl-card:has(.kfl-card__link:focus-visible) { outline: var(--kfl-focus-width) solid var(--kfl-focus); outline-offset: var(--kfl-focus-offset); }
 .kfl-card__link { color: var(--kfl-text); text-decoration: none; }
 .kfl-card__link::after { content: ""; position: absolute; inset: 0; }
-.kfl-card__link:focus-visible { outline: none; }
 .kfl-card__title { font-size: var(--kfl-fs-lead); line-height: var(--kfl-lh-lead); font-weight: var(--kfl-fw-bold); }
 .kfl-card__meta { font-size: var(--kfl-fs-small); line-height: var(--kfl-lh-small); color: var(--kfl-text-2); }
 .kfl-card__body { color: var(--kfl-text-2); }
@@ -653,7 +645,7 @@
 .kfl-progress::-webkit-progress-bar { background: var(--kfl-sunken); }
 .kfl-progress::-webkit-progress-value { background: var(--kfl-accent); transition: inline-size var(--kfl-dur-panel) var(--kfl-ease-enter); }
 .kfl-progress::-moz-progress-bar { background: var(--kfl-accent); }
-.kfl-progress:indeterminate { background: linear-gradient(var(--kfl-accent), var(--kfl-accent)) no-repeat, var(--kfl-sunken); background-size: 30% 100%, auto; animation: kfl-indeterminate 1.6s var(--kfl-ease-enter) infinite; }
+.kfl-progress:indeterminate { background: linear-gradient(var(--kfl-accent), var(--kfl-accent)) no-repeat, var(--kfl-sunken); background-size: 30% 100%, auto; animation: kfl-indeterminate var(--kfl-dur-loop) var(--kfl-ease-enter) infinite; }
 .kfl-progress:indeterminate::-webkit-progress-bar { background: transparent; }
 .kfl-progress:indeterminate::-moz-progress-bar { background: transparent; }
 @keyframes kfl-indeterminate { from { background-position: -40% 0, 0 0; } to { background-position: 140% 0, 0 0; } }
@@ -661,13 +653,13 @@
 .kfl-progress-field > .kfl-progress, .kfl-progress-field > .kfl-field__hint { grid-column: 1 / -1; }
 .kfl-progress-field > output { font-variant-numeric: tabular-nums; font-weight: var(--kfl-fw-medium); }
 
-.kfl-loader { display: inline-flex; gap: 0.1875rem; }
-.kfl-loader > span { inline-size: 0.375rem; block-size: 0.375rem; background: currentColor; animation: kfl-loader 900ms ease-in-out infinite; }
-.kfl-loader > span:nth-child(2) { animation-delay: 150ms; }
-.kfl-loader > span:nth-child(3) { animation-delay: 300ms; }
+.kfl-loader { display: inline-flex; gap: var(--kfl-loader-gap); }
+.kfl-loader > span { inline-size: var(--kfl-loader-dot); block-size: var(--kfl-loader-dot); background: currentColor; animation: kfl-loader var(--kfl-dur-loader) ease-in-out infinite; }
+.kfl-loader > span:nth-child(2) { animation-delay: calc(var(--kfl-dur-loader) / 6); }
+.kfl-loader > span:nth-child(3) { animation-delay: calc(var(--kfl-dur-loader) / 3); }
 @keyframes kfl-loader { 0%, 80%, 100% { opacity: 0.25; } 40% { opacity: 1; } }
 
-.kfl-skeleton { display: block; block-size: 1lh; background: var(--kfl-sunken); animation: kfl-pulse 1.6s ease-in-out infinite; }
+.kfl-skeleton { display: block; block-size: 1lh; background: var(--kfl-sunken); animation: kfl-pulse var(--kfl-dur-loop) ease-in-out infinite; }
 .kfl-skeleton[data-width="40"] { inline-size: 40%; }
 .kfl-skeleton[data-width="60"] { inline-size: 60%; }
 .kfl-skeleton[data-width="80"] { inline-size: 80%; }
@@ -675,7 +667,6 @@
 @media (prefers-reduced-motion: reduce) {
   .kfl-skeleton { animation: none; }
   .kfl-progress:indeterminate { animation: none; background: repeating-linear-gradient(-45deg, var(--kfl-accent) 0 0.25rem, var(--kfl-sunken) 0.25rem 0.5rem); }
-  .kfl-loader > span { animation-duration: 1800ms; }
 }
 
 
@@ -711,24 +702,24 @@
    Current location is marked by a bar and weight, and aria-current. */
 .kfl-topbar { border-block-end: var(--kfl-border) solid var(--kfl-rule); background: var(--kfl-surface); }
 .kfl-topbar__row { display: flex; align-items: center; gap: var(--kfl-space-5); min-block-size: 3.5rem; }
-.kfl-topbar__brand { display: inline-flex; align-items: center; gap: var(--kfl-space-2); min-block-size: var(--kfl-control-md); color: var(--kfl-text); font-weight: var(--kfl-fw-bold); text-decoration: none; }
+.kfl-topbar__brand { display: inline-flex; align-items: center; gap: var(--kfl-space-2); min-block-size: var(--kfl-control-md); min-inline-size: var(--kfl-control-md); color: var(--kfl-text); font-weight: var(--kfl-fw-bold); text-decoration: none; }
 .kfl-topbar__brand:hover { color: var(--kfl-text); }
 .kfl-topbar__nav { display: flex; align-self: stretch; }
 .kfl-topbar__nav ul { display: flex; margin: 0; padding: 0; list-style: none; }
 .kfl-topbar__nav a {
   position: relative; display: inline-flex; align-items: center; block-size: 100%; padding: 0 var(--kfl-space-3);
-  color: var(--kfl-text-2); font-weight: var(--kfl-fw-medium); text-decoration: none;
+  color: var(--kfl-text-2); font-weight: var(--kfl-fw-medium);
+  text-decoration: underline var(--kfl-focus-bar) transparent; text-underline-offset: var(--kfl-focus-gap);
 }
 .kfl-topbar__nav a:hover { color: var(--kfl-text); }
-.kfl-topbar__nav a::after { content: ""; position: absolute; inset-inline: 0; inset-block-end: calc(-1 * var(--kfl-border)); block-size: 0.1875rem; background: transparent; }
+.kfl-topbar__nav a::after { content: ""; position: absolute; inset-inline: 0; inset-block-end: calc(-1 * var(--kfl-border)); block-size: var(--kfl-indicator); background: transparent; }
 .kfl-topbar__nav a[aria-current="page"] { color: var(--kfl-text); }
 .kfl-topbar__nav a[aria-current="page"]::after { background: var(--kfl-accent); }
-.kfl-topbar__nav a:focus-visible { outline-offset: calc(-1 * var(--kfl-focus-width)); }
 .kfl-topbar__end { display: flex; align-items: center; gap: var(--kfl-space-2); margin-inline-start: auto; }
 .kfl-topbar__menu-button { display: none; }
 .kfl-topbar__panel { border-block-start: var(--kfl-border) solid var(--kfl-rule); padding-block: var(--kfl-space-2); }
 .kfl-topbar__panel ul { margin: 0; padding: 0; list-style: none; }
-.kfl-topbar__panel a { display: flex; align-items: center; min-block-size: var(--kfl-control-lg); color: var(--kfl-text); text-decoration: none; font-weight: var(--kfl-fw-medium); border-inline-start: 0.1875rem solid transparent; padding-inline-start: var(--kfl-space-3); }
+.kfl-topbar__panel a { display: flex; align-items: center; min-block-size: var(--kfl-control-lg); color: var(--kfl-text); text-decoration: none; font-weight: var(--kfl-fw-medium); border-inline-start: var(--kfl-indicator) solid transparent; padding-inline-start: var(--kfl-space-3); }
 .kfl-topbar__panel a[aria-current="page"] { border-inline-start-color: var(--kfl-accent); }
 @media (width < 48rem) {
   .kfl-topbar__nav { display: none; }
@@ -742,20 +733,22 @@
   padding: var(--kfl-space-2) var(--kfl-space-4); background: var(--kfl-inverse); color: var(--kfl-on-inverse); font-weight: var(--kfl-fw-medium);
   translate: 0 -200%;
 }
-.kfl-skip-link:focus { translate: 0 0; color: var(--kfl-on-inverse); outline-color: var(--kfl-on-inverse); }
+.kfl-skip-link:focus { translate: 0 0; color: var(--kfl-on-inverse); }
 
 .kfl-sidenav { display: flex; flex-direction: column; gap: var(--kfl-space-5); }
 .kfl-sidenav__group { display: flex; flex-direction: column; gap: var(--kfl-space-2); }
 .kfl-sidenav ul { margin: 0; padding: 0; list-style: none; }
 .kfl-sidenav a {
   display: flex; align-items: center; gap: var(--kfl-space-3); min-block-size: var(--kfl-control-md);
-  padding: 0 var(--kfl-space-3); border-inline-start: 0.1875rem solid transparent;
+  padding: 0 var(--kfl-space-3); border-inline-start: var(--kfl-indicator) solid transparent;
   color: var(--kfl-text-2); font-weight: var(--kfl-fw-medium); text-decoration: none;
 }
 .kfl-sidenav a:hover { background: var(--kfl-hover); color: var(--kfl-text); }
 .kfl-sidenav a[aria-current="page"] { border-inline-start-color: var(--kfl-accent); color: var(--kfl-text); font-weight: var(--kfl-fw-bold); }
 .kfl-sidenav a > .kfl-count { margin-inline-start: auto; }
-.kfl-sidenav a:focus-visible { outline-offset: calc(-1 * var(--kfl-focus-width)); }
+/* Icon rail (KFL Law 4): each destination is its icon; the name is the tooltip and aria-label. */
+.kfl-sidenav[data-icon-only] a { position: relative; justify-content: center; inline-size: var(--kfl-control-lg); min-block-size: var(--kfl-control-lg); padding: 0; }
+.kfl-sidenav[data-icon-only] a > .kfl-count { position: absolute; inset-block-start: 0; inset-inline-end: 0; margin: 0; translate: 25% -25%; } /* clear of the glyph */
 
 
 /* 26 Form, error summary --------------------------------------------------------
@@ -773,23 +766,53 @@
 .kfl-error-summary__title > .kfl-icon { color: var(--kfl-danger); }
 .kfl-error-summary ul { margin: 0; padding-inline-start: var(--kfl-space-5); }
 .kfl-error-summary a { color: var(--kfl-danger); font-weight: var(--kfl-fw-medium); }
-.kfl-error-summary:focus-visible { outline-offset: var(--kfl-focus-offset); }
 
 
 /* 27 Kbd, code, rules ---------------------------------------------------------- */
-.kfl-kbd { display: inline-block; min-inline-size: 1.75em; padding: 0 0.375em; border: var(--kfl-border) solid var(--kfl-line); border-block-end-width: var(--kfl-border-strong); background: var(--kfl-surface); color: var(--kfl-text); font-family: var(--kfl-font-mono); font-size: 0.8125em; line-height: 1.5; text-align: center; }
+.kfl-kbd { display: inline-block; min-inline-size: 1.75em; padding: 0 0.375em; border: var(--kfl-border) solid var(--kfl-line); border-block-end-width: var(--kfl-border-strong); background: var(--kfl-surface); color: var(--kfl-text); font-family: var(--kfl-font-mono); font-size: max(0.8125em, var(--kfl-fs-floor)); line-height: 1.5; text-align: center; }
 .kfl-code { display: block; margin: 0; padding: var(--kfl-space-4); overflow-x: auto; background: var(--kfl-sunken); color: var(--kfl-text); font-size: var(--kfl-fs-small); line-height: var(--kfl-lh-small); tab-size: 2; }
 .kfl-rule-heavy { border: 0; border-block-start: var(--kfl-rule-heavy) solid var(--kfl-line-strong); }
 
 
-/* Forced colors (Windows contrast themes): the platform takes over painting.
-   Hand native controls back to it and keep state marks visible. */
-@media (forced-colors: active) {
-  .kfl-checkbox, .kfl-radio, .kfl-switch, .kfl-slider, .kfl-progress { appearance: auto; }
-  :is(.kfl-checkbox, .kfl-radio, .kfl-switch)::before { display: none; }
-  .kfl-tab[aria-selected="true"]::after, .kfl-topbar__nav a[aria-current="page"]::after { background: Highlight; }
-  .kfl-sidenav a[aria-current="page"] { border-inline-start-color: Highlight; }
-  .kfl-segmented > label:has(:checked) { outline: var(--kfl-focus-width) solid Highlight; outline-offset: calc(-1 * var(--kfl-focus-width) - 1px); }
-  .kfl-tag[data-tone]::before { background: CanvasText; forced-color-adjust: none; }
-  .kfl-pagination [aria-current="page"] { outline: var(--kfl-border-strong) solid Highlight; }
+/* Focus cues -------------------------------------------------------------------
+   No outline frame anywhere (base.css). The cue follows what the element already
+   draws, in this order (KFL Interaction Baseline):
+     1. a border   -> the border changes colour, never its width;
+     2. an underline (links) -> the underline thickens (base.css);
+     3. neither    -> its text and icon change colour.
+   Each --kfl-focus-shift* token changes the colour it replaces by >= 3:1. Where no
+   colour can (text at rest in --kfl-text-2 must stay readable), a link underlines;
+   a button never does: it rests in ink so the colour cue works, or shows an inset
+   bar when it has no text. Containers whose content keeps its own colours (scroll
+   regions, tab panels) also take the inset bar. Every cue eases in and out. */
+
+/* 1 Border. Fields show where typing goes for pointer and keyboard alike. */
+.kfl-button:not([data-variant="quiet"]):focus-visible,
+.kfl-segmented > label:has(:focus-visible) { border-color: var(--kfl-focus-shift); }
+.kfl-button:is([data-variant="danger"], [data-variant="danger-secondary"]):focus-visible { border-color: var(--kfl-focus-shift-danger); }
+.kfl-button:is(:disabled, [aria-disabled="true"]):focus-visible { border-color: var(--kfl-focus-shift); } /* at rest its edge is --kfl-rule */
+:is(.kfl-input, .kfl-textarea, .kfl-select > select):focus,
+:is(.kfl-checkbox, .kfl-radio, .kfl-switch):focus-visible { border-color: var(--kfl-focus-shift-line); }
+:is(.kfl-input, .kfl-textarea, .kfl-select > select)[aria-invalid="true"]:focus { border-color: var(--kfl-focus-shift-danger); }
+:is(.kfl-input, .kfl-textarea):read-only:not(:disabled):focus { border-color: var(--kfl-focus-shift); } /* rests on --kfl-rule */
+:is(.kfl-checkbox, .kfl-radio, .kfl-switch):is(:checked, :indeterminate):focus-visible { border-color: var(--kfl-focus-shift-accent); }
+.kfl-slider:focus-visible::-webkit-slider-thumb { border-color: var(--kfl-focus-shift); }
+.kfl-slider:focus-visible::-moz-range-thumb { border-color: var(--kfl-focus-shift); }
+
+/* 3 Colour. */
+:is(.kfl-button[data-variant="quiet"], .kfl-tab, .kfl-menu__item, .kfl-disclosure > summary, .kfl-card__link, .kfl-topbar__brand, .kfl-topbar__panel a, .kfl-pagination a, .kfl-table__sort):focus-visible {
+  --_label: var(--kfl-focus-shift); color: var(--kfl-focus-shift);
+}
+
+/* Fallbacks where no colour reaches 3:1. */
+.kfl-topbar__nav a:focus-visible { text-decoration-color: currentColor; }
+:is(.kfl-sidenav a, .kfl-tag__remove, .kfl-table-wrap, .kfl-tabs__panel):focus-visible {
+  box-shadow: inset 0 calc(-1 * var(--kfl-focus-bar)) 0 currentColor;
+}
+
+/* Easing for the cue targets that have no transition of their own. */
+:is(.kfl-tab, .kfl-menu__item, .kfl-disclosure > summary, .kfl-card__link, .kfl-topbar__brand, .kfl-topbar__nav a, .kfl-topbar__panel a,
+    .kfl-pagination a, .kfl-table__sort, .kfl-sidenav a, .kfl-tag__remove, .kfl-table-wrap, .kfl-tabs__panel) {
+  transition: color var(--kfl-dur-state), background-color var(--kfl-dur-state), border-color var(--kfl-dur-state),
+    text-decoration-color var(--kfl-dur-state), box-shadow var(--kfl-dur-state);
 }

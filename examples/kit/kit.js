@@ -7,43 +7,65 @@
 (() => {
   'use strict';
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+  // Timing and spacing used by behaviour (visual values live in tokens.css).
+  const ANNOUNCE_GAP_MS = 60;    // clear, then speak: repeated text is announced again
+  const TOAST_MS = 5000;
+  const TOAST_ACTION_MS = 8000;
+  const EXIT_SLACK_MS = 100;     // a missed transitionend never strands a leaving surface
+  const COPY_RESET_MS = 2000;
+  const MENU_EDGE_PX = 8;        // room a menu keeps from the viewport edge
+
+  /* KFL.init(root) may run again on the same root: each element binds once. */
+  const bound = new WeakMap();
+  const fresh = (name, els) => els.filter((el) => {
+    const names = bound.get(el) ?? new Set();
+    if (names.has(name)) return false;
+    bound.set(el, names.add(name));
+    return true;
+  });
 
   /* Announcements — one polite live region, created before it is needed. */
   let announcer;
   function announce(text) {
     announcer.textContent = '';
-    setTimeout(() => { announcer.textContent = text; }, 60); // repeated text is announced again
+    setTimeout(() => { announcer.textContent = text; }, ANNOUNCE_GAP_MS);
   }
 
-  /* Theme: system / light / dark. A per-viewer convenience, so browser storage
-     is fine; the page renders correctly when storage is unavailable. */
-  const THEME_KEY = 'kfl-theme';
-  function applyTheme(value) {
-    if (value === 'light' || value === 'dark') document.documentElement.dataset.theme = value;
-    else delete document.documentElement.dataset.theme;
-  }
-  function initTheme() {
-    let stored = null;
-    try { stored = localStorage.getItem(THEME_KEY); } catch { /* storage blocked */ }
-    applyTheme(stored);
-    // Every copy of the control (top bar, mobile panel) shows the same choice.
-    const groups = $$('[data-theme-control]');
-    const show = (value) => {
+  /* Viewer preferences: colour theme (system / light / dark), set as
+     html[data-theme]. A per-viewer convenience, so browser storage is fine; the
+     page renders correctly when storage is unavailable. The first value is the
+     default and sets no attribute. */
+  const PREFERENCES = [
+    { key: 'kfl-theme', attr: 'theme', control: '[data-theme-control]', values: ['system', 'light', 'dark'] },
+  ];
+  function initPreferences() {
+    for (const { key, attr, control, values } of PREFERENCES) {
+      const apply = (value) => {
+        if (values.indexOf(value) > 0) document.documentElement.dataset[attr] = value;
+        else delete document.documentElement.dataset[attr];
+      };
+      let stored = null;
+      try { stored = localStorage.getItem(key); } catch { /* storage blocked */ }
+      apply(stored);
+      // Every copy of the control (top bar, mobile panel) shows the same choice.
+      const groups = $$(control);
+      const show = (value) => {
+        for (const group of groups) {
+          const input = group.querySelector(`input[value="${value}"]`);
+          if (input) input.checked = true;
+        }
+      };
+      show(values.includes(stored) ? stored : values[0]);
       for (const group of groups) {
-        const input = group.querySelector(`input[value="${value}"]`);
-        if (input) input.checked = true;
+        group.addEventListener('change', (e) => {
+          apply(e.target.value);
+          show(e.target.value);
+          try {
+            if (values.indexOf(e.target.value) > 0) localStorage.setItem(key, e.target.value);
+            else localStorage.removeItem(key);
+          } catch { /* storage blocked */ }
+        });
       }
-    };
-    show(stored ?? 'system');
-    for (const group of groups) {
-      group.addEventListener('change', (e) => {
-        applyTheme(e.target.value);
-        show(e.target.value);
-        try {
-          if (e.target.value === 'system') localStorage.removeItem(THEME_KEY);
-          else localStorage.setItem(THEME_KEY, e.target.value);
-        } catch { /* storage blocked */ }
-      });
     }
   }
 
@@ -60,7 +82,7 @@
 
   /* Disclosure buttons: <button data-toggle aria-expanded aria-controls>. */
   function initToggles(root) {
-    for (const button of $$('button[data-toggle][aria-controls]', root)) {
+    for (const button of fresh('toggle', $$('button[data-toggle][aria-controls]', root))) {
       const target = document.getElementById(button.getAttribute('aria-controls'));
       if (!target) continue;
       button.addEventListener('click', () => {
@@ -73,7 +95,7 @@
 
   /* Tabs — automatic activation with a roving tabindex (WAI-ARIA APG). */
   function initTabs(root) {
-    for (const list of $$('[role="tablist"]', root)) {
+    for (const list of fresh('tabs', $$('[role="tablist"]', root))) {
       const tabs = $$('[role="tab"]', list);
       const select = (tab) => {
         for (const t of tabs) {
@@ -110,7 +132,7 @@
      button; Tab or a click outside closes without stealing focus. */
   const openMenus = new Set();
   function initMenus(root) {
-    for (const button of $$('[aria-haspopup="menu"][aria-controls]', root)) {
+    for (const button of fresh('menu', $$('[aria-haspopup="menu"][aria-controls]', root))) {
       const menu = document.getElementById(button.getAttribute('aria-controls'));
       if (!menu) continue;
       const items = () => $$('[role^="menuitem"]:not([aria-disabled="true"])', menu);
@@ -165,8 +187,8 @@
     if (menu.dataset.alignAuto !== undefined) menu.removeAttribute('data-align');
     const trigger = button.getBoundingClientRect();
     const below = innerHeight - trigger.bottom;
-    if (menu.offsetHeight + 8 > below && trigger.top > below) menu.dataset.placement = 'top';
-    if (menu.getBoundingClientRect().right > document.documentElement.clientWidth - 8) {
+    if (menu.offsetHeight + MENU_EDGE_PX > below && trigger.top > below) menu.dataset.placement = 'top';
+    if (menu.getBoundingClientRect().right > document.documentElement.clientWidth - MENU_EDGE_PX) {
       menu.dataset.align = 'end';
       menu.dataset.alignAuto = '';
     }
@@ -174,21 +196,26 @@
 
   /* Dialogs: [data-dialog-open="id"] opens a native modal dialog. Buttons in a
      <form method="dialog"> close it with their value. Only dialogs marked
-     data-light-dismiss close on a backdrop click — never one holding input. */
+     data-light-dismiss close on a backdrop click — never one holding input. A
+     press that starts inside the dialog and ends on the backdrop is not a click
+     on the backdrop. */
   function initDialogs(root) {
-    for (const opener of $$('[data-dialog-open]', root)) {
+    for (const opener of fresh('dialog-open', $$('[data-dialog-open]', root))) {
       opener.addEventListener('click', () => document.getElementById(opener.dataset.dialogOpen)?.showModal());
     }
-    for (const dialog of $$('dialog[data-light-dismiss]', root)) {
-      dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close('dismiss'); });
+    for (const dialog of fresh('light-dismiss', $$('dialog[data-light-dismiss]', root))) {
+      let pressedBackdrop = false;
+      dialog.addEventListener('pointerdown', (e) => { pressedBackdrop = e.target === dialog; });
+      dialog.addEventListener('click', (e) => { if (e.target === dialog && pressedBackdrop) dialog.close('dismiss'); });
     }
   }
 
-  /* Toasts: KFL.toast(message, { action, onAction }). Actions give 8 s, plain
+  /* Toasts: KFL.toast(message, { action, icon, onAction }). With an icon the
+     action is icon-only and its words become the tooltip (KFL Law 4). Actions give 8 s, plain
      messages 5 s; hover or focus pauses the clock. Anything a toast offers must
      also be reachable elsewhere on the page. */
   let toaster;
-  function toast(message, { action, onAction, duration } = {}) {
+  function toast(message, { action, icon, onAction, duration } = {}) {
     const origin = document.activeElement;
     const el = document.createElement('div');
     el.className = 'kfl-toast';
@@ -200,7 +227,12 @@
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'kfl-button kfl-toast__action';
-      b.textContent = action;
+      if (icon) {
+        b.dataset.iconOnly = '';
+        b.setAttribute('aria-label', action);
+        b.dataset.tooltip = action;
+        b.innerHTML = `<span class="kfl-icon" data-icon="${icon}" aria-hidden="true"></span>`;
+      } else b.textContent = action;
       b.addEventListener('click', () => { onAction?.(); dismiss(); });
       el.append(b);
     }
@@ -209,20 +241,23 @@
     close.className = 'kfl-button';
     close.dataset.iconOnly = '';
     close.setAttribute('aria-label', 'Dismiss');
+    close.dataset.tooltip = 'Dismiss';
+    close.dataset.tooltipAlign = 'end';
     close.innerHTML = '<span class="kfl-icon" data-icon="close" aria-hidden="true"></span>';
     close.addEventListener('click', dismiss);
     el.append(close);
     toaster.append(el);
 
-    let remaining = duration ?? (action ? 8000 : 5000);
-    let started = 0;
+    let remaining = duration ?? (action ? TOAST_ACTION_MS : TOAST_MS);
+    let started = 0; // 0 while paused
     let timer = 0;
-    const run = () => { started = Date.now(); timer = setTimeout(dismiss, remaining); };
-    const pause = () => { clearTimeout(timer); remaining -= Date.now() - started; };
-    el.addEventListener('pointerenter', pause);
-    el.addEventListener('pointerleave', run);
+    let hovered = false;
+    const run = () => { if (started) return; started = Date.now(); timer = setTimeout(dismiss, remaining); };
+    const pause = () => { if (!started) return; clearTimeout(timer); remaining -= Date.now() - started; started = 0; };
+    el.addEventListener('pointerenter', () => { hovered = true; pause(); });
+    el.addEventListener('pointerleave', () => { hovered = false; if (!el.contains(document.activeElement)) run(); });
     el.addEventListener('focusin', pause);
-    el.addEventListener('focusout', (e) => { if (!el.contains(e.relatedTarget)) run(); });
+    el.addEventListener('focusout', (e) => { if (!hovered && !el.contains(e.relatedTarget)) run(); });
     run();
 
     function dismiss() {
@@ -231,8 +266,13 @@
       const hadFocus = el.contains(document.activeElement);
       el.hidden = true; // the exit transition runs; removal waits for it
       const remove = () => el.remove();
-      el.addEventListener('transitionend', remove, { once: true });
-      setTimeout(remove, 600); // zero-duration paths still clean up (KFL Law 3)
+      // Zero-duration paths clean up at once (KFL Law 3); others wait for the exit.
+      const exitMs = Math.max(...getComputedStyle(el).transitionDuration.split(',').map(parseFloat)) * 1000;
+      if (!exitMs) remove();
+      else {
+        el.addEventListener('transitionend', remove, { once: true });
+        setTimeout(remove, exitMs + EXIT_SLACK_MS);
+      }
       if (hadFocus && origin?.isConnected) origin.focus();
     }
     return { dismiss };
@@ -264,7 +304,7 @@
 
   /* Sliders: keep the filled track and the paired <output> in step. */
   function initSliders(root) {
-    for (const slider of $$('input[type="range"].kfl-slider', root)) {
+    for (const slider of fresh('slider', $$('input[type="range"].kfl-slider', root))) {
       const output = slider.id ? document.querySelector(`output[for~="${slider.id}"]`) : null;
       const sync = () => {
         const min = Number(slider.min || 0);
@@ -281,17 +321,19 @@
      data-select-group="name"; it turns indeterminate for a partial selection
      and reports the count through a kfl:selection event. */
   function initSelectAll(root) {
-    for (const all of $$('input[data-select-all]', root)) {
+    for (const all of fresh('select-all', $$('input[data-select-all]', root))) {
       const name = all.dataset.selectAll;
       const members = () => $$(`input[data-select-group="${name}"]`);
+      const enabled = () => members().filter((i) => !i.disabled);
       const sync = () => {
-        const group = members();
-        const count = group.filter((i) => i.checked).length;
-        all.checked = count > 0 && count === group.length;
-        all.indeterminate = count > 0 && count < group.length;
-        all.dispatchEvent(new CustomEvent('kfl:selection', { bubbles: true, detail: { name, count, total: group.length } }));
+        const group = enabled();
+        const on = group.filter((i) => i.checked).length;
+        all.checked = on > 0 && on === group.length;
+        all.indeterminate = on > 0 && on < group.length;
+        const count = members().filter((i) => i.checked).length;
+        all.dispatchEvent(new CustomEvent('kfl:selection', { bubbles: true, detail: { name, count, total: members().length } }));
       };
-      all.addEventListener('change', () => { for (const i of members()) i.checked = all.checked; sync(); });
+      all.addEventListener('change', () => { for (const i of enabled()) i.checked = all.checked; sync(); });
       document.addEventListener('change', (e) => { if (e.target.matches?.(`input[data-select-group="${name}"]`)) sync(); });
       all.kflSync = sync;
       sync();
@@ -301,7 +343,7 @@
   /* Sortable tables: header buttons cycle ascending/descending, aria-sort says
      which, and the new order is announced. Cells may carry data-value. */
   function initSortableTables(root) {
-    for (const table of $$('table.kfl-table', root)) {
+    for (const table of fresh('sort', $$('table.kfl-table', root))) {
       for (const button of $$('th > .kfl-table__sort', table)) {
         button.addEventListener('click', () => {
           const th = button.closest('th');
@@ -325,22 +367,29 @@
     }
   }
 
-  /* Copy: <button data-copy="#source">. The label reports what really happened. */
+  /* Copy: <button data-copy="#source">. The label reports what really happened;
+     an icon-only button reports it through its tooltip and accessible name. */
   function initCopy(root) {
-    for (const button of $$('[data-copy]', root)) {
+    for (const button of fresh('copy', $$('[data-copy]', root))) {
+      const iconOnly = button.hasAttribute('data-icon-only');
       const label = button.querySelector('[data-copy-label]') ?? button;
-      const idle = label.textContent;
+      const idle = iconOnly ? button.getAttribute('aria-label') : label.textContent;
+      const say = (text) => {
+        if (!iconOnly) { label.textContent = text; return; }
+        button.setAttribute('aria-label', text);
+        button.dataset.tooltip = text;
+      };
       button.addEventListener('click', async () => {
         const source = document.querySelector(button.dataset.copy);
         try {
           await navigator.clipboard.writeText(source?.value ?? source?.textContent ?? '');
-          label.textContent = 'Copied';
+          say('Copied');
           announce('Copied to the clipboard');
         } catch {
-          label.textContent = 'Copy failed';
+          say('Copy failed');
           announce('Copy failed. Select the text and copy it manually.');
         }
-        setTimeout(() => { label.textContent = idle; }, 2000);
+        setTimeout(() => say(idle), COPY_RESET_MS);
       });
     }
   }
@@ -348,7 +397,7 @@
   /* Character count: a soft limit people can exceed while editing, shown as
      "n / max" and enforced at submit — pasting never silently truncates. */
   function initCounters(root) {
-    for (const out of $$('[data-count-for]', root)) {
+    for (const out of fresh('count', $$('[data-count-for]', root))) {
       const field = document.getElementById(out.dataset.countFor);
       if (!field) continue;
       const max = Number(field.dataset.maxlength);
@@ -363,7 +412,7 @@
 
   /* Password reveal: <button data-reveal="input-id" aria-pressed>. */
   function initReveal(root) {
-    for (const button of $$('[data-reveal]', root)) {
+    for (const button of fresh('reveal', $$('[data-reveal]', root))) {
       const input = document.getElementById(button.dataset.reveal);
       button.addEventListener('click', () => {
         const show = input.type === 'password';
@@ -395,14 +444,16 @@
      every field, keeps every value, marks each problem at its field and lists
      them in the error summary, which takes focus. After that, an error clears
      the moment its field becomes valid. A valid form dispatches kfl:valid. */
+  let fieldUid = 0;
+  const idOf = (el) => el.id || (el.id = `kfl-field-${++fieldUid}`);
   function initForms(root) {
-    for (const form of $$('form[data-validate]', root)) {
+    for (const form of fresh('validate', $$('form[data-validate]', root))) {
       form.noValidate = true;
       const summary = form.querySelector('.kfl-error-summary');
       const controls = () => $$('input, select, textarea', form).filter((f) => !f.disabled && f.type !== 'hidden' && (f.willValidate || f.dataset.maxlength));
       const hostOf = (f) => (f.type === 'radio' || f.type === 'checkbox') && f.closest('fieldset') ? f.closest('fieldset') : f;
-      const keyOf = (f) => (f.type === 'radio' ? `radio:${f.name}` : f.id);
-      const errorId = (f) => `${f.type === 'radio' ? hostOf(f).id : f.id}-error`;
+      const keyOf = (f) => (f.type === 'radio' ? `radio:${f.name}` : f);
+      const errorId = (f) => `${idOf(f.type === 'radio' ? hostOf(f) : f)}-error`;
       const message = (f) => {
         if (f.dataset.maxlength && f.value.length > Number(f.dataset.maxlength)) return f.dataset.errorLength ?? `Use ${f.dataset.maxlength} characters or fewer`;
         const v = f.validity;
@@ -457,7 +508,7 @@
             list.replaceChildren(...problems.map(({ f, text }) => {
               const li = document.createElement('li');
               const a = document.createElement('a');
-              a.href = `#${f.id}`;
+              a.href = `#${idOf(f)}`;
               a.textContent = text;
               a.addEventListener('click', (ev) => { ev.preventDefault(); f.focus(); f.scrollIntoView({ block: 'center' }); });
               li.append(a);
@@ -507,7 +558,7 @@
       toaster.setAttribute('aria-live', 'polite');
     }
     document.body.append(announcer, toaster);
-    initTheme();
+    initPreferences();
     initGridToggle();
     initTooltips();
     init();

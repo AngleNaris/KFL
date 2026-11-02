@@ -67,7 +67,8 @@ writeFileSync(join(outDir, 'grid.css'), css);
 
 let overlay = `<div class="grid-overlay" aria-hidden="true"><div class="grid-overlay__inner">\n`;
 for (let i = 0; i < maxCols; i++) overlay += `  <span></span>\n`;
-overlay += `</div></div>\n<script>addEventListener('keydown', function (e) { if (e.ctrlKey && !e.shiftKey && !e.altKey && e.key.toLowerCase() === 'g') document.body.classList.toggle('grid-debug'); });</script>\n`;
+// Alt+Shift+G: Ctrl+G belongs to the browser (find next). Toggle buttons stay in step.
+overlay += `</div></div>\n<script>addEventListener('keydown', function (e) { if (e.altKey && e.shiftKey && !e.ctrlKey && !e.metaKey && e.code === 'KeyG') { var on = document.body.classList.toggle('grid-debug'); document.querySelectorAll('[data-grid-toggle]').forEach(function (b) { b.setAttribute('aria-pressed', String(on)); }); } });</script>\n`;
 writeFileSync(join(outDir, 'grid-overlay.html'), overlay);
 
 console.log(`generate: wrote grid.css and grid-overlay.html to ${outDir} (${bps.length} breakpoints, ${spanned.length} spanned regions, ${regions.length - spanned.length} without a span map, max ${maxCols} columns)`);

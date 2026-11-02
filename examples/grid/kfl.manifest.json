@@ -31,14 +31,10 @@
   ],
   "regions": [
     {
-      "role": "kicker",
-      "spans": { "mobile": 4, "tablet": 8, "desktop": 3 },
-      "rationale": "running label (page number, collection) hangs in the first three columns"
-    },
-    {
       "role": "title",
       "spans": { "mobile": 4, "tablet": 8, "desktop": 9 },
-      "rationale": "display title starts on column 4, the page's main reading edge"
+      "starts": { "desktop": 4 },
+      "rationale": "display title starts on column 4, the reading edge the section prose shares; the three columns before it belong to the section labels below"
     },
     {
       "role": "lede",
@@ -46,6 +42,12 @@
       "spans": { "mobile": 4, "tablet": 8, "desktop": 7 },
       "starts": { "desktop": 4 },
       "rationale": "20px introduction; 7 of 12 columns keeps it inside 45-75ch at that size and shares the title's start edge"
+    },
+    {
+      "role": "masthead-actions",
+      "spans": { "mobile": 4, "tablet": 8, "desktop": 9 },
+      "starts": { "desktop": 4 },
+      "rationale": "the masthead's links continue the title's reading edge instead of hanging alone at the frame's start"
     },
     {
       "role": "section-label",
@@ -75,6 +77,11 @@
       "rationale": "full-width grid specimens whose blocks sit on page columns through subgrid"
     },
     {
+      "role": "frame-row",
+      "spans": { "mobile": 4, "tablet": 8, "desktop": 12 },
+      "rationale": "action rows and page indexes that use the whole frame from its first column"
+    },
+    {
       "role": "demo",
       "min": 1,
       "rationale": "blocks inside a grid specimen: spans differ per pattern, so only their track edges are audited"
@@ -88,29 +95,6 @@
       "role": "settings-main",
       "spans": { "mobile": 4, "tablet": 8, "desktop": 7 },
       "rationale": "one form column; the two empty tracks at the end keep fields near the reading edge"
-    },
-    {
-      "role": "page-header",
-      "spans": { "mobile": 4, "tablet": 8, "desktop": 12 },
-      "rationale": "page title, its primary action and the filter bar span the frame"
-    },
-    {
-      "role": "workspace",
-      "spans": { "mobile": 4, "tablet": 8, "desktop": 12 },
-      "rationale": "the records workspace takes the whole frame; its rail and table use a local layout"
-    },
-    {
-      "role": "filters",
-      "kind": "fixed",
-      "min": 200,
-      "max": 288,
-      "rationale": "filter rail at a functional width (a bounded track, not a column count); moves into a drawer below desktop"
-    },
-    {
-      "role": "records",
-      "kind": "fixed",
-      "min": 280,
-      "rationale": "the table takes the remaining space and scrolls locally when it needs more"
     }
   ]
 }

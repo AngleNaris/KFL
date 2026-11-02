@@ -2,19 +2,33 @@
 
 Enforce Kasidia's frontend laws when designing, implementing, refactoring, or reviewing interactive UI.
 
-## The Three Laws
+## The Four Laws
 
 1. **Every Element Aligns** — every visible UI element must align with at least one other visible element or an explicit layout anchor.
 2. **Similar Elements Reuse One Contract** — elements with the same semantic role must use the same shared component or component family with explicit variants.
 3. **Motion Returns to Its Origin** — every animated element must leave by reversing the path and transformation used to enter.
+4. **Minimal, Weighted, Icon-First** — every screen stays highly concise with no decorative text, every piece of information has a clear weight, and an icon replaces text wherever an established icon can carry the meaning; the words move into a hover/focus tooltip.
 
-Plus supporting rules for information hierarchy, color roles, icon integrity, interaction baseline, and a verification gate.
+Plus supporting rules for size-tiered concentric corner radii, color roles, icon integrity, content and status integrity, type legibility, styled scrollbars, interaction baseline, and a verification gate.
 
-The full specification lives in [`Kasidia-Frontend-Law.md`](./Kasidia-Frontend-Law.md).
+## How it runs
 
-## Usage
+KFL is a spec executed in stages, so an agent cannot apply a rule once and then forget it:
 
-The file is written in Hermes Agent skill format (frontmatter + markdown). It can be used directly as a `SKILL.md` for agent-based UI work, or read as a human-facing design standard for frontend teams.
+1. **Load** the skill, the rules and the project's spec.
+2. **Clarify:** ask every unknown on a must-ask list (task, platform, content, brand, themes, geometry, icons, language, scope, approval) in one batch, then wait.
+3. **Spec:** write the design contract and a checklist of every rule ID; get approval.
+4. **Plan slices,** foundations first, each with its rule IDs.
+5. **Build** slice by slice, rereading the rules and recording evidence per ID.
+6. **Verify** the whole checklist against the running UI; **report** pass, fail and not tested.
+
+| File | Role |
+| --- | --- |
+| [`SKILL.md`](./SKILL.md) | entry: stages, gates, when to stop and ask |
+| [`references/rules.md`](./references/rules.md) | the laws and rules, each with an ID |
+| [`references/spec-template.md`](./references/spec-template.md) | the per-project spec and checklist |
+
+`SKILL.md` uses the agent skill format (frontmatter + markdown); copy the repository as a skill folder. The rules also read as a human-facing design standard for frontend teams.
 
 ## License
 

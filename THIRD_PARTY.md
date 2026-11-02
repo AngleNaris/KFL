@@ -1,8 +1,7 @@
 # Sources and licenses
 
-This skill continues [AngleNaris/KFL](https://github.com/AngleNaris/KFL), whose README declares MIT.
-The source specification and its in-progress grid/surface tooling are retained and adapted here.
-The source revision has no separate license file. This records the README declaration, not a newly granted license. The separate Starcode/mancode repository retains its own AGPL-3.0-only license.
+This repository is [AngleNaris/KFL](https://github.com/AngleNaris/KFL); its README declares MIT.
+It has no separate license file. This records the README declaration, not a newly granted license. The separate Starcode/mancode repository retains its own AGPL-3.0-only license.
 
 The ten Swiss grid principles quote
 [longplay45/swiss-grid-generator](https://github.com/longplay45/swiss-grid-generator/blob/cca381a7254125a6ff0144c483ae72ba8e529c17/TEN_RULES_OF_GOOD_SWISS_GRID_DESIGN.md).
@@ -12,7 +11,7 @@ The UI-specific adaptations are KFL guidance; they do not claim authorship of th
 
 The optional tool package depends on Playwright and playwright-core under Apache-2.0, resolved through its own lockfile.
 Dependencies and browser binaries are not vendored here; retain their notices when distributing them separately.
-The reference-kit icons are the existing KFL local vector definitions, not a newly imported third-party icon library.
+The reference-kit icons are local KFL vector definitions, including the icons added for Law 4, drawn to the kit's own icon contract; no third-party icon library is imported.
 
 ## License verification boundary
 
