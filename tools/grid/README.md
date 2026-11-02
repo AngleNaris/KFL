@@ -104,3 +104,11 @@ Interaction Baseline.
 
 `demo/` contains a manifest, a compliant page, and a broken page (a nudging margin
 plus a percentage width). Run the audit on both to see the pass and fail outputs.
+
+Both pages use 16px `Arial, "Liberation Sans", sans-serif`: the manifest's reading
+measure is designed for these fonts. Windows supplies Arial; the Linux CI's
+`playwright install --with-deps chromium` supplies Liberation Sans. A `system-ui`
+font can have different glyph widths on each OS, so the same pixel-wide column
+can pass the 45–75ch window on one OS and fail it on another. Choose the actual
+typography before deriving a project's tracks; the demo's font and dimensions
+are an example contract, not a required typeface or layout for other projects.

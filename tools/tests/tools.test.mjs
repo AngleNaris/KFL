@@ -55,6 +55,27 @@ test('browser-backed audits measure generated layout, reject empty pages and uns
   } finally { rmSync(scratch, { recursive: true, force: true }); }
 });
 
+test('grid reading measure uses the actual font and rejects short or long prose', () => {
+  const scratch = mkdtempSync(join(tmpdir(), 'kfl-measure-'));
+  try {
+    const input = join(scratch, 'manifest.json');
+    writeFileSync(input, JSON.stringify({
+      breakpoints: [{ id: 'base', minWidth: 0 }],
+      regions: [{ role: 'content', kind: 'measure' }],
+    }));
+    const html = join(scratch, 'page.html');
+    for (const font of ['serif', 'monospace']) {
+      for (const width of [44, 60, 76]) {
+        writeFileSync(html, `<!doctype html><style>body{margin:0}.prose{display:grid;grid-template-columns:minmax(0,1fr);font:16px ${font};width:${width}ch}</style><main class="prose" data-grid="local"><section data-region="content">Reading measure</section></main>`);
+        const result = run('grid/audit.mjs', ['--manifest', input, '--html', html, '--viewports', '768']);
+        const output = result.stdout + result.stderr;
+        assert.equal(result.status, width === 60 ? 0 : 1, `${font} ${width}ch: ${output}`);
+        if (width !== 60) assert.match(output, /measure-window/);
+      }
+    }
+  } finally { rmSync(scratch, { recursive: true, force: true }); }
+});
+
 test('surface radius scale: one radius per family, larger tiers rounder, nested corners concentric', () => {
   const scratch = mkdtempSync(join(tmpdir(), 'kfl-radius-'));
   const audit = (body) => {
