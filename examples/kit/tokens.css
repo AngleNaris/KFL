@@ -40,7 +40,7 @@
   --kfl-accent: light-dark(#2B44D1, #93A3FF);
   --kfl-accent-hover: light-dark(#2236AB, #B4C0FF);
   --kfl-on-accent: light-dark(#FFFFFF, #121211);
-  --kfl-accent-tint: light-dark(#E8EBFA, #1C2140);
+  --kfl-accent-tint: light-dark(#E8EBFA, #161B36);   /* also the selected/current fill */
   --kfl-focus: var(--kfl-accent);
   /* Focus colours: each changes the colour it replaces by >= 3:1 (KFL Interaction
      Baseline); text in --kfl-focus-shift still reads at 4.5:1. */
@@ -108,9 +108,6 @@
   --kfl-border: 1px;
   --kfl-border-strong: 2px;
   --kfl-rule-heavy: 4px;       /* the rule above a major section */
-  --kfl-indicator: 0.1875rem;  /* current/selected bars */
-  --kfl-focus-bar: var(--kfl-indicator); /* keyboard focus: underline or inset bar, never an outline frame */
-  --kfl-focus-gap: 0.25em;     /* focus underline offset below the text */
   --kfl-scrollbar-size: 0.5rem; /* 8 — WebKit-part track; standard-only engines draw "thin" */
   --kfl-elevation: 4px;        /* hard offset of a floating layer — drawn, never blurred */
 

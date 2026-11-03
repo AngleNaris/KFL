@@ -56,5 +56,5 @@ unmeasured requirements and exceptions in the original task ledger. Do not uploa
 `examples/` is a local synthetic component specimen, not an approved image package or a production backend.
 Its geometry, tokens and data demonstrate one direction; use only parts consistent with the project's approved contract.
 Demo feedback and browser storage cannot establish real identity, server persistence or business integration.
-Its focus cues follow the Interaction Baseline order (border, then underline, then color) with
+Its focus cues are color only (INT-3: border color, else text/icon color, a scroll region's caption) with
 3:1 focus tokens per resting color; tab through the components page to inspect them.

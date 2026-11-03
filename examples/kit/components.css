@@ -101,14 +101,14 @@
   color: var(--kfl-text);
   font-size: var(--kfl-fs-body); /* 16px: also stops mobile browsers zooming in on focus */
   line-height: var(--kfl-lh-body);
-  transition: border-color var(--kfl-dur-state), box-shadow var(--kfl-dur-state);
+  transition: border-color var(--kfl-dur-state);
 }
 .kfl-textarea { display: block; padding-block: var(--kfl-space-2); min-block-size: calc(4lh + var(--kfl-space-4) + 2 * var(--kfl-border)); max-block-size: 24rem; resize: vertical; field-sizing: content; }
 :is(.kfl-input, .kfl-textarea, .kfl-select > select):hover { border-color: var(--kfl-line-strong); }
 /* Where typing goes, for pointer and keyboard alike: an inset bar; the border stays put. */
 :is(.kfl-input, .kfl-textarea)::placeholder { color: var(--kfl-text-3); opacity: 1; }
-/* Invalid: red edge plus an inner bar — a shape cue that does not move the text. */
-:is(.kfl-input, .kfl-textarea, .kfl-select > select)[aria-invalid="true"] { border-color: var(--kfl-danger); box-shadow: inset 0.25rem 0 0 var(--kfl-danger); }
+/* Invalid: red edge; the icon and message beside the field carry it without colour. */
+:is(.kfl-input, .kfl-textarea, .kfl-select > select)[aria-invalid="true"] { border-color: var(--kfl-danger); }
 :is(.kfl-input, .kfl-textarea, .kfl-select > select):disabled { background: var(--kfl-sunken); color: var(--kfl-text-disabled); border-color: var(--kfl-rule); }
 :is(.kfl-input, .kfl-textarea):read-only:not(:disabled) { background: transparent; border-color: var(--kfl-rule); }
 /* Width tells people how much to type: a postcode field is not a paragraph. */
@@ -254,18 +254,15 @@
 
 /* 7 Tabs --------------------------------------------------------------------
    Peer views of one object. Arrow keys move between tabs (kit.js); the selected
-   tab is marked by weight and an accent bar, not by color alone. */
+   tab is marked by a fill and ink text; no bar beneath it (KFL INT-3a). */
 .kfl-tabs__list { display: flex; overflow-x: auto; border-block-end: var(--kfl-border) solid var(--kfl-rule); scrollbar-width: thin; }
 .kfl-tab {
   position: relative; display: inline-flex; align-items: center; gap: var(--kfl-space-2); flex: none;
   min-block-size: var(--kfl-control-md); padding: 0 var(--kfl-space-3);
-  border: 0; background: none; color: var(--kfl-text-2); font-weight: var(--kfl-fw-medium); white-space: nowrap;
+  border: 0; background: none; color: var(--kfl-text); font-weight: var(--kfl-fw-medium); white-space: nowrap;
 }
-.kfl-tab::after { content: ""; position: absolute; inset-inline: 0; inset-block-end: 0; block-size: var(--kfl-indicator); background: transparent; transition: background-color var(--kfl-dur-state); }
-.kfl-tab:hover { color: var(--kfl-text); }
-.kfl-tab:hover::after { background: var(--kfl-rule); }
-.kfl-tab[aria-selected="true"] { color: var(--kfl-text); }
-.kfl-tab[aria-selected="true"]::after { background: var(--kfl-accent); }
+.kfl-tab:hover { background: var(--kfl-hover); }
+.kfl-tab[aria-selected="true"] { background: var(--kfl-accent-tint); }
 .kfl-tabs__panel { padding-block-start: var(--kfl-space-5); }
 
 
@@ -274,8 +271,8 @@
 .kfl-breadcrumb ol { display: flex; flex-wrap: wrap; align-items: center; margin: 0; padding: 0; list-style: none; font-size: var(--kfl-fs-small); line-height: var(--kfl-lh-small); }
 .kfl-breadcrumb li { display: inline-flex; align-items: center; color: var(--kfl-text-2); }
 .kfl-breadcrumb li + li::before { content: ""; inline-size: 1rem; block-size: 1rem; margin-inline: var(--kfl-space-1); background: var(--kfl-text-3); mask: var(--kfl-icon-chevron-right) center / contain no-repeat; }
-.kfl-breadcrumb a { display: inline-block; min-inline-size: var(--kfl-hit-min); padding-block: max(0.125rem, (var(--kfl-hit-min) - 1lh) / 2); color: var(--kfl-text-2); text-decoration-color: var(--kfl-line); }
-.kfl-breadcrumb a:hover { color: var(--kfl-text); text-decoration-color: currentColor; }
+.kfl-breadcrumb a { display: inline-block; min-inline-size: var(--kfl-hit-min); padding-block: max(0.125rem, (var(--kfl-hit-min) - 1lh) / 2); color: var(--kfl-text); text-decoration-color: var(--kfl-line); }
+.kfl-breadcrumb a:hover { text-decoration-color: currentColor; }
 .kfl-breadcrumb [aria-current="page"] { color: var(--kfl-text); font-weight: var(--kfl-fw-medium); }
 
 
@@ -319,9 +316,9 @@
 .kfl-tag[data-tone="danger"] { --_tone: var(--kfl-danger); --_tint: var(--kfl-danger-tint); }
 /* A removable tag (an applied filter): the remove control names what it removes. */
 .kfl-tag:has(> .kfl-tag__remove) { padding-inline-end: 0; }
-.kfl-tag__remove { position: relative; display: inline-grid; place-content: center; inline-size: 1.5rem; block-size: 1.5rem; padding: 0; border: 0; background: none; color: var(--kfl-text-2); }
+.kfl-tag__remove { position: relative; display: inline-grid; place-content: center; inline-size: 1.5rem; block-size: 1.5rem; padding: 0; border: 0; background: none; color: var(--kfl-text); }
 .kfl-tag__remove::after { content: ""; position: absolute; inset: min(0px, (1.5rem - var(--kfl-hit-min)) / 2); }
-.kfl-tag__remove:hover { background: var(--kfl-hover); color: var(--kfl-text); }
+.kfl-tag__remove:hover { background: var(--kfl-hover); }
 .kfl-tag__remove > .kfl-icon { --kfl-icon-size: 1rem; }
 
 .kfl-count {
@@ -329,7 +326,7 @@
   background: var(--kfl-sunken); color: var(--kfl-text-2);
   font-size: var(--kfl-fs-caption); line-height: 1; font-weight: var(--kfl-fw-medium); font-variant-numeric: tabular-nums;
 }
-:is([aria-selected="true"], [aria-current="page"]) .kfl-count { background: var(--kfl-accent-tint); color: var(--kfl-accent); }
+:is([aria-selected="true"], [aria-current="page"]) .kfl-count { background: var(--kfl-accent); color: var(--kfl-on-accent); } /* sits on the selected fill */
 
 
 /* 11 Avatar -------------------------------------------------------------------
@@ -346,11 +343,11 @@
 
 /* 12 Alert ------------------------------------------------------------------
    Inline and persistent: for conditions the reader must notice or act on.
-   A heavy start rule, an icon and a title carry the tone together. */
+   A tinted fill, an icon and a title carry the tone together; no start stripe. */
 .kfl-alert {
   --_tone: var(--kfl-accent); --_tint: var(--kfl-accent-tint);
   display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; column-gap: var(--kfl-space-3);
-  padding: var(--kfl-space-4); border-inline-start: var(--kfl-rule-heavy) solid var(--_tone);
+  padding: var(--kfl-space-4);
   background: var(--_tint); color: var(--kfl-text);
 }
 .kfl-alert[data-tone="success"] { --_tone: var(--kfl-success); --_tint: var(--kfl-success-tint); }
@@ -693,13 +690,13 @@
 .kfl-steps > li[aria-current="step"] { border-color: var(--kfl-accent); color: var(--kfl-text); font-weight: var(--kfl-fw-medium); }
 @media (width < 40rem) {
   .kfl-steps { flex-direction: column; gap: 0; }
-  .kfl-steps > li { flex-direction: row; gap: var(--kfl-space-3); padding: var(--kfl-space-2) 0 var(--kfl-space-2) var(--kfl-space-4); border-block-start: 0; border-inline-start: var(--kfl-rule-heavy) solid var(--kfl-rule); }
+  .kfl-steps > li { flex-direction: row; gap: var(--kfl-space-3); padding-block: var(--kfl-space-2); border-block-start: 0; } /* stacked: number and colour, no start stripe */
 }
 
 
 /* 25 Top bar, side nav ----------------------------------------------------------
    Product name at the start links home; sections next; account at the end.
-   Current location is marked by a bar and weight, and aria-current. */
+   Current location is marked by a fill and aria-current; no bar (KFL INT-3a). */
 .kfl-topbar { border-block-end: var(--kfl-border) solid var(--kfl-rule); background: var(--kfl-surface); }
 .kfl-topbar__row { display: flex; align-items: center; gap: var(--kfl-space-5); min-block-size: 3.5rem; }
 .kfl-topbar__brand { display: inline-flex; align-items: center; gap: var(--kfl-space-2); min-block-size: var(--kfl-control-md); min-inline-size: var(--kfl-control-md); color: var(--kfl-text); font-weight: var(--kfl-fw-bold); text-decoration: none; }
@@ -707,20 +704,18 @@
 .kfl-topbar__nav { display: flex; align-self: stretch; }
 .kfl-topbar__nav ul { display: flex; margin: 0; padding: 0; list-style: none; }
 .kfl-topbar__nav a {
-  position: relative; display: inline-flex; align-items: center; block-size: 100%; padding: 0 var(--kfl-space-3);
-  color: var(--kfl-text-2); font-weight: var(--kfl-fw-medium);
-  text-decoration: underline var(--kfl-focus-bar) transparent; text-underline-offset: var(--kfl-focus-gap);
+  display: inline-flex; align-items: center; block-size: 100%; padding: 0 var(--kfl-space-3);
+  color: var(--kfl-text); font-weight: var(--kfl-fw-medium); text-decoration: none;
 }
-.kfl-topbar__nav a:hover { color: var(--kfl-text); }
-.kfl-topbar__nav a::after { content: ""; position: absolute; inset-inline: 0; inset-block-end: calc(-1 * var(--kfl-border)); block-size: var(--kfl-indicator); background: transparent; }
-.kfl-topbar__nav a[aria-current="page"] { color: var(--kfl-text); }
-.kfl-topbar__nav a[aria-current="page"]::after { background: var(--kfl-accent); }
+.kfl-topbar__nav a:hover { background: var(--kfl-hover); }
+.kfl-topbar__nav a[aria-current="page"] { background: var(--kfl-accent-tint); }
 .kfl-topbar__end { display: flex; align-items: center; gap: var(--kfl-space-2); margin-inline-start: auto; }
 .kfl-topbar__menu-button { display: none; }
 .kfl-topbar__panel { border-block-start: var(--kfl-border) solid var(--kfl-rule); padding-block: var(--kfl-space-2); }
 .kfl-topbar__panel ul { margin: 0; padding: 0; list-style: none; }
-.kfl-topbar__panel a { display: flex; align-items: center; min-block-size: var(--kfl-control-lg); color: var(--kfl-text); text-decoration: none; font-weight: var(--kfl-fw-medium); border-inline-start: var(--kfl-indicator) solid transparent; padding-inline-start: var(--kfl-space-3); }
-.kfl-topbar__panel a[aria-current="page"] { border-inline-start-color: var(--kfl-accent); }
+.kfl-topbar__panel a { display: flex; align-items: center; min-block-size: var(--kfl-control-lg); color: var(--kfl-text); text-decoration: none; font-weight: var(--kfl-fw-medium); padding-inline-start: var(--kfl-space-3); }
+.kfl-topbar__panel a:hover { background: var(--kfl-hover); }
+.kfl-topbar__panel a[aria-current="page"] { background: var(--kfl-accent-tint); }
 @media (width < 48rem) {
   .kfl-topbar__nav { display: none; }
   .kfl-topbar__menu-button { display: inline-flex; }
@@ -740,11 +735,11 @@
 .kfl-sidenav ul { margin: 0; padding: 0; list-style: none; }
 .kfl-sidenav a {
   display: flex; align-items: center; gap: var(--kfl-space-3); min-block-size: var(--kfl-control-md);
-  padding: 0 var(--kfl-space-3); border-inline-start: var(--kfl-indicator) solid transparent;
-  color: var(--kfl-text-2); font-weight: var(--kfl-fw-medium); text-decoration: none;
+  padding: 0 var(--kfl-space-3);
+  color: var(--kfl-text); font-weight: var(--kfl-fw-medium); text-decoration: none;
 }
-.kfl-sidenav a:hover { background: var(--kfl-hover); color: var(--kfl-text); }
-.kfl-sidenav a[aria-current="page"] { border-inline-start-color: var(--kfl-accent); color: var(--kfl-text); font-weight: var(--kfl-fw-bold); }
+.kfl-sidenav a:hover { background: var(--kfl-hover); }
+.kfl-sidenav a[aria-current="page"] { background: var(--kfl-accent-tint); }
 .kfl-sidenav a > .kfl-count { margin-inline-start: auto; }
 /* Icon rail (KFL Law 4): each destination is its icon; the name is the tooltip and aria-label. */
 .kfl-sidenav[data-icon-only] a { position: relative; justify-content: center; inline-size: var(--kfl-control-lg); min-block-size: var(--kfl-control-lg); padding: 0; }
@@ -765,7 +760,7 @@
 .kfl-error-summary__title { display: flex; align-items: center; gap: var(--kfl-space-2); font-size: var(--kfl-fs-lead); line-height: var(--kfl-lh-lead); font-weight: var(--kfl-fw-bold); }
 .kfl-error-summary__title > .kfl-icon { color: var(--kfl-danger); }
 .kfl-error-summary ul { margin: 0; padding-inline-start: var(--kfl-space-5); }
-.kfl-error-summary a { color: var(--kfl-danger); font-weight: var(--kfl-fw-medium); }
+.kfl-error-summary a { color: var(--kfl-text); font-weight: var(--kfl-fw-medium); } /* ink, so focus can shift it; the title's icon carries danger */
 
 
 /* 27 Kbd, code, rules ---------------------------------------------------------- */
@@ -775,16 +770,13 @@
 
 
 /* Focus cues -------------------------------------------------------------------
-   No outline frame anywhere (base.css). The cue follows what the element already
-   draws, in this order (KFL Interaction Baseline):
+   No outline frame anywhere (base.css), and no underline, bar or fill either: focus
+   is a colour change only (KFL INT-3).
      1. a border   -> the border changes colour, never its width;
-     2. an underline (links) -> the underline thickens (base.css);
-     3. neither    -> its text and icon change colour.
-   Each --kfl-focus-shift* token changes the colour it replaces by >= 3:1. Where no
-   colour can (text at rest in --kfl-text-2 must stay readable), a link underlines;
-   a button never does: it rests in ink so the colour cue works, or shows an inset
-   bar when it has no text. Containers whose content keeps its own colours (scroll
-   regions, tab panels) also take the inset bar. Every cue eases in and out. */
+     2. otherwise  -> its text and icon change colour; a link's underline stays as is;
+     3. a focusable container (scroll region) -> its caption changes colour.
+   Each --kfl-focus-shift* token changes the colour it replaces by >= 3:1, so
+   interactive text and icons rest in ink, never in --kfl-text-2. Every cue eases. */
 
 /* 1 Border. Fields show where typing goes for pointer and keyboard alike. */
 .kfl-button:not([data-variant="quiet"]):focus-visible,
@@ -799,20 +791,18 @@
 .kfl-slider:focus-visible::-webkit-slider-thumb { border-color: var(--kfl-focus-shift); }
 .kfl-slider:focus-visible::-moz-range-thumb { border-color: var(--kfl-focus-shift); }
 
-/* 3 Colour. */
-:is(.kfl-button[data-variant="quiet"], .kfl-tab, .kfl-menu__item, .kfl-disclosure > summary, .kfl-card__link, .kfl-topbar__brand, .kfl-topbar__panel a, .kfl-pagination a, .kfl-table__sort):focus-visible {
+/* 2 Colour. */
+:is(.kfl-button[data-variant="quiet"], .kfl-tab, .kfl-menu__item, .kfl-disclosure > summary, .kfl-card__link, .kfl-topbar__brand,
+    .kfl-topbar__nav a, .kfl-topbar__panel a, .kfl-sidenav a, .kfl-breadcrumb a, .kfl-table__key > a, .kfl-error-summary a,
+    .kfl-tag__remove, .kfl-pagination a, .kfl-table__sort):focus-visible {
   --_label: var(--kfl-focus-shift); color: var(--kfl-focus-shift);
 }
 
-/* Fallbacks where no colour reaches 3:1. */
-.kfl-topbar__nav a:focus-visible { text-decoration-color: currentColor; }
-:is(.kfl-sidenav a, .kfl-tag__remove, .kfl-table-wrap, .kfl-tabs__panel):focus-visible {
-  box-shadow: inset 0 calc(-1 * var(--kfl-focus-bar)) 0 currentColor;
-}
+/* 3 Container: the region's name. */
+.kfl-table-wrap:focus-visible > .kfl-table > caption { color: var(--kfl-focus-shift); }
 
 /* Easing for the cue targets that have no transition of their own. */
 :is(.kfl-tab, .kfl-menu__item, .kfl-disclosure > summary, .kfl-card__link, .kfl-topbar__brand, .kfl-topbar__nav a, .kfl-topbar__panel a,
-    .kfl-pagination a, .kfl-table__sort, .kfl-sidenav a, .kfl-tag__remove, .kfl-table-wrap, .kfl-tabs__panel) {
-  transition: color var(--kfl-dur-state), background-color var(--kfl-dur-state), border-color var(--kfl-dur-state),
-    text-decoration-color var(--kfl-dur-state), box-shadow var(--kfl-dur-state);
+    .kfl-pagination a, .kfl-table__sort, .kfl-sidenav a, .kfl-tag__remove, .kfl-table > caption) {
+  transition: color var(--kfl-dur-state), background-color var(--kfl-dur-state), border-color var(--kfl-dur-state);
 }

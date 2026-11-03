@@ -52,22 +52,20 @@ button, input, select, textarea { font: inherit; color: inherit; letter-spacing:
 button, summary, label:has(> input:is([type="checkbox"], [type="radio"])) { cursor: pointer; }
 :disabled { cursor: not-allowed; }
 
-/* Links look like links wherever they sit in running text: underlined, accent colored.
-   Hover changes colour only: a 1px thickness step reads as a flicker. Keyboard focus
-   thickens the underline and eases it in. text-decoration-thickness does not
-   interpolate in Chromium, so the thickness reads a registered length that does. */
-@property --kfl-underline { syntax: "<length>"; inherits: false; initial-value: 1px; }
+/* Links look like links wherever they sit in running text: a 1px underline that never
+   changes. They rest in ink so keyboard focus can move the colour by 3:1 (an accent
+   link at rest leaves no focus colour that is both 3:1 away and readable). */
 a {
-  color: var(--kfl-accent); text-decoration-line: underline; text-decoration-thickness: var(--kfl-underline); text-underline-offset: 0.2em;
-  transition: color var(--kfl-dur-state), --kfl-underline var(--kfl-dur-small) var(--kfl-ease-enter);
+  color: var(--kfl-text); text-decoration: underline 1px; text-underline-offset: 0.2em;
+  transition: color var(--kfl-dur-state);
 }
-a:hover { color: var(--kfl-accent-hover); }
+a:hover { color: var(--kfl-accent); }
 
 /* Focus never draws an outline frame: not for pointer, keyboard, script or restored
-   focus. The cue follows what an element already draws (components.css, Focus cues):
-   a border changes colour (never width), an underline thickens, otherwise the text changes colour. */
+   focus. The cue is colour only (components.css, Focus cues): a border changes colour
+   (never width), otherwise the text and icon change colour. */
 :focus { outline: none; }
-a:focus-visible { --kfl-underline: var(--kfl-focus-bar); } /* links already underline */
+a:focus-visible { color: var(--kfl-focus-shift); }
 ::selection { background: var(--kfl-accent-tint); color: var(--kfl-text); }
 
 code, kbd, samp, pre { font-family: var(--kfl-font-mono); font-size: 0.875em; }

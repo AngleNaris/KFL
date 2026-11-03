@@ -233,7 +233,7 @@
   <section class="grid-row doc-section" id="link" aria-labelledby="link-h">
     <header data-region="section-label"><h2 id="link-h" class="kfl-h3">Link</h2></header>
     <div data-region="section-text" class="kfl-prose">
-      <p>Links navigate. In running text they are underlined and accent-colored, because that is what people look for. A standalone link adds an arrow when it leads onward; a link that leaves the product says so with the external icon.</p>
+      <p>Links navigate. In running text they carry a 1px underline, because that is what people look for; focus changes their color. A standalone link adds an arrow when it leads onward; a link that leaves the product says so with the external icon.</p>
     </div>
     <div data-region="section-aside" class="doc-aside">
       <div><h3 class="kfl-label">Avoid</h3><ul><li>“Click here” — the link text names the destination.</li><li>Opening new tabs by default; people choose that.</li></ul></div>
@@ -258,7 +258,7 @@
     </div>
     <div data-region="section-aside" class="doc-aside">
       <div><h3 class="kfl-label">Validation</h3><p>Nothing is judged while someone types. Errors appear on submit and clear the moment the value is valid.</p></div>
-      <div><h3 class="kfl-label">Tokens</h3><p><code>--kfl-line</code> edge (3:1), <code>--kfl-focus</code> ring, 16px text so phones do not zoom.</p></div>
+      <div><h3 class="kfl-label">Tokens</h3><p><code>--kfl-line</code> edge (3:1), <code>--kfl-focus-shift-line</code> edge on focus, 16px text so phones do not zoom.</p></div>
     </div>
     <div data-region="section-body" class="doc-body">
       <div class="specimen-grid">
@@ -447,20 +447,20 @@
           <button type="button" class="kfl-tab" role="tab" id="tab-activity" aria-selected="false" aria-controls="panel-activity" tabindex="-1">Activity <span class="kfl-count">3</span></button>
           <button type="button" class="kfl-tab" role="tab" id="tab-files" aria-selected="false" aria-controls="panel-files" tabindex="-1">Files</button>
         </div>
-        <div class="kfl-tabs__panel" role="tabpanel" id="panel-details" aria-labelledby="tab-details" tabindex="0">
+        <div class="kfl-tabs__panel" role="tabpanel" id="panel-details" aria-labelledby="tab-details">
           <dl class="kfl-dl">
             <div><dt>Customer</dt><dd>Atelier Nord</dd></div>
             <div><dt>Amount</dt><dd class="kfl-num">€4,280.00</dd></div>
           </dl>
         </div>
-        <div class="kfl-tabs__panel" role="tabpanel" id="panel-activity" aria-labelledby="tab-activity" tabindex="0" hidden>
+        <div class="kfl-tabs__panel" role="tabpanel" id="panel-activity" aria-labelledby="tab-activity" hidden>
           <ol class="kfl-list" role="list">
             <li class="kfl-list__item"><span class="kfl-icon" data-icon="check" aria-hidden="true"></span><div><p class="kfl-list__title">Payment received</p><p class="kfl-list__meta">Bank transfer</p></div><span class="kfl-list__trail kfl-small">12 Sep</span></li>
             <li class="kfl-list__item"><span class="kfl-icon" data-icon="bell" aria-hidden="true"></span><div><p class="kfl-list__title">Reminder sent</p><p class="kfl-list__meta">To billing contact</p></div><span class="kfl-list__trail kfl-small">10 Sep</span></li>
             <li class="kfl-list__item"><span class="kfl-icon" data-icon="document" aria-hidden="true"></span><div><p class="kfl-list__title">Invoice issued</p><p class="kfl-list__meta">By Mira Holm</p></div><span class="kfl-list__trail kfl-small">3 Sep</span></li>
           </ol>
         </div>
-        <div class="kfl-tabs__panel" role="tabpanel" id="panel-files" aria-labelledby="tab-files" tabindex="0" hidden>
+        <div class="kfl-tabs__panel" role="tabpanel" id="panel-files" aria-labelledby="tab-files" hidden>
           <div class="kfl-empty" data-size="compact">
             <p class="kfl-empty__title">No files attached</p>
             <p class="kfl-muted">Attach receipts or contracts so they travel with the invoice.</p>
