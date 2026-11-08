@@ -1,43 +1,66 @@
-# KFL — Kasidia Frontend Law
+# Kasidia Frontend Law
 
-Enforce Kasidia's frontend laws when designing, implementing, refactoring, or reviewing interactive UI.
+KFL is an aesthetics-first frontend design skill. It uses a scoped spec, shared contracts and inspection of the actual UI to produce a coherent visual result while avoiding recurring AI-generated clutter.
 
-## The Four Laws
+## Priority and scope
 
-1. **Every Element Aligns** — every visible UI element must align with at least one other visible element or an explicit layout anchor.
-2. **Similar Elements Reuse One Contract** — elements with the same semantic role must use the same shared component or component family with explicit variants.
-3. **Motion Returns to Its Origin** — every animated element must leave by reversing the path and transformation used to enter.
-4. **Minimal, Weighted, Icon-First** — every screen stays highly concise with no decorative text, every piece of information has a clear weight, and an icon replaces text wherever an established icon can carry the meaning; the words move into a hover/focus tooltip.
+Follow the current explicit user requirements, then the project's approved direction and established design system. Within that scope, prioritize visual quality and identity, ordinary comprehension and task efficiency, consistency and implementation quality, then accessibility enhancements and numerical diagnostics. User-adopted accessibility or numerical requirements remain requirements. Content truth, data integrity and working controls are always required.
 
-Plus supporting rules for size-tiered concentric corner radii, color roles, icon integrity, content and status integrity, type legibility, styled scrollbars, interaction baseline, and a verification gate.
+KFL distinguishes **required**, **default** and **advisory** rules from verification status. A default guides the design unless a scoped reason supports another choice. Numerical contrast, typography, radius and target-size heuristics do not override an approved design merely by producing a failing diagnostic. Preserve the actual measurement and document the design choice.
 
-## How it runs
+## The four laws
 
-KFL is a spec executed in stages, so an agent cannot apply a rule once and then forget it:
+| Law | Purpose |
+| --- | --- |
+| Swiss Grid, Scoped Alignment | Align related content through shared layout owners. Keep intentional whitespace; remove accidental residual gaps. |
+| Shared Component Contracts | Reuse components by semantic responsibility, with consistent dimensions and behavior across their consumers. |
+| Reversible Motion | Give reversible opening and closing transitions coherent return paths. Meaningful task progression need not run backward. |
+| Minimal, Weighted, Recognizable | Remove unsolicited filler and preserve hierarchy. Use icons for familiar compact actions, icon plus text for business/main actions, and visible labels for navigation, tabs and option values. Navigation does not require an icon. |
 
-1. **Load** the skill, the rules and the project's spec.
-2. **Clarify:** ask every unknown on a must-ask list (task, platform, content, brand, themes, geometry, icons, language, scope, approval) in one batch, then wait.
-3. **Spec:** write the design contract and a checklist of every rule ID; get approval.
-4. **Plan slices,** foundations first, each with its rule IDs.
-5. **Build** slice by slice, rereading the rules and recording evidence per ID.
-6. **Verify** the whole checklist against the running UI; **report** pass, fail and not tested.
+## Recurring anti-patterns to prevent
+
+- Redundant or decorative copy with no basis in the user's content or the established product.
+- Invented or irrelevant green status dots and other “live” decoration.
+- Numbered headings for unordered peer sections.
+- Overusing plain-text action buttons, replacing needed action/navigation labels with icons, or adding icons to every label. Visible text navigation is not action-button clutter.
+- Residual gaps left by removed content or broken layout, while preserving deliberate spacing and breathing room.
+- Newly injected side accent stripes and decorative underlines, while respecting approved inherited styles and meaningful structural rules.
+
+These guards preserve the user's taste. They are scoped to the change and do not authorize rewriting every existing pattern.
+
+## Workflow
+
+1. Load the request, existing system, content sources and prior decisions.
+2. Choose **Inherit** for work within an established system, using actual UI/screenshots as the baseline; choose **Explore** when establishing or changing the visual direction.
+3. Clarify consequential gaps. Resolve routine design details within the contract without repeated permission requests.
+4. Record the scoped design contract, affected rule IDs, requirement levels and preserved choices.
+5. Implement in useful slices at shared layout and component owners.
+6. Inspect actual screenshots and relevant interactions; report verified results and limitations honestly.
+
+Image generation is for exploring a new visual direction or an explicit user request. A new page within an existing system does not require it. Generating a needed visual asset is distinct from regenerating the UI.
+
+## Files
 
 | File | Role |
 | --- | --- |
-| [`SKILL.md`](./SKILL.md) | entry: stages, gates, when to stop and ask |
-| [`references/rules.md`](./references/rules.md) | the laws and rules, each with an ID |
-| [`references/spec-template.md`](./references/spec-template.md) | the per-project spec and checklist |
+| [SKILL.md](SKILL.md) | Modes, priority, stages and decision gates |
+| [references/rules.md](references/rules.md) | Stable rule IDs, scope and requirement levels |
+| [references/spec-template.md](references/spec-template.md) | Compact design contract and verification record |
+| [references/design-review.md](references/design-review.md) | Evidence-based visual and interaction review |
+| [references/workflow.md](references/workflow.md) | Starcode/mancode integration |
+| [references/tools.md](references/tools.md) | Optional generators, diagnostics and reference kit |
+| [tools/](tools/) | Local helpers with bounded measurement contracts |
+| [examples/](examples/) | Reference specimens; adapt them to the product |
+| [THIRD_PARTY.md](THIRD_PARTY.md) | Third-party notices |
 
-`SKILL.md` uses the agent skill format (frontmatter + markdown); copy the repository as a skill folder. The rules also read as a human-facing design standard for frontend teams.
+## Optional tools
+
+The tools help inspect declared layout and component contracts. They do not choose a visual direction or replace actual screenshot and interaction review. A diagnostic's exit code is not universal acceptance of the UI; see [the tool reference](references/tools.md) for measured and unmeasured properties.
+
+## Starcode integration
+
+Under Starcode, reuse the bound plan, task ledger and current authorization. G1 handles interaction confirmation and G2 handles visual baseline/change confirmation through Inherit or Explore. An established UI provides a valid inherited baseline; do not restart image generation or approval on every continuation. See [workflow integration](references/workflow.md).
 
 ## License
 
-MIT
-
-## Reviewed tooling and Starcode integration
-
-The specification retains the ten original Swiss grid principles, their source link and attribution. See [source declarations and verification boundaries](THIRD_PARTY.md).
-
-[Optional tools](references/tools.md) include a shared manifest resolver, grid generator/auditor, a bounded surface auditor and a synthetic [reference kit](examples/index.html). Run `npm ci` and `npm test` inside `tools/`; browser tests need an available Chromium. Square-geometry checks apply only to an explicitly chosen square contract. The kit is neither an approved generated design nor a production backend.
-
-[Starcode](https://github.com/AngleNaris/starcode) embeds this skill in its interaction approval → actual image generation and visual approval → implementation workflow. Read the [integration guide](references/workflow.md); reuse its existing approvals and task ledger. Standalone KFL remains usable without Starcode. No global skill installation is performed.
+MIT, as declared by this repository. See [source declarations and verification boundaries](THIRD_PARTY.md).

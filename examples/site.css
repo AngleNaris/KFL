@@ -12,7 +12,7 @@
 .doc-index li { border-block-end: var(--kfl-border) solid var(--kfl-rule); }
 .doc-index a { display: flex; align-items: center; min-block-size: var(--kfl-control-md); padding-block: var(--kfl-space-2); color: var(--kfl-text); text-decoration: none; }
 .doc-index a:hover { color: var(--kfl-accent); }
-.doc-index a:focus-visible { color: var(--kfl-focus-shift); } /* colour only (KFL INT-3) */
+.doc-index a:focus-visible { color: var(--kfl-focus-shift); } /* this specimen’s focus treatment */
 
 .doc-section { row-gap: var(--kfl-space-5); padding-block: var(--kfl-space-6) var(--kfl-space-8); border-block-start: var(--kfl-rule-heavy) solid var(--kfl-line-strong); scroll-margin-block-start: var(--kfl-space-4); }
 .doc-aside { display: flex; flex-direction: column; gap: var(--kfl-space-4); font-size: var(--kfl-fs-small); line-height: var(--kfl-lh-small); color: var(--kfl-text-2); }

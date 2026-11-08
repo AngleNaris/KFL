@@ -1,59 +1,83 @@
-# KFL spec template
+# KFL project spec template
 
-Copy this into `kfl-spec.md` at the project root (under Starcode, into the KFL section of the bound `docs/<module>.md` plan). Keep it compact: one spec per product or module, updated in place. Write facts, not intentions; mark unknowns as open questions instead of filling them in.
+Keep one compact spec per product or module. Standalone: `kfl-spec.md`. Under Starcode: a KFL section in the bound `docs/<module>.md` plan; reuse its task IDs, G1/G2 state and execution authorization. The fields below are documentation, not new Starcode runtime schema or a second approval ledger.
 
 ```markdown
-# KFL spec: <product or module>
+# KFL spec — <product/module>
 
-Mode: Build | Change | Review    Stage: <0-6>    Approved: <who, when, or "pending">
+## Context
 
-## 1. Answers (Stage 1)
-| # | Item | Answer | Source |
-| --- | --- | --- | --- |
-| 1 | Task and primary action | | request / file / answer <date> |
-| 2 | Platform and window range | | |
-| 3 | Content and data (sample allowed?) | | |
-| 4 | Brand assets that exist | | |
-| 5 | Direction and themes | | |
-| 6 | Geometry and radius tiers | | |
-| 7 | Icon family and owner | | |
-| 8 | Language(s) | | |
-| 9 | Scope (may change / must stay) | | |
-| 10 | Approval route | | |
+- Mode / stage: Build | Change | Review / <current stage>
+- Scope: <affected pages, components and roles>
+- Visual path: Inherit | Explore
+- Authorization: <current request and relevant existing approvals>
 
-Open questions: <none, or the list to ask>
+| Topic | Established facts / source / meaningful assumptions |
+| --- | --- |
+| Task and primary action | |
+| Supported platforms, inputs and window range | |
+| Real content/data; sample-data authorization if applicable | |
+| Brand, themes and geometry | |
+| Existing system, actual UI references and sibling pages | |
+| Icon family, language and text direction | |
+| Scope and choices to preserve | |
 
-## 2. Design contract (Stage 2)
-- **Task:** <user, goal, primary action>
-- **Content inventory:** every visible string or group and why it exists (MIN-2, CON-4). Anything without a reason is cut.
-- **Hierarchy:** primary / secondary / supporting / contextual items (MIN-3); type scale with sizes and line heights (TYP).
-- **Layout:** page frame, regions, local layouts; breakpoints and what changes at each (ALN).
-- **Tokens:** color roles per theme (COL), spacing, radius tiers (RAD), focus cues (INT-3), scrollbar thumb/track/size (SCR), motion durations and curves (MOT).
-- **Components:** reuse map, variants, icon per action with tooltip text (REU, MIN-5).
-- **States and motion:** loading, empty, error, populated, disabled, selected; enter/leave pairs; reduced motion.
+Consequential open questions: <only questions that block dependent work; otherwise none>
 
-## 3. Slices (Stage 3)
-| Slice | Builds | Rule IDs |
+## Design contract
+
+- Visual intent and priorities: <explicit user requirements, project identity and desired composition>
+- Baseline: <actual UI/screenshots, component contracts or approved Explore reference; revision and scope>
+- Visual path: <what is inherited, or what direction is being explored; asset-only work separately>
+- Task and content: <truthful inventory and hierarchy; keep navigation/option names visible where needed>
+- Layout: <owners, shared edges, density, supported windows and intentional whitespace>
+- Type and tokens: <reuse existing scale, palette, spacing, geometry, focus, scrollbar and motion contracts>
+- Components: <semantic roles and shared owners; compact icon actions, icon+text main/business actions, visible navigation/option labels; icons optional for navigation>
+- States and behavior: <real loading/empty/error/disabled/selected states and relevant interaction paths>
+- Adopted requirements: <explicit accessibility/numerical requirements and their scope, if any>
+- Preserved choices: <approved choices and reasons that later slices/resumes must carry forward>
+
+## Slices
+
+| Slice | Authorized change / shared owner | Affected rule IDs and checks |
 | --- | --- | --- |
-| 1 Tokens | | REU-6, COL-1, RAD-1, SCR-2, SCR-3, INT-3, ... |
+| | | |
 
-## 4. Checklist (Stages 2-5)
-One row per rule ID in references/rules.md. Status: todo | pass | fail | not tested | N/A.
-| ID | Applies | Slice | Status | Evidence |
-| --- | --- | --- | --- | --- |
-| ALN-1 | yes | 2 | todo | |
-| MIN-2 | yes | all | todo | |
-| SCR-1 | yes | 1 | todo | |
-| ... | | | | |
+## Rule checklist
 
-## 5. Decision log
-| Date | Question or conflict | Decision | By |
+Review the full rule set for a new design. For a scoped change, list affected rules and relevant inherited contracts. Requirement level and verification status are separate.
+
+| Rule ID | Scope | Level and source | Slice | Status | Disposition | Evidence / rationale |
+| --- | --- | --- | --- | --- | --- | --- |
+| GOV-1 | affected work | required: user/project precedence | | todo | action needed | |
+| MIN-5 | affected controls/navigation | default: contextual icon/text choice | | todo | action needed | |
+| COL-3 | affected palette pairs | advisory, unless explicitly adopted | | not tested | diagnostic only | |
+
+Levels: required | default | advisory
+Statuses: todo | pass | fail | not tested | N/A
+Dispositions: conforms | action needed | intentional choice | diagnostic only | out of scope
+
+## Decision log
+
+| Date | Decision and rationale | Authority / source | Scope and affected checks |
 | --- | --- | --- | --- |
+| | | | |
+
+## Verification
+
+- Actual screenshots inspected: <runtime, fixtures, widths, states and evidence references>
+- Relevant interactions exercised: <paths and observed results>
+- Required failures or missing evidence: <details, or none>
+- Advisory findings and intentional choices: <measurement, visual/task effect and disposition>
+- Remaining limitations: <what is not tested and why>
 ```
 
-Rules for keeping it:
+## How to use the record
 
-- Update the checklist at the end of every slice, not at the end of the task.
-- *pass* needs evidence: a screenshot that was inspected, a measurement, an interaction trace or a tool result. Name it.
-- *N/A* needs a reason (for example "no motion in scope").
-- A changed answer or decision reopens the rows it affects.
+- **Required** includes explicit user/project requirements and KFL's factual, functional and evidence requirements. Do not silently downgrade these to obtain a pass.
+- **Default** is an operative design preference. Follow it, or record a scoped choice grounded in the user, approved system, visual quality or task comprehension. Preserve that choice across resumes unless its basis changes.
+- **Advisory** is a diagnostic or optional enhancement. A measured failure may remain `fail` with `intentional choice` or `diagnostic only`; do not change the measurement to `pass` because the design is accepted.
+- `N/A` needs a scope reason. Missing evidence is `not tested`, not `N/A` and not `pass`.
+- Do not invent facts or state to complete a checklist. Ask only when missing information consequentially affects the dependent work.
+- Inspect actual UI/screenshots and relevant interactions. Generated images and tool exit codes cannot establish runtime visual or functional completion.
+- Update affected decisions and checks when new evidence arrives; do not reopen unrelated approved choices or request duplicate permission.

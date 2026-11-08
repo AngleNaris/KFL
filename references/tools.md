@@ -1,12 +1,12 @@
 # Optional KFL tools
 
-The tools supplement the skill after the relevant design is approved. They are not mancode runtime gates.
+The tools supplement the scoped design contract and current authorization. They are bounded diagnostics, not mancode runtime gates or global design acceptance criteria. Apply GOV-1 through GOV-4 to their findings.
 Run commands from `tools/`. Dependencies are isolated in this directory;
 do not add Playwright to mancode's root dependencies or install globally.
 
 With project authorization, use `npm ci` for the pinned tooling dependencies. A compatible Chromium is required
 for audits; use an existing installation via `KFL_CHROMIUM` or the Playwright browser installation process.
-Missing browser/dependencies is **not tested / blocked**, not a pass.
+Missing browser/dependencies leaves the dependent audit **not tested**, not passed. It does not block independent authorized work. Actual UI screenshot and interaction evidence is still required before claiming verified completion.
 
 ## Grid
 
@@ -27,6 +27,8 @@ See [grid tool details](../tools/grid/README.md).
 
 ## Surface
 
+The viewport arguments below illustrate syntax. Replace them with the product's supported window/input matrix; the examples do not add mobile or touch scope.
+
 ```sh
 npm run surface:audit -- --html /path/to/page.html --viewports 375t,1440 --json /absolute/path/to/surface-report.json
 npm run surface:audit -- --html ../examples/components.html --viewports 375t,1440 --geometry square
@@ -36,17 +38,24 @@ This detects selected type-floor and target-size risks, default browser scrollba
 The scrollbar check covers the page when it scrolls and every element with `overflow: auto|scroll`, hidden ones included,
 and passes when the standard `scrollbar-color` or `scrollbar-width` is set or `::-webkit-scrollbar` is sized; it does not judge the thumb's shape or contrast.
 Headless Chromium hides scrollbars in screenshots; to inspect them (SCR-4), launch a full Chromium without `--hide-scrollbars`. The default `--geometry rounded`
-measures KFL's Corner Radius rules: one radius per component family, a larger radius for a clearly larger
-family (short side at least 2x), and concentric nested corners. Square-only pages pass it trivially.
+measures its configured geometry model: one radius per component family, a larger radius for a clearly larger
+family (short side at least 2x), and concentric nested corners. That model is an advisory diagnostic unless the
+project explicitly adopts it; it does not override approved shapes. Square-only pages pass it trivially.
 `--geometry square` is the reference kit's stricter contract: any rounded rectangle, pill, round SVG cap/join or
 rounded clip fails. Use it only for a project that explicitly chose square geometry.
 Families are keyed by an element's first class (plus `data-size`); a family named differently is not compared.
 The checker samples hit areas; it is not a complete WCAG conformance engine, keyboard audit or behavior test.
-Primary touch controls still need KFL's 44px target check; the optional warning mode does not lower an approved requirement.
-Native control behavior and an approved icon family must not be replaced merely to silence an aesthetic finding.
+Its type and target thresholds are numerical screening values, not automatic visual mandates. For supported touch
+input, inspect actual target accuracy; the 44px reference is advisory unless explicitly adopted. An optional warning
+mode does not lower an adopted requirement. The tools do not assess contextual icon/text choices, actual contrast,
+focus visibility or business behavior; inspect those with appropriate real evidence. Preserve native behavior,
+approved typography, geometry and icon systems rather than changing them solely to silence a diagnostic.
 
-Exit codes for both audits: 0 = the configured checks passed, 1 = violations, 2 = not tested
-(bad input, missing page, unavailable browser). Never report exit 2 as a pass or a failure.
+Exit codes for both audits: 0 = the configured checks passed, 1 = configured violations, 2 = not tested
+(bad input, missing page, unavailable browser). Never report exit 2 as a measured pass or failure. Exit 0 does not
+prove the UI is attractive, recognizable or functional; exit 1 does not automatically reject an approved design.
+Record the result, requirement level and disposition separately. A justified choice may retain a failing advisory
+measurement; do not alter the result or silently downgrade an adopted requirement.
 
 Keep generated reports/screenshots outside the distributed skill. Record command, environment, result, measured scope,
 unmeasured requirements and exceptions in the original task ledger. Do not upload private page content without authorization.
@@ -56,5 +65,7 @@ unmeasured requirements and exceptions in the original task ledger. Do not uploa
 `examples/` is a local synthetic component specimen, not an approved image package or a production backend.
 Its geometry, tokens and data demonstrate one direction; use only parts consistent with the project's approved contract.
 Demo feedback and browser storage cannot establish real identity, server persistence or business integration.
-Its focus cues are color only (INT-3: border color, else text/icon color, a scroll region's caption) with
-3:1 focus tokens per resting color; tab through the components page to inspect them.
+Its focus specimens demonstrate restrained palette-compatible cues (INT-3), not a required focus/resting ratio.
+Tab through the running components page and inspect the actual result. Its compact icon actions and visible
+main-action/navigation labels illustrate semantic choices; they do not require every project control to use
+the same treatment.
