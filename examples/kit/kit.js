@@ -210,8 +210,8 @@
     }
   }
 
-  /* Toasts: KFL.toast(message, { action, icon, onAction }). With an icon the
-     action is icon-only and its words become the tooltip (KFL Law 4). Actions give 8 s, plain
+  /* Toasts: KFL.toast(message, { action, icon, onAction }). Actions keep a visible
+     label; an optional icon aids recognition. Actions give 8 s, plain
      messages 5 s; hover or focus pauses the clock. Anything a toast offers must
      also be reachable elsewhere on the page. */
   let toaster;
@@ -228,11 +228,13 @@
       b.type = 'button';
       b.className = 'kfl-button kfl-toast__action';
       if (icon) {
-        b.dataset.iconOnly = '';
-        b.setAttribute('aria-label', action);
-        b.dataset.tooltip = action;
-        b.innerHTML = `<span class="kfl-icon" data-icon="${icon}" aria-hidden="true"></span>`;
-      } else b.textContent = action;
+        const glyph = document.createElement('span');
+        glyph.className = 'kfl-icon';
+        glyph.dataset.icon = icon;
+        glyph.setAttribute('aria-hidden', 'true');
+        b.append(glyph);
+      }
+      b.append(document.createTextNode(action));
       b.addEventListener('click', () => { onAction?.(); dismiss(); });
       el.append(b);
     }

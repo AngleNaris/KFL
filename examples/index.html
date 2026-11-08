@@ -63,8 +63,8 @@
     <h1 data-region="title" class="kfl-display">Square edge,<br>human pace</h1>
     <p data-region="lede" class="kfl-lead">A grid manifest, a verification loop and thirty-one components built on it. This square-corner reference kit demonstrates checks for annotated regions and selected surface properties; visual and behavior review remain necessary.</p>
     <div data-region="masthead-actions" class="kfl-cluster">
-      <a class="kfl-button" href="components.html">Open the components</a>
-      <a class="kfl-button" data-variant="secondary" href="grid.html">See the grid</a>
+      <a class="kfl-button" href="components.html"><span class="kfl-icon" data-icon="grid" aria-hidden="true"></span><span>Open the components</span></a>
+      <a class="kfl-button" data-variant="secondary" href="grid.html"><span class="kfl-icon" data-icon="columns" aria-hidden="true"></span><span>See the grid</span></a>
     </div>
   </header>
 
@@ -74,7 +74,7 @@
       <p>Tokens name raw values, base gives elements their defaults, components maps one contract per semantic role. The grid is generated from a manifest; its annotated regions can be checked in the browser against that contract.</p>
     </div>
     <div data-region="section-aside" class="doc-aside">
-      <div><h3 class="kfl-label">Rules</h3><ul><li>Change tokens, never component internals.</li><li>Copy <code>kit/</code> and <code>grid/</code>; leave <code>site.css</code> behind.</li></ul></div>
+      <div><h3 class="kfl-label">Rules</h3><ul><li>Adopt only what fits the project; keep shared tokens and component contracts coherent.</li><li>Copy <code>kit/</code> and <code>grid/</code>; leave <code>site.css</code> behind.</li></ul></div>
     </div>
     <div data-region="section-body" class="doc-body">
       <div class="kfl-card-grid">
@@ -98,19 +98,19 @@
   </section>
 
   <section class="grid-row doc-section" id="principles" aria-labelledby="principles-h">
-    <header data-region="section-label"><h2 id="principles-h" class="kfl-h3">What the kit enforces</h2></header>
+    <header data-region="section-label"><h2 id="principles-h" class="kfl-h3">What this kit demonstrates</h2></header>
     <div data-region="section-text" class="kfl-prose">
-      <p>Four laws cover geometry, contract, motion and restraint. Around them: typography floors, a status rule, square-capped icons. Each is short enough to remember; the audits make them hard to break.</p>
+      <p>Aesthetic quality leads the decisions: coherent geometry, reusable components, purposeful motion and restrained content. This square-edged kit is one worked example. Existing projects retain their own design system; the audits provide evidence, not a universal style mandate.</p>
     </div>
     <div data-region="section-aside" class="doc-aside">
-      <div><h3 class="kfl-label">Hard limits</h3><ul><li>No rounded rectangles — the only curve allowed is a true circle (the radio control).</li><li>12px text floor on CJK, 10px on Latin.</li><li>Hit area: at least 24px for a mouse, 44px on touch screens.</li></ul></div>
+      <div><h3 class="kfl-label">Specimen choices</h3><ul><li>Square surfaces and a circular radio control.</li><li>A compact type scale, checked in the actual language.</li><li>Control sizes adapted to the input device.</li></ul></div>
     </div>
     <div data-region="section-body" class="doc-body">
       <div class="specimen-grid">
-        <div class="specimen"><p class="specimen__label kfl-overline">Law 1</p><h3 class="kfl-h4">Align within the owning layout</h3><p class="kfl-muted">Page frames, regions and component interiors have distinct alignment scopes. Share tracks with subgrid when needed; local layouts may use their own content-driven structure.</p></div>
-        <div class="specimen"><p class="specimen__label kfl-overline">Law 2</p><h3 class="kfl-h4">Similar elements reuse one contract</h3><p class="kfl-muted">A button is a button everywhere. Variants are named attributes, states come from semantic markup — never from a parallel class that can drift.</p></div>
-        <div class="specimen"><p class="specimen__label kfl-overline">Law 3</p><h3 class="kfl-h4">Motion returns to its origin</h3><p class="kfl-muted">Panels open from where the user was looking and give the space back when they close. Nothing slides off the page forever.</p></div>
-        <div class="specimen"><p class="specimen__label kfl-overline">Law 4</p><h3 class="kfl-h4">Minimal, weighted, icon-first</h3><p class="kfl-muted">Show only what the task needs and give each item one weight. Where an established icon names an action, it stands alone; the words move into its tooltip.</p></div>
+        <div class="specimen"><h3 class="kfl-h4">Align within the owning layout</h3><p class="kfl-muted">Page frames, regions and component interiors have distinct alignment scopes. Share tracks with subgrid when needed; local layouts may use their own content-driven structure.</p></div>
+        <div class="specimen"><h3 class="kfl-h4">Similar elements reuse one contract</h3><p class="kfl-muted">A button is a button everywhere. Variants are named attributes, states come from semantic markup — never from a parallel class that can drift.</p></div>
+        <div class="specimen"><h3 class="kfl-h4">Motion returns to its origin</h3><p class="kfl-muted">Panels open from where the user was looking and give the space back when they close. Nothing slides off the page forever.</p></div>
+        <div class="specimen"><h3 class="kfl-h4">Purposeful content, readable controls</h3><p class="kfl-muted">Remove redundant copy and decorative signals. Keep navigation names visible; pair important actions with useful icons and short labels. Reserve icon-only controls for recognizable compact tools.</p></div>
       </div>
     </div>
   </section>
@@ -120,9 +120,9 @@
     <div data-region="frame-row" class="doc-body">
       <div class="doc-index">
         <ol>
-          <li><a href="grid.html"><span>01</span>Grid — breakpoints, subgrid, audit loop</a></li>
-          <li><a href="components.html"><span>02</span>Components — all 31 contracts</a></li>
-          <li><a href="settings.html"><span>03</span>Settings page — forms in the wild</a></li>
+          <li><a href="grid.html">Grid — breakpoints, subgrid, audit loop</a></li>
+          <li><a href="components.html">Components — all 31 contracts</a></li>
+          <li><a href="settings.html">Settings page — forms in the wild</a></li>
         </ol>
       </div>
     </div>

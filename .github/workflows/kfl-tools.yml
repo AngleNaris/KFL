@@ -28,3 +28,40 @@ jobs:
             npm run grid:audit -- --manifest ../examples/grid/kfl.manifest.json --html ../examples/$page.html
             npm run surface:audit -- --html ../examples/$page.html --viewports 375t,1440 --geometry square
           done
+      - name: Capture revision specimens
+        run: |
+          node --input-type=module <<'JS'
+          import { mkdirSync, writeFileSync } from 'node:fs';
+          import { resolve } from 'node:path';
+          import { pathToFileURL } from 'node:url';
+          import { launchChromium } from './lib/browser.mjs';
+          mkdirSync('../qa-screenshots', { recursive: true });
+          const browser = await launchChromium('revision visual review');
+          const findings = [];
+          for (const width of [375, 1440]) {
+            for (const theme of ['light', 'dark']) {
+              const page = await browser.newPage({ viewport: { width, height: 1000 }, colorScheme: theme });
+              await page.goto(pathToFileURL(resolve('../examples/settings.html')).href);
+              await page.evaluate(async theme => { document.documentElement.dataset.theme = theme; await document.fonts.ready; }, theme);
+              await page.screenshot({ path: `../qa-screenshots/settings-${theme}-${width}.png` });
+              findings.push(await page.evaluate(() => ({ page: 'settings', width: innerWidth, theme: document.documentElement.dataset.theme, scrollWidth: document.documentElement.scrollWidth, navigation: [...document.querySelectorAll('.kfl-sidenav a')].map(a => a.innerText), actions: [...document.querySelectorAll('.kfl-form__actions button')].map(b => b.innerText) })));
+              if (width === 375 && theme === 'light') {
+                await page.locator('#security .kfl-form__actions').screenshot({ path: '../qa-screenshots/settings-actions-375.png' });
+                await page.getByRole('button', { name: 'Delete workspace', exact: true }).click();
+                await page.locator('#dlg-delete-ws').screenshot({ path: '../qa-screenshots/settings-dialog-375.png' });
+              }
+              await page.goto(pathToFileURL(resolve('../examples/components.html')).href);
+              await page.evaluate(async theme => { document.documentElement.dataset.theme = theme; await document.fonts.ready; }, theme);
+              await page.locator('#button [data-region="section-body"]').screenshot({ path: `../qa-screenshots/buttons-${theme}-${width}.png` });
+              await page.locator('#sidenav nav').screenshot({ path: `../qa-screenshots/navigation-${theme}-${width}.png` });
+              await page.close();
+            }
+          }
+          writeFileSync('../qa-screenshots/observations.json', JSON.stringify(findings, null, 2));
+          await browser.close();
+          JS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: revision-visual-review
+          path: qa-screenshots
+          retention-days: 7

@@ -105,7 +105,7 @@
 }
 .kfl-textarea { display: block; padding-block: var(--kfl-space-2); min-block-size: calc(4lh + var(--kfl-space-4) + 2 * var(--kfl-border)); max-block-size: 24rem; resize: vertical; field-sizing: content; }
 :is(.kfl-input, .kfl-textarea, .kfl-select > select):hover { border-color: var(--kfl-line-strong); }
-/* Where typing goes, for pointer and keyboard alike: an inset bar; the border stays put. */
+/* Field focus changes the existing border color without shifting the layout. */
 :is(.kfl-input, .kfl-textarea)::placeholder { color: var(--kfl-text-3); opacity: 1; }
 /* Invalid: red edge; the icon and message beside the field carry it without colour. */
 :is(.kfl-input, .kfl-textarea, .kfl-select > select)[aria-invalid="true"] { border-color: var(--kfl-danger); }
@@ -254,7 +254,7 @@
 
 /* 7 Tabs --------------------------------------------------------------------
    Peer views of one object. Arrow keys move between tabs (kit.js); the selected
-   tab is marked by a fill and ink text; no bar beneath it (KFL INT-3a). */
+   tab uses a restrained fill and stronger text in this specimen. */
 .kfl-tabs__list { display: flex; overflow-x: auto; border-block-end: var(--kfl-border) solid var(--kfl-rule); scrollbar-width: thin; }
 .kfl-tab {
   position: relative; display: inline-flex; align-items: center; gap: var(--kfl-space-2); flex: none;
@@ -470,7 +470,8 @@
 }
 .kfl-menu__item:is(:hover, :focus-visible) { background: var(--kfl-hover); color: var(--kfl-text); }
 .kfl-menu__item > .kfl-icon { color: var(--kfl-text-2); }
-.kfl-menu__item[data-tone="danger"] > .kfl-icon { color: var(--kfl-danger); } /* ink text keeps the colour focus cue at 3:1 */
+.kfl-menu__item[data-tone="danger"],
+.kfl-menu__item[data-tone="danger"] > .kfl-icon { color: var(--kfl-danger); }
 .kfl-menu__hint { margin-inline-start: auto; padding-inline-start: var(--kfl-space-5); color: var(--kfl-text-3); font-size: var(--kfl-fs-small); }
 .kfl-menu__list > [role="separator"] { block-size: var(--kfl-border); margin: var(--kfl-space-1) 0; background: var(--kfl-rule); }
 
@@ -696,7 +697,7 @@
 
 /* 25 Top bar, side nav ----------------------------------------------------------
    Product name at the start links home; sections next; account at the end.
-   Current location is marked by a fill and aria-current; no bar (KFL INT-3a). */
+   Current location uses a fill and aria-current in this specimen. */
 .kfl-topbar { border-block-end: var(--kfl-border) solid var(--kfl-rule); background: var(--kfl-surface); }
 .kfl-topbar__row { display: flex; align-items: center; gap: var(--kfl-space-5); min-block-size: 3.5rem; }
 .kfl-topbar__brand { display: inline-flex; align-items: center; gap: var(--kfl-space-2); min-block-size: var(--kfl-control-md); min-inline-size: var(--kfl-control-md); color: var(--kfl-text); font-weight: var(--kfl-fw-bold); text-decoration: none; }
@@ -736,12 +737,13 @@
 .kfl-sidenav a {
   display: flex; align-items: center; gap: var(--kfl-space-3); min-block-size: var(--kfl-control-md);
   padding: 0 var(--kfl-space-3);
-  color: var(--kfl-text); font-weight: var(--kfl-fw-medium); text-decoration: none;
+  color: var(--kfl-text-2); font-weight: var(--kfl-fw-medium); text-decoration: none;
 }
-.kfl-sidenav a:hover { background: var(--kfl-hover); }
-.kfl-sidenav a[aria-current="page"] { background: var(--kfl-accent-tint); }
+.kfl-sidenav a:hover { color: var(--kfl-text); background: var(--kfl-hover); }
+.kfl-sidenav a[aria-current="page"] { color: var(--kfl-text); background: var(--kfl-accent-tint); }
 .kfl-sidenav a > .kfl-count { margin-inline-start: auto; }
-/* Icon rail (KFL Law 4): each destination is its icon; the name is the tooltip and aria-label. */
+/* Optional collapsed rail: use only when destinations remain recognizable.
+   Expanded navigation keeps visible names; tooltips do not replace scanning. */
 .kfl-sidenav[data-icon-only] a { position: relative; justify-content: center; inline-size: var(--kfl-control-lg); min-block-size: var(--kfl-control-lg); padding: 0; }
 .kfl-sidenav[data-icon-only] a > .kfl-count { position: absolute; inset-block-start: 0; inset-inline-end: 0; margin: 0; translate: 25% -25%; } /* clear of the glyph */
 
@@ -760,7 +762,7 @@
 .kfl-error-summary__title { display: flex; align-items: center; gap: var(--kfl-space-2); font-size: var(--kfl-fs-lead); line-height: var(--kfl-lh-lead); font-weight: var(--kfl-fw-bold); }
 .kfl-error-summary__title > .kfl-icon { color: var(--kfl-danger); }
 .kfl-error-summary ul { margin: 0; padding-inline-start: var(--kfl-space-5); }
-.kfl-error-summary a { color: var(--kfl-text); font-weight: var(--kfl-fw-medium); } /* ink, so focus can shift it; the title's icon carries danger */
+.kfl-error-summary a { color: var(--kfl-danger); font-weight: var(--kfl-fw-medium); }
 
 
 /* 27 Kbd, code, rules ---------------------------------------------------------- */
@@ -770,13 +772,10 @@
 
 
 /* Focus cues -------------------------------------------------------------------
-   No outline frame anywhere (base.css), and no underline, bar or fill either: focus
-   is a colour change only (KFL INT-3).
-     1. a border   -> the border changes colour, never its width;
-     2. otherwise  -> its text and icon change colour; a link's underline stays as is;
-     3. a focusable container (scroll region) -> its caption changes colour.
-   Each --kfl-focus-shift* token changes the colour it replaces by >= 3:1, so
-   interactive text and icons rest in ink, never in --kfl-text-2. Every cue eases. */
+   A restrained, palette-based recipe for this specimen: existing borders change
+   color, borderless controls change text/icon color, and scroll regions use their
+   caption. Review the actual cues alongside the host design system. No required
+   rest-to-focus ratio dictates the resting text, accent or semantic colors. */
 
 /* 1 Border. Fields show where typing goes for pointer and keyboard alike. */
 .kfl-button:not([data-variant="quiet"]):focus-visible,
@@ -793,10 +792,13 @@
 
 /* 2 Colour. */
 :is(.kfl-button[data-variant="quiet"], .kfl-tab, .kfl-menu__item, .kfl-disclosure > summary, .kfl-card__link, .kfl-topbar__brand,
-    .kfl-topbar__nav a, .kfl-topbar__panel a, .kfl-sidenav a, .kfl-breadcrumb a, .kfl-table__key > a, .kfl-error-summary a,
+    .kfl-topbar__nav a, .kfl-topbar__panel a, .kfl-sidenav a, .kfl-breadcrumb a, .kfl-table__key > a,
     .kfl-tag__remove, .kfl-pagination a, .kfl-table__sort):focus-visible {
   --_label: var(--kfl-focus-shift); color: var(--kfl-focus-shift);
 }
+
+.kfl-menu__item[data-tone="danger"]:focus-visible,
+.kfl-error-summary a:focus-visible { color: var(--kfl-danger-hover); }
 
 /* 3 Container: the region's name. */
 .kfl-table-wrap:focus-visible > .kfl-table > caption { color: var(--kfl-focus-shift); }

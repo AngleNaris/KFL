@@ -61,16 +61,16 @@
 
   <header class="grid-row doc-masthead">
     <h1 data-region="title" class="kfl-display">Settings</h1>
-    <p data-region="lede" class="kfl-lead">A three-column rail beside a seven-column form. Same kit, same rules — validation writes its errors at the field, and every result is reported where it happened.</p>
+    <p data-region="lede" class="kfl-lead">Labelled navigation beside a seven-column form. The same components carry through — validation writes its errors at the field, and every result is reported where it happened.</p>
   </header>
 
   <div class="grid-row site-page-end">
-    <nav class="kfl-sidenav" data-icon-only data-region="settings-nav" aria-label="Settings sections">
+    <nav class="kfl-sidenav" data-region="settings-nav" aria-label="Settings sections">
       <ul>
-        <li><a href="#profile" aria-label="Profile" data-tooltip="Profile" data-tooltip-align="start"><span class="kfl-icon" data-icon="user" aria-hidden="true"></span></a></li>
-        <li><a href="#notifications" aria-label="Notifications" data-tooltip="Notifications" data-tooltip-align="start"><span class="kfl-icon" data-icon="bell" aria-hidden="true"></span></a></li>
-        <li><a href="#security" aria-label="Security" data-tooltip="Security" data-tooltip-align="start"><span class="kfl-icon" data-icon="lock" aria-hidden="true"></span></a></li>
-        <li><a href="#danger" aria-label="Danger zone" data-tooltip="Danger zone" data-tooltip-align="start"><span class="kfl-icon" data-icon="warning" aria-hidden="true"></span></a></li>
+        <li><a href="#profile"><span class="kfl-icon" data-icon="user" aria-hidden="true"></span><span>Profile</span></a></li>
+        <li><a href="#notifications"><span class="kfl-icon" data-icon="bell" aria-hidden="true"></span><span>Notifications</span></a></li>
+        <li><a href="#security"><span class="kfl-icon" data-icon="lock" aria-hidden="true"></span><span>Security</span></a></li>
+        <li><a href="#danger"><span class="kfl-icon" data-icon="warning" aria-hidden="true"></span><span>Danger zone</span></a></li>
       </ul>
     </nav>
 
@@ -114,8 +114,8 @@
             </div>
           </div>
           <div class="kfl-form__actions">
-            <button type="submit" class="kfl-button" data-variant="primary" data-icon-only aria-label="Save profile" data-tooltip="Save profile" data-tooltip-align="start"><span class="kfl-icon" data-icon="save" aria-hidden="true"></span></button>
-            <button type="reset" class="kfl-button" data-variant="quiet" data-icon-only aria-label="Reset" data-tooltip="Reset"><span class="kfl-icon" data-icon="undo" aria-hidden="true"></span></button>
+            <button type="submit" class="kfl-button" data-variant="primary"><span class="kfl-icon" data-icon="save" aria-hidden="true"></span><span>Save profile</span></button>
+            <button type="reset" class="kfl-button" data-variant="quiet"><span class="kfl-icon" data-icon="undo" aria-hidden="true"></span><span>Reset</span></button>
             <p class="kfl-form__status" role="status"></p>
           </div>
         </form>
@@ -149,7 +149,7 @@
             </fieldset>
           </div>
           <div class="kfl-form__actions">
-            <button type="submit" class="kfl-button" data-variant="primary" data-icon-only aria-label="Save notifications" data-tooltip="Save notifications" data-tooltip-align="start"><span class="kfl-icon" data-icon="save" aria-hidden="true"></span></button>
+            <button type="submit" class="kfl-button" data-variant="primary"><span class="kfl-icon" data-icon="save" aria-hidden="true"></span><span>Save notifications</span></button>
             <p class="kfl-form__status" role="status"></p>
           </div>
         </form>
@@ -180,8 +180,8 @@
             <label class="kfl-choice"><input type="checkbox" class="kfl-checkbox" name="twofa" checked><span class="kfl-choice__text">Authenticator app for two-factor sign-in<span class="kfl-choice__hint">TOTP, any standard app</span></span></label>
           </div>
           <div class="kfl-form__actions">
-            <button type="submit" class="kfl-button" data-variant="primary" data-icon-only aria-label="Update security" data-tooltip="Update security" data-tooltip-align="start"><span class="kfl-icon" data-icon="save" aria-hidden="true"></span></button>
-            <button type="button" class="kfl-button" data-variant="quiet" data-icon-only data-demo-action="No sessions were signed out." aria-label="Sign out other sessions" data-tooltip="Sign out other sessions"><span class="kfl-icon" data-icon="sign-out" aria-hidden="true"></span></button>
+            <button type="submit" class="kfl-button" data-variant="primary"><span class="kfl-icon" data-icon="save" aria-hidden="true"></span><span>Update security</span></button>
+            <button type="button" class="kfl-button" data-variant="quiet" data-demo-action="No sessions were signed out."><span class="kfl-icon" data-icon="sign-out" aria-hidden="true"></span><span>Sign out other sessions</span></button>
             <p class="kfl-form__status" role="status"></p>
           </div>
         </form>
@@ -199,8 +199,8 @@
           </div>
         </div>
         <div class="kfl-cluster">
-          <button type="button" class="kfl-button" data-variant="danger-secondary" data-icon-only aria-disabled="true" aria-describedby="export-why" aria-label="Export workspace" data-tooltip="Export workspace" data-tooltip-align="start"><span class="kfl-icon" data-icon="download" aria-hidden="true"></span></button>
-          <button type="button" class="kfl-button" data-variant="danger" data-icon-only data-dialog-open="dlg-delete-ws" aria-label="Delete workspace" data-tooltip="Delete workspace"><span class="kfl-icon" data-icon="trash" aria-hidden="true"></span></button>
+          <button type="button" class="kfl-button" data-variant="danger-secondary" aria-disabled="true" aria-describedby="export-why"><span class="kfl-icon" data-icon="download" aria-hidden="true"></span><span>Export workspace</span></button>
+          <button type="button" class="kfl-button" data-variant="danger" data-dialog-open="dlg-delete-ws"><span class="kfl-icon" data-icon="trash" aria-hidden="true"></span><span>Delete workspace</span></button>
           <p class="kfl-small kfl-muted" id="export-why">Export is unavailable in this demo.</p>
           <p class="kfl-small kfl-muted" id="delete-ws-status" role="status"></p>
         </div>
@@ -209,7 +209,7 @@
           <form class="kfl-dialog__frame" method="dialog">
             <header class="kfl-dialog__header">
               <h3 id="dlg-delete-ws-title" class="kfl-h3">Delete workspace?</h3>
-              <button class="kfl-button" data-variant="quiet" data-icon-only value="cancel" formnovalidate autofocus aria-label="Cancel" data-tooltip="Cancel" data-tooltip-align="end"><span class="kfl-icon" data-icon="close" aria-hidden="true"></span></button>
+              <button class="kfl-button" data-variant="quiet" value="cancel" formnovalidate autofocus><span class="kfl-icon" data-icon="close" aria-hidden="true"></span><span>Cancel</span></button>
             </header>
             <div class="kfl-dialog__body kfl-stack" data-gap="4">
               <p id="dlg-delete-ws-desc">Type the workspace name <strong>northwind</strong> to confirm. There is no undo.</p>
@@ -219,7 +219,7 @@
               </div>
             </div>
             <footer class="kfl-dialog__footer">
-              <button type="submit" class="kfl-button" data-variant="danger" data-icon-only value="confirm" aria-label="Delete permanently" data-tooltip="Delete permanently" data-tooltip-align="end"><span class="kfl-icon" data-icon="trash" aria-hidden="true"></span></button>
+              <button type="submit" class="kfl-button" data-variant="danger" value="confirm"><span class="kfl-icon" data-icon="trash" aria-hidden="true"></span><span>Delete permanently</span></button>
             </footer>
           </form>
         </dialog>

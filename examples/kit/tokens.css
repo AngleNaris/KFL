@@ -1,9 +1,9 @@
 /* KFL reference kit — tokens
    Every raw value in the kit lives here; components read only these names.
-   To adapt the kit to a product, change tokens (typeface, accent, action),
-   never component internals. Colors use light-dark(), so each token shows its
-   light and dark value side by side. Text pairs keep 4.5:1 and control and
-   state cues 3:1 on every surface they meet (KFL Color System). */
+   Adapt tokens and shared component contracts to the product’s design system.
+   This square-edged palette is one example, not a mandatory replacement.
+   Colors use light-dark() to keep light and dark values side by side. Contrast
+   measurements inform visual review; this kit sets no universal ratio gate. */
 
 :root {
   color-scheme: light dark;
@@ -19,14 +19,14 @@
   /* Text — three levels; hierarchy comes from size, weight and space first. */
   --kfl-text: light-dark(#161615, #EDEDE8);
   --kfl-text-2: light-dark(#484843, #BDBDB6);
-  --kfl-text-3: light-dark(#63635D, #9A9A93);       /* still >= 4.5:1 on bg, surface and sunken */
+  --kfl-text-3: light-dark(#63635D, #9A9A93);       /* subordinate labels, checked on their actual surface */
   --kfl-text-disabled: light-dark(#9E9E97, #6C6C66);
 
   /* Lines */
   --kfl-rule: light-dark(#DADAD4, #34342F);         /* decorative dividers; never a control's only edge */
-  --kfl-line: light-dark(#85857E, #7C7C75);         /* control boundaries: >= 3:1 on every surface */
+  --kfl-line: light-dark(#85857E, #7C7C75);         /* control boundaries in this palette */
   --kfl-line-strong: light-dark(#161615, #EDEDE8);  /* structural rules, hovered edges */
-  --kfl-scrollbar-thumb: var(--kfl-line);           /* every scroll container; >= 3:1 like any control edge */
+  --kfl-scrollbar-thumb: var(--kfl-line);           /* shared scrollbar treatment for this specimen */
   --kfl-scrollbar-thumb-hover: var(--kfl-line-strong);
   --kfl-scrollbar-track: transparent;
 
@@ -42,12 +42,12 @@
   --kfl-on-accent: light-dark(#FFFFFF, #121211);
   --kfl-accent-tint: light-dark(#E8EBFA, #161B36);   /* also the selected/current fill */
   --kfl-focus: var(--kfl-accent);
-  /* Focus colours: each changes the colour it replaces by >= 3:1 (KFL Interaction
-     Baseline); text in --kfl-focus-shift still reads at 4.5:1. */
-  --kfl-focus-shift: light-dark(#3B56E3, #677CE9);        /* replaces text-coloured ink or edges, --kfl-rule and surface edges */
-  --kfl-focus-shift-line: light-dark(#162C9C, #D7DCF9);   /* replaces --kfl-line edges */
-  --kfl-focus-shift-accent: light-dark(#94A3F0, #2442E0); /* replaces accent edges (checked) */
-  --kfl-focus-shift-danger: light-dark(#050A24, #2946E0); /* replaces danger edges */
+  /* Focus colors follow the palette’s semantic roles. They need not differ
+     from the resting color by a fixed ratio; review the actual state change. */
+  --kfl-focus-shift: var(--kfl-accent);
+  --kfl-focus-shift-line: var(--kfl-accent);
+  --kfl-focus-shift-accent: var(--kfl-accent-hover);
+  --kfl-focus-shift-danger: var(--kfl-danger-hover);
 
   /* States — only for states that really exist (KFL Status Integrity). */
   --kfl-danger: light-dark(#C0271E, #FF8C82);
@@ -69,8 +69,8 @@
   --kfl-font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "Liberation Mono", monospace;
 
   /* Type scale: size / line height. Line heights land on the 4px rhythm at a 16px root. */
-  --kfl-fs-floor: 0.625rem;   /* 10 — the Latin type floor; never a default size */
-  --kfl-fs-caption: 0.75rem;  --kfl-lh-caption: 1rem;      /* 12/16 — also the CJK floor */
+  --kfl-fs-floor: 0.625rem;   /* 10 — specimen’s smallest Latin token, not a general target */
+  --kfl-fs-caption: 0.75rem;  --kfl-lh-caption: 1rem;      /* 12/16 — specimen’s smallest CJK token */
   --kfl-fs-small: 0.875rem;   --kfl-lh-small: 1.25rem;     /* 14/20 */
   --kfl-fs-body: 1rem;        --kfl-lh-body: 1.5rem;       /* 16/24 */
   --kfl-fs-lead: 1.25rem;     --kfl-lh-lead: 1.75rem;      /* 20/28 */
@@ -99,11 +99,11 @@
   --kfl-control-sm: 2rem;      /* 32 — dense desktop toolbars and tables */
   --kfl-control-md: 2.5rem;    /* 40 — default */
   --kfl-control-lg: 3rem;      /* 48 — prominent actions */
-  --kfl-hit-min: 1.5rem;       /* 24 — smallest pointer target (WCAG 2.5.8) */
+  --kfl-hit-min: 1.5rem;       /* 24 — compact pointer target in this kit */
   --kfl-icon-size: 1.25rem;    /* 20 — icons sit on the text line they label */
 
-  /* Geometry — square by contract. There is no radius scale to choose from:
-     base.css pins every box to 0, and tools/surface/audit.mjs verifies it. */
+  /* Geometry — this reference kit adopts square surfaces. Existing products
+     keep their own shape language. The surface audit reports this kit’s policy. */
   --kfl-radius: 0;
   --kfl-border: 1px;
   --kfl-border-strong: 2px;
@@ -142,7 +142,7 @@
   --kfl-lh-lead: 2rem;
 }
 
-/* Coarse pointers: every control reaches 44px (KFL Interaction Baseline). */
+/* Coarse-pointer sizing chosen for this specimen. */
 @media (pointer: coarse) {
   :root {
     --kfl-control-sm: 2.75rem;
